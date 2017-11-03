@@ -6,9 +6,9 @@ Hierbei kann sich das Plugin anhand der im PVR befindlichen Sender richten und z
 
 The script 'script.service.gto' fetches actual tv highlights from various RSS feeds and present them as widget in the home menu (skin integration is needed). It can show only those events optionally if they are present in the pvr channel list. Furthermore, there is an integration of the service addon 'service.kn.switchtimer' which switches to the broadcast at appropriated time.
 
-Das Plugin wird bei jedem Kodi Start ausgeführt und holt die Daten in Abhängigkeit vom eingestellten Intervall. Daneben erfolgt eine weitere Aktualisierung des Widgets, um z.B. abgelaufene Sendungen nach einem bestimmten Zeitpunkt aus der Anzeige zu entfernen.
+Das Skript wird bei jedem Kodi Start ausgeführt und holt die Daten in Abhängigkeit vom eingestellten Intervall. Daneben erfolgt eine weitere Aktualisierung des Widgets, um z.B. abgelaufene Sendungen nach einem bestimmten Zeitpunkt aus der Anzeige zu entfernen.
 
-The Plugin has a service which runs at Kodi start and fetches the data depending on the selected interval. In addition to update all outdated broadcasts will removed from display. 
+The script has a service which runs at Kodi start and fetches the data depending on the selected interval. In addition to update all outdated broadcasts will removed from display.
 
 ## Skintegration:
 
@@ -22,9 +22,9 @@ Eine genaue Beschreibung der ListItem.Labels und ListItem.Properties erfolgt wei
 
 For detailed description see below.
 
-## Pluginaufrufe (Methoden):
+## Skriptaufrufe (Methoden):
 
-Der Dienst für die Aktualisierung der Inhalte und des Widgets (starter.py) ruft das eigentliche Plugin über den Parameter 'action' auf. Dieser Parameter kann auch von anderen Plugins oder Scripten wie folgt verwendet werden:
+Der Dienst für die Aktualisierung der Inhalte und des Widgets (starter.py) ruft das eigentliche Skript über den Parameter 'action' auf. Dieser Parameter kann auch von anderen Plugins oder Scripten wie folgt verwendet werden:
 
 The service for updating content and widgets (starter.py) calls the actual plugin via the parameter 'action'. This parameter can be used by other plugins or scripts as follows:
 
@@ -122,9 +122,9 @@ Als Condition lässt sich das Vorhandensein einer Broadcast-ID verwenden. Danebe
 
 #### Debugging:
 
-Das Plugin wird gesprächig, wenn in den Einstellungen von Kodi unter System, Logging das Debug-Logging aktiviert wird.
+Das Skript wird gesprächig, wenn in den Einstellungen von Kodi unter System, Logging das Debug-Logging aktiviert wird.
 
-The Plugin tells much more if You activate the debug mode within Kodi.
+The script tells much more if You activate the debug mode within Kodi.
 
 
 ### FAQ (German only)

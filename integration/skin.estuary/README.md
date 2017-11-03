@@ -1,9 +1,9 @@
 Skintegration in Estuary:
 ----------------------------
 
-Um die TV Highlights des Tages in Estuary zu integrieren sind folgende Schritte erforderlich (als Beispiel dient hier die Integration unter einer Linux-Distribution). Die zum Kopieren erforderlichen Dateien befinden sich im Ordner 'integration/Estuary':
+Um die TV Highlights des Tages in Estuary zu integrieren sind folgende Schritte erforderlich (als Beispiel dient hier die Integration unter einer Linux-Distribution). Die zum Kopieren erforderlichen Dateien befinden sich im Ordner 'integration/skin.estuary':
 
-If You want to use the plugin as widget you have to perfom following steps. The example described here is an example under Linux. All files resides in folder 'integration/Estuary' of the addon:
+If You want to use the plugin as widget you have to perfom following steps. The example described here is an example under Linux. All files resides in folder 'integration/skin.estuary' of the addon:
 
         cd $HOME/.kodi/addons/script.service.gto/integration/
 
