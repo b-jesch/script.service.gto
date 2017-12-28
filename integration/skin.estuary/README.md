@@ -137,7 +137,7 @@ If You want to use the plugin as widget you have to perfom following steps. The 
 1. Copy the widget XML into the skin XML folder:
 
         cd $HOME/.kodi/addons/script.service.gto/integration/
-        cp skin.estuary/gto.widget.xml $HOME/.kodi/addons/skin.estuary.modv2/xml/
+        cp skin.estuary/gto-widget.xml $HOME/.kodi/addons/skin.estuary.modv2/xml/
 
 2. Register the widget as include:
 
