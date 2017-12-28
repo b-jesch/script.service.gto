@@ -172,7 +172,7 @@
                     <param name="label" value="$ADDON[script.service.gto 30107]"/>
                     <param name="onclick_1" value="RunScript(service.kn.switchtimer,action=add,channel=$INFO[Window(Home).Property(GTO.Info.Channel)],icon=$INFO[Window(Home).Property(GTO.Info.Logo)],date=$INFO[Window(Home).Property(GTO.Info.Date)],title=$INFO[Window(Home).Property(GTO.Info.Title)])"/>
                     <param name="onclick_2" value="Dialog.Close(all)"/>
-                    <param name="visible">!String.IsEmpty(Window(Home).Property(GTO.Info.isInFuture)) + System.HasAddon(service.kn.switchtimer)</param>
+                    <param name="visible">!IsEmpty(Window(Home).Property(GTO.Info.isInFuture)) + !String.IsEqual(Window(Home).Property(GTO.Info.ChannelID),False) + System.HasAddon(service.kn.switchtimer)</param>
                 </include>
                 <include content="InfoDialogButton">
                     <description>Switch now button</description>
@@ -181,7 +181,7 @@
                     <param name="label" value="$ADDON[script.service.gto 30108]"/>
                     <param name="onclick_1" value="RunScript(script.service.gto,action=switch_channel&amp;pvrid=$INFO[Window(Home).Property(GTO.Info.ChannelID)])"/>
                     <param name="onclick_2" value="Dialog.Close(all)"/>
-                    <param name="visible">!String.IsEmpty(Window(Home).Property(GTO.Info.isRunning)) + System.HasAddon(service.kn.switchtimer)</param>
+                    <param name="visible">!IsEmpty(Window(Home).Property(GTO.Info.isRunning)) + !String.IsEqual(Window(Home).Property(GTO.Info.ChannelID),False) + System.HasAddon(service.kn.switchtimer)</param>
                 </include>
 				<include content="InfoDialogButton">
                     <description>Set Timer button</description>
@@ -190,7 +190,7 @@
                     <param name="label" value="$ADDON[script.service.gto 30112]"/>
                     <param name="onclick_1" value="RunScript(script.service.gto,action=record&amp;broadcastid=$INFO[Window(Home).Property(GTO.Info.BroadcastID)]&amp;blob=$INFO[Window(Home).Property(GTO.Info.BlobID)])"/>
                     <param name="onclick_2" value="Dialog.Close(all)"/>
-                    <param name="visible">!String.IsEmpty(Window(Home).Property(GTO.Info.BroadcastID)) + String.IsEqual(Window(Home).Property(GTO.Info.hasTimer),False)</param>
+                    <param name="visible">!String.IsEmpty(Window(Home).Property(GTO.Info.BroadcastID)) + !String.IsEqual(Window(Home).Property(GTO.Info.ChannelID),False) + String.IsEqual(Window(Home).Property(GTO.Info.hasTimer),False)</param>
                 </include>
                 <include content="InfoDialogButton">
 						<param name="id" value="23" />
