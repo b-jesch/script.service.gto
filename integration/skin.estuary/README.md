@@ -159,7 +159,7 @@ If You want to use the plugin as widget you have to perfom following steps. The 
             <param name="content_path" value="plugin://script.service.gto?action=getcontent&amp;ts=$INFO[Window(Home).Property(GTO.timestamp)]"/>
             <param name="widget_header" value="$ADDON[script.service.gto 30104]: $INFO[Window(Home).Property(GTO.Provider)]"/>
             <param name="widget_target" value="pvr"/>
-            <param name="list_id" value="12400"/>
+            <param name="list_id" value="12500"/>
             <param name="label" value="$INFO[ListItem.label2]$INFO[ListItem.Property(StartTime), (,)]"/>
             <param name="label2" value="$INFO[ListItem.label]"/>
         </include>
