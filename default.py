@@ -402,7 +402,11 @@ def refreshWidget(handle=None, notify=__enableinfo__):
     for i in range(1, blobs, 1):
 
         writeLog('Processing blob GTO.%s for widget #%s' % (i, widget))
-        blob = eval(HOME.getProperty('GTO.%s' % (i)))
+        try:
+            blob = eval(HOME.getProperty('GTO.%s' % (i)))
+        except SyntaxError:
+            writeLog('Could not read blob #%s properly' % (i))
+            continue
 
         if __pvronly__ and not blob['pvrid']:
             writeLog("Channel %s is not in PVR, discard entry" % (blob['channel']))
