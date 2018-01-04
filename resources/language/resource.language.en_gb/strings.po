@@ -106,7 +106,11 @@ msgctxt "#30131"
 msgid "Start Scraper with delay"
 msgstr ""
 
-#empty strings from id 30132 to 30139
+msgctxt "#30132"
+msgid "Something went wrong, scraper can't read any data."
+msgstr ""
+
+#empty strings from id 30133 to 30139
 
 msgctxt "#30140"
 msgid "Oh sorry! Details are not accessible at this time."

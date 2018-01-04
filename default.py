@@ -280,7 +280,7 @@ def getRecordingCapabilities(pvrid, datetime2):
         "params": {"channelid": pvrid,
                    "properties": ["title", "starttime", "hastimer"]}
     }
-    res = json.loads(xbmc.executeJSONRPC(json.dumps(query, encoding='utf-8')))
+    res = json.loads(xbmc.executeJSONRPC(json.dumps(query, encoding='utf-8', ensure_ascii=False)))
     if 'result' in res and 'broadcasts' in res['result']:
         for broadcast in res['result']['broadcasts']:
             _ltt = utc_to_local_datetime(parser.parse(broadcast['starttime'])).strftime(RSS_TIME_FORMAT)
@@ -476,7 +476,11 @@ def scrapeGTOPage(enabled=__enableinfo__):
         data.scrapeDetailPage(details, data.detailselector)
 
         now = datetime.datetime.now()
-        end = parser.parse(data.enddate)
+        try:
+            end = parser.parse(data.enddate)
+        except ValueError:
+            writeLog('Could not determine end of broadcast, discard blob', xbmc.LOGERROR)
+            continue
 
         if end < now:
             writeLog('Broadcast has finished already, discard blob')
@@ -542,6 +546,8 @@ def scrapeGTOPage(enabled=__enableinfo__):
 
     HOME.setProperty('GTO.blobs', str(idx - 1))
     writeLog('%s items scraped and written to blobs' % (idx - 1))
+    if (idx - 1) == 0:
+        notifyOSD(__LS__(30010), __LS__(30132), icon=getScraperIcon(Scraper().icon), enabled=enabled)
     HOME.setProperty('GTO.timestamp', str(int(time.time()) / 5))
     xbmc.executebuiltin('Container.Refresh')
 

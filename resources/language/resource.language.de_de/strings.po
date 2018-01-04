@@ -93,6 +93,10 @@ msgctxt "#30131"
 msgid "Start Scraper with delay"
 msgstr "Scraper zeitverzögert starten"
 
+msgctxt "#30132"
+msgid "Something went wrong, scraper can't read any data."
+msgstr "Der Scraper kann keine Daten lesen."
+
 msgctxt "#30140"
 msgid "Oh sorry! Details are not accessible at this time."
 msgstr "Es liegen leider keine weiteren Informationen vor."
