@@ -460,6 +460,10 @@ def scrapeGTOPage(enabled=__enableinfo__):
     idx = 1
     content.pop(0)
 
+    if hasattr(data, 'subselector'):
+        content = content[0].split(data.subselector)
+        content.pop(0)
+
     HOME.setProperty('GTO.blobs', '0')
     HOME.setProperty('GTO.provider', data.shortname)
     
