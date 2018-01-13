@@ -241,10 +241,12 @@ def getStationLogo(channelid, fallback):
             "id": 1
             }
     res = json.loads(xbmc.executeJSONRPC(json.dumps(query, encoding='utf-8')))
-    if 'result' in res and 'channeldetails' in res['result'] and 'thumbnail' in res['result']['channeldetails']:
-        return urllib.unquote_plus(res['result']['channeldetails']['thumbnail']).split('://', 1)[1][:-1]
-    else:
-        return fallback
+    try:
+        if 'result' in res and 'channeldetails' in res['result'] and 'thumbnail' in res['result']['channeldetails']:
+            return urllib.unquote_plus(res['result']['channeldetails']['thumbnail']).split('://', 1)[1][:-1]
+    except IndexError, e:
+            writeLog('Could not get station logo: %s' % (e.message), level=xbmc.LOGERROR)
+    return fallback
 
 def switchToChannel(pvrid):
     '''

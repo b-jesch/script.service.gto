@@ -3,7 +3,10 @@
 
 import re
 import urllib2
+import datetime
+from dateutil import parser
 
+RSS_TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 
 class Scraper():
     def __init__(self):
@@ -11,7 +14,7 @@ class Scraper():
 
         # Properties
 
-        self.enabled = False
+        self.enabled = True
         self.baseurl = 'https://www.hoerzu.de'
         self.rssurl = 'https://www.hoerzu.de/rss/tipp/spielfilm/'
         self.friendlyname = 'HÖRZU Spielfilm Highlights'
@@ -27,14 +30,13 @@ class Scraper():
         self.title = ''
         self.thumb = False
         self.detailURL = ''
-        self.starttime = '00:00'
+        self.startdate = ''
+        self.enddate = ''
         self.runtime = '0'
         self.genre = ''
-        self.extrainfos = ''
+        self.plot = ''
         self.cast = ''
         self.rating = ''
-
-        self.endtime = '00:00'
 
 
     def checkResource(self, resource, fallback):
@@ -63,8 +65,7 @@ class Scraper():
             pass
 
         try:
-            self.starttime = re.compile('<description>(.+?)</description>', re.DOTALL).findall(content)[0][9:14]
-            print (self.starttime).encode('utf-8')
+            self.startdate = (re.compile('<dc:date>(.+?)</dc:date>', re.DOTALL).findall(content)[0][0:19]).replace('T', ' ').replace('.', '-')
         except IndexError:
             pass
 
@@ -78,7 +79,7 @@ class Scraper():
                 content = container[0]
 
                 try:
-                    self.extrainfos = re.compile('<p itemprop="description">(.+?)</p>', re.DOTALL).findall(content)[0]
+                    self.plot = re.compile('<p itemprop="description">(.+?)</p>', re.DOTALL).findall(content)[0]
                 except IndexError:
                     pass
 
@@ -97,6 +98,19 @@ class Scraper():
                     self.thumb = 'image://%s' % (self.err404)
 
                 self.thumb = self.checkResource(self.thumb, self.err404)
+
+                # Enddate
+
+                _start = parser.parse(self.startdate)
+                try:
+                    _s = re.compile('<div class="day">(.+?)<div class="labels">', re.DOTALL).findall(content)[0].split('/')[1].split(' - ')[1].strip()
+                    _stop = _start.replace(hour=int(_s[0:2]), minute=int(_s[3:5]))
+                except IndexError:
+                    _stop = _start
+
+                if _start > _stop: _stop += datetime.timedelta(days=1)
+                self.enddate = datetime.datetime.strftime(_stop, RSS_TIME_FORMAT)
+                self.runtime = str((_stop - _start).seconds / 60)
 
         except TypeError:
             pass
