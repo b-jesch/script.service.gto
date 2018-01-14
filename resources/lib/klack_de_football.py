@@ -15,6 +15,7 @@ class Scraper():
 
         self.enabled = True
         self.baseurl = 'http://www.klack.de'
+        self.lang = 'de_DE'
         self.rssurl = 'http://www.klack.de/xml/fussballRSS.xml'
         self.friendlyname = 'klack.de - Fussball'
         self.shortname = 'klack.de - Fussball'

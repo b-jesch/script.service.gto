@@ -14,6 +14,7 @@ class Scraper():
 
         self.enabled = True
         self.baseurl = 'https://www.tvdigital.de'
+        self.lang = 'de_DE'
         self.rssurl = 'https://www.tvdigital.de/rss/tipp/spielfilm/'
         self.friendlyname = 'TV Digital Spielfilm Highlights'
         self.shortname = 'TV Digital'

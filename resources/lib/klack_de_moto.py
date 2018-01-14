@@ -15,6 +15,7 @@ class Scraper():
 
         self.enabled = True
         self.baseurl = 'http://www.klack.de'
+        self.lang = 'de_DE'
         self.rssurl = 'http://www.klack.de/xml/motorsportRSS.xml'
         self.friendlyname = 'klack.de - Motorsport'
         self.shortname = 'klack.de - Motorsport'

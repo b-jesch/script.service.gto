@@ -22,7 +22,7 @@ __addon__ = xbmcaddon.Addon()
 __addonID__ = __addon__.getAddonInfo('id')
 __addonname__ = __addon__.getAddonInfo('name')
 __version__ = __addon__.getAddonInfo('version')
-__path__ = __addon__.getAddonInfo('path')
+__path__ = xbmc.translatePath(__addon__.getAddonInfo('path'))
 __profiles__ = __addon__.getAddonInfo('profile')
 __LS__ = __addon__.getLocalizedString
 
@@ -47,7 +47,7 @@ Scraper = getattr(mod, 'Scraper')
 # Helpers
 
 def getScraperIcon(icon):
-    return xbmc.translatePath(os.path.join(__path__, 'resources', 'lib', 'media', icon))
+    return os.path.join(__path__, 'resources', 'lib', 'media', icon)
 
 def notifyOSD(header, message, icon=xbmcgui.NOTIFICATION_INFO, disp=4000, enabled=__enableinfo__):
     if enabled:
@@ -62,7 +62,7 @@ def writeLog(message, level=xbmc.LOGDEBUG):
 # End Helpers
 
 if not os.path.isfile(__usertranslations__):
-    xbmcvfs.copy(xbmc.translatePath(os.path.join(__path__, 'ChannelTranslate.json')), __usertranslations__)
+    xbmcvfs.copy(os.path.join(__path__, 'ChannelTranslate.json'), __usertranslations__)
 
 writeLog('Getting PVR translations from %s' % (__usertranslations__), xbmc.LOGDEBUG)
 with open(__usertranslations__, 'r') as transfile:
@@ -137,7 +137,7 @@ def getDateFormat():
 # determine and change scraper modules
 
 def changeScraper():
-    _scraperdir = xbmc.translatePath(os.path.join(__path__, 'resources', 'lib'))
+    _scraperdir = os.path.join(__path__, 'resources', 'lib')
     _scrapers = []
     _scraperdict = []
     for module in os.listdir(_scraperdir):
@@ -147,11 +147,17 @@ def changeScraper():
         ScraperClass = getattr(mod, 'Scraper')
 
         if not ScraperClass().enabled: continue
+        _scraperdict.append({'name': ScraperClass().friendlyname,
+                             'shortname': ScraperClass().shortname,
+                             'baseurl': ScraperClass().baseurl,
+                             'icon': ScraperClass().icon,
+                             'module': 'resources.lib.%s' % (module[:-3])})
 
-        _scrapers.append(ScraperClass().friendlyname)
-        _scraperdict.append({'name': ScraperClass().friendlyname, 'shortname': ScraperClass().shortname, 'module': 'resources.lib.%s' % (module[:-3])})
-
-    _idx = xbmcgui.Dialog().select(__LS__(30111), _scrapers)
+    _scraperdict.sort()
+    for scrapers in _scraperdict:
+        liz = xbmcgui.ListItem(label=scrapers['name'], label2=scrapers['baseurl'], iconImage=getScraperIcon(scrapers['icon']))
+        _scrapers.append(liz)
+    _idx = xbmcgui.Dialog().select(__LS__(30111), _scrapers, useDetails=True)
     if _idx > -1:
         writeLog('selected scrapermodule is %s' % (_scraperdict[_idx]['module']))
         __addon__.setSetting('scraper', _scraperdict[_idx]['module'])
@@ -447,7 +453,7 @@ def refreshWidget(handle=None, notify=__enableinfo__):
 def scrapeGTOPage(enabled=__enableinfo__):
 
     data = Scraper()
-    data.err404 = xbmc.translatePath(os.path.join(__path__, 'resources', 'lib', 'media', data.err404))
+    data.err404 = os.path.join(__path__, 'resources', 'lib', 'media', data.err404)
 
     notifyOSD(__LS__(30010), __LS__(30018) % ((data.shortname).decode('utf-8')), icon=getScraperIcon(data.icon), enabled=enabled)
     writeLog('Start scraping from %s' % (data.rssurl))

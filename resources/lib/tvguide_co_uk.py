@@ -14,7 +14,8 @@ class Scraper():
         # Properties
 
         self.enabled = True
-        self.baseurl = 'http://www.tvguide.co.uk/TVhighlights.asp'
+        self.baseurl = 'http://www.tvguide.co.uk'
+        self.lang = 'en_GB'
         self.rssurl = 'http://www.tvguide.co.uk/TVhighlights.asp'
         self.friendlyname = 'TVGuide.co.uk - TV Highlights'
         self.shortname = 'TVGuide.co.uk'
