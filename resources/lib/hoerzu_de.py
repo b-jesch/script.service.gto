@@ -58,10 +58,10 @@ class Scraper():
         self.reset()
 
         try:
-            self.channel = re.compile('<title>(.+?)</title>', re.DOTALL).findall(content)[0].split(' - ')[0]
+            self.channel = re.compile('<dc:subject>(.+?)</dc:subject>', re.DOTALL).findall(content)[0]
             self.genre = re.compile('<title>(.+?)</title>', re.DOTALL).findall(content)[0].split(' - ')[1]
             self.detailURL = re.compile('<link>(.+?)</link>', re.DOTALL).findall(content)[0]
-            self.title = re.compile('<title>(.+?)</title>', re.DOTALL).findall(content)[0].split(': ')[1]
+            self.title = re.compile('<title>(.+?)</title>', re.DOTALL).findall(content)[0].split(': ', 1)[1]
         except IndexError:
             pass
 
