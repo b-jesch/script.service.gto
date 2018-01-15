@@ -1,11 +1,7 @@
 #!/usr/bin/python
 
-import re
-import urllib2
-import datetime
+from tools import *
 from dateutil import parser
-
-RSS_TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 
 class Scraper():
 
@@ -75,7 +71,7 @@ class Scraper():
             pass
 
         try:
-            self.startdate = (re.compile('<span class="datetime">(.+?)</span>', re.DOTALL).findall(content)[0])
+            self.startdate = parser.parse((re.compile('<span class="datetime">(.+?)</span>', re.DOTALL).findall(content)[0]))
         except IndexError:
             pass
 
@@ -90,17 +86,15 @@ class Scraper():
 
                 # Broadcast Info (stop)
 
-                _start = parser.parse(self.startdate)
                 try:
                     _stop = re.compile('<br>(.+?)<span style="color:#999">', re.DOTALL).findall(content)[0]
                     _pos = _stop.rfind('<br>') + 4
-                    _stop = parser.parse(_stop[_pos:].split('-')[1])
+                    self.enddate = parser.parse(_stop[_pos:].split('-')[1])
                 except IndexError:
-                    _stop = _start
+                    self.enddate = self.startdate
 
-                if _start > _stop: _stop += datetime.timedelta(days=1)
-                self.enddate = datetime.datetime.strftime(_stop, RSS_TIME_FORMAT)
-                self.runtime = str((_stop - _start).seconds / 60)
+                if self.startdate > self.enddate: self.enddate += datetime.timedelta(days=1)
+                self.runtime = str((self.enddate - self.startdate).seconds / 60)
 
                 # Genre
                 try:

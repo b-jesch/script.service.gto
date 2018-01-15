@@ -1,11 +1,7 @@
 #!/usr/bin/python
 
-import re
-import urllib2
-import datetime
+from tools import *
 from dateutil import parser
-
-RSS_TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 
 class Scraper():
     def __init__(self):
@@ -64,8 +60,7 @@ class Scraper():
             pass
 
         try:
-            _ts = re.compile('<title>(.+?)</title>', re.DOTALL).findall(content)[0].split(' | ')[1].split(' ', 1)[1]
-            self.startdate = datetime.datetime.strftime(parser.parse(_ts), RSS_TIME_FORMAT)
+            self.startdate = parser.parse(re.compile('<title>(.+?)</title>', re.DOTALL).findall(content)[0].split(' | ')[1].split(' ', 1)[1])
         except IndexError:
             pass
 
@@ -104,16 +99,14 @@ class Scraper():
 
                 # Broadcast Info (stop)
 
-                _start = parser.parse(self.startdate)
                 try:
                     _s = re.compile('<div class="broadcast-time">(.+?)</div>', re.DOTALL).findall(content)[0].split(' - ')[1]
-                    _stop = _start.replace(hour=int(_s[0:2]), minute=int(_s[3:5]))
+                    self.enddate = self.startdate.replace(hour=int(_s[0:2]), minute=int(_s[3:5]))
                 except IndexError:
-                    _stop = _start
+                    self.enddate = self.startdate
 
-                if _start > _stop: _stop += datetime.timedelta(days=1)
-                self.enddate = datetime.datetime.strftime(_stop, RSS_TIME_FORMAT)
-                self.runtime = str((_stop - _start).seconds / 60)
+                if self.startdate > self.enddate: self.enddate += datetime.timedelta(days=1)
+                self.runtime = str((self.enddate - self.startdate).seconds / 60)
 
                 # Rating
                 try:

@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
-import os,re,xbmc,xbmcgui,xbmcaddon
+from resources.lib.tools import *
+
 
 __addon__ = xbmcaddon.Addon()
 __addonID__ = __addon__.getAddonInfo('id')
@@ -15,40 +16,27 @@ DELAY = 15                      # wait for PVR content
 CYCLE = 60                      # poll cycle
 OSD = xbmcgui.Dialog()
 
-__screenrefresh__ = 0
-__refreshratio__ = 0
-
-# Helpers #
-
-def writeLog(message, level=xbmc.LOGDEBUG):
-        xbmc.log('[%s %s]: %s' % (__addonID__, __version__,  message.encode('utf-8')), level)
-
-# End Helpers #
-
-def getNumVals(setting, multiplicator):
-    try:
-        return int(re.match('\d+', __addon__.getSetting(setting)).group()) * multiplicator
-    except AttributeError:
-        return 0
+OPT_SCREENREFRESH = 0
+REFRESH_RATIO = 0
 
 def getSettings():
-    global __screenrefresh__
-    global __refreshratio__
+    global OPT_SCREENREFRESH
+    global REFRESH_RATIO
 
-    __enableinfo__ = True if __addon__.getSetting('enableinfo').upper() == 'TRUE' else False
-    __prefer_hd__ = True if __addon__.getSetting('prefer_hd').upper() == 'TRUE' else False
-    __mdelay__ = getNumVals('mdelay', 60)
-    __screenrefresh__ = getNumVals('screenrefresh', 60)
-    __refreshratio__ = __mdelay__ / __screenrefresh__
-    __scrapermodule__ = __addon__.getSetting('scraper')
+    OPT_ENABLE_INFO = getAddonSetting('enableinfo', BOOL)
+    OPT_PREFER_HD = getAddonSetting('prefer_hd', BOOL)
+    OPT_MDELAY = getAddonSetting('mdelay', NUM, 60)
+    OPT_SCREENREFRESH = getAddonSetting('screenrefresh', NUM, 60)
+    REFRESH_RATIO = OPT_MDELAY / OPT_SCREENREFRESH
+    OPT_PREFERRED_SCRAPER = getAddonSetting('scraper')
 
     writeLog('Settings (re)loaded')
-    writeLog('preferred scraper module: %s' % (__scrapermodule__))
-    writeLog('Show notifications:       %s' % (__enableinfo__))
-    writeLog('Prefer HD channel:        %s' % (__prefer_hd__))
-    writeLog('Refresh interval content: %s secs' % (__mdelay__))
-    writeLog('Refresh interval widget:  %s secs' % (__screenrefresh__))
-    writeLog('Refreshing ratio:         %s' % (__refreshratio__))
+    writeLog('preferred scraper module: %s' % (OPT_PREFERRED_SCRAPER))
+    writeLog('Show notifications:       %s' % (OPT_ENABLE_INFO))
+    writeLog('Prefer HD channel:        %s' % (OPT_PREFER_HD))
+    writeLog('Refresh interval content: %s secs' % (OPT_MDELAY))
+    writeLog('Refresh interval widget:  %s secs' % (OPT_SCREENREFRESH))
+    writeLog('Refreshing ratio:         %s' % (REFRESH_RATIO))
 
     xbmc.executebuiltin('XBMC.RunScript(script.service.gto,action=scrape)')
 
@@ -62,7 +50,7 @@ class MyMonitor(xbmc.Monitor):
     def onSettingsChanged(self):
         self.settingsChanged = True
         getSettings()
-        xbmc.executebuiltin('XBMC.RunScript(script.service.gto,action=scrape)')
+        # xbmc.executebuiltin('XBMC.RunScript(script.service.gto,action=scrape)')
 
 
 class Starter():
@@ -71,7 +59,7 @@ class Starter():
         pass
 
     def start(self):
-        writeLog('Starting %s V.%s' % (__addonname__, __version__), level=xbmc.LOGNOTICE)
+        writeLog('Starting %s V.%s' % (ADDON_NAME, ADDON_VERSION), level=xbmc.LOGNOTICE)
         getSettings()
 
         HOME.setProperty('PVRisReady', 'no')
@@ -94,11 +82,11 @@ class Starter():
                 xbmc.executebuiltin('XBMC.RunScript(script.service.gto,action=refresh)')
                 _attempts -= 1
 
-            writeLog('Next action %s seconds remaining' % (__screenrefresh__))
-            if monitor.waitForAbort(__screenrefresh__): break
+            writeLog('Next action %s seconds remaining' % (OPT_SCREENREFRESH))
+            if monitor.waitForAbort(OPT_SCREENREFRESH): break
             _c += 1
 
-            if _c >= __refreshratio__:
+            if _c >= REFRESH_RATIO:
                 writeLog('Scraping feeds')
                 xbmc.executebuiltin('XBMC.RunScript(script.service.gto,action=scrape)')
                 _c = 0

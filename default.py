@@ -1,71 +1,29 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+from resources.lib.tools import *
+
 import urllib
 import urllib2
-import os
 import sys
 import socket
-import xbmc
-import xbmcgui
-import xbmcaddon
-import xbmcplugin
 import xbmcvfs
+import xbmcplugin
 import time
-import datetime
-import json
-import re
 
 from dateutil import parser
 
-__addon__ = xbmcaddon.Addon()
-__addonID__ = __addon__.getAddonInfo('id')
-__addonname__ = __addon__.getAddonInfo('name')
-__version__ = __addon__.getAddonInfo('version')
-__path__ = xbmc.translatePath(__addon__.getAddonInfo('path'))
-__profiles__ = __addon__.getAddonInfo('profile')
-__LS__ = __addon__.getLocalizedString
-
-HOME = xbmcgui.Window(10000)
-OSD = xbmcgui.Dialog()
-
-EPOCH = datetime.datetime(1970, 1, 1)
-RSS_TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
-
-__xml__ = xbmc.translatePath('special://skin').split(os.sep)[-2] + '.script-gto-info.xml'
-
-__usertranslations__ = xbmc.translatePath(os.path.join(__profiles__, 'ChannelTranslate.json'))
-
-__prefer_hd__ = True if __addon__.getSetting('prefer_hd').upper() == 'TRUE' else False
-__enableinfo__ = True if __addon__.getSetting('enableinfo').upper() == 'TRUE' else False
-__pvronly__ = True if __addon__.getSetting('pvronly').upper() == 'TRUE' else False
-__preferred_scraper__ = __addon__.getSetting('scraper')
-
-mod = __import__(__preferred_scraper__, locals(), globals(), fromlist=['Scraper'])
+try:
+    mod = __import__(OPT_PREFERRED_SCRAPER, locals(), globals(), fromlist=['Scraper'])
+except ImportError:
+    mod = __import__(SCRAPER_DEFAULT, locals(), globals(), fromlist=['Scraper'])
 Scraper = getattr(mod, 'Scraper')
 
-# Helpers
+if not os.path.isfile(USER_TRANSLATIONS):
+    xbmcvfs.copy(os.path.join(ADDON_PATH, 'ChannelTranslate.json'), USER_TRANSLATIONS)
 
-def getScraperIcon(icon):
-    return os.path.join(__path__, 'resources', 'lib', 'media', icon)
-
-def notifyOSD(header, message, icon=xbmcgui.NOTIFICATION_INFO, disp=4000, enabled=__enableinfo__):
-    if enabled:
-        OSD.notification(header.encode('utf-8'), message.encode('utf-8'), icon, disp)
-
-def writeLog(message, level=xbmc.LOGDEBUG):
-        try:
-            xbmc.log('[%s %s]: %s' % (__addonID__, __version__,  message.encode('utf-8')), level)
-        except Exception:
-            xbmc.log('[%s %s]: %s' % (__addonID__, __version__,  'Fatal: Message could not displayed'), xbmc.LOGERROR)
-
-# End Helpers
-
-if not os.path.isfile(__usertranslations__):
-    xbmcvfs.copy(os.path.join(__path__, 'ChannelTranslate.json'), __usertranslations__)
-
-writeLog('Getting PVR translations from %s' % (__usertranslations__), xbmc.LOGDEBUG)
-with open(__usertranslations__, 'r') as transfile:
+writeLog('Getting PVR translations from %s' % (USER_TRANSLATIONS), xbmc.LOGDEBUG)
+with open(USER_TRANSLATIONS, 'r') as transfile:
     ChannelTranslate=transfile.read().rstrip('\n')
 
 infoprops = ['Title', 'Picture', 'Subtitle', 'Description', 'Channel', 'ChannelID', 'Logo', 'Date', 'StartTime', 'RunTime', 'EndTime', 'Genre', 'Cast', 'isRunning', 'isInFuture', 'isInDB', 'dbTitle', 'dbOriginalTitle', 'Fanart', 'dbTrailer', 'dbRating', 'dbUserRating', 'BroadcastID', 'hasTimer', 'BlobID']
@@ -121,29 +79,15 @@ def ParamsToDict(parameters):
                 paramDict[paramSplits[0]] = paramSplits[1]
     return paramDict
 
-# get used dateformat of kodi
-
-def getDateFormat():
-    df = xbmc.getRegion('dateshort')
-    tf = xbmc.getRegion('time').split(':')
-
-    try:
-        # time format is 12h with am/pm
-        return df + ' ' + tf[0][0:2] + ':' + tf[1] + ' ' + tf[2].split()[1]
-    except IndexError:
-        # time format is 24h with or w/o leading zero
-        return df + ' ' + tf[0][0:2] + ':' + tf[1]
-
 # determine and change scraper modules
 
 def changeScraper():
-    _scraperdir = os.path.join(__path__, 'resources', 'lib')
     _scrapers = []
     _scraperdict = []
-    for module in os.listdir(_scraperdir):
-        if module in ('__init__.py') or module[-3:] != '.py': continue
+    for module in os.listdir(SCRAPER_FOLDER):
+        if module in (['__init__.py', 'tools.py']) or module[-3:] != '.py': continue
         writeLog('Found Scraper Module %s' % (module))
-        mod = __import__('resources.lib.%s' % (module[:-3]), locals(), globals(), fromlist=['Scraper'])
+        mod = __import__('%s.%s' % (SCRAPER_MODULPATH, module[:-3]), locals(), globals(), fromlist=['Scraper'])
         ScraperClass = getattr(mod, 'Scraper')
 
         if not ScraperClass().enabled: continue
@@ -151,32 +95,19 @@ def changeScraper():
                              'shortname': ScraperClass().shortname,
                              'baseurl': ScraperClass().baseurl,
                              'icon': ScraperClass().icon,
-                             'module': 'resources.lib.%s' % (module[:-3])})
+                             'module': '%s.%s' % (SCRAPER_MODULPATH, module[:-3])})
 
     _scraperdict.sort()
     for scrapers in _scraperdict:
         liz = xbmcgui.ListItem(label=scrapers['name'], label2=scrapers['baseurl'], iconImage=getScraperIcon(scrapers['icon']))
         _scrapers.append(liz)
-    _idx = xbmcgui.Dialog().select(__LS__(30111), _scrapers, useDetails=True)
+    _idx = xbmcgui.Dialog().select(LOC(30111), _scrapers, useDetails=True)
     if _idx > -1:
         writeLog('selected scrapermodule is %s' % (_scraperdict[_idx]['module']))
-        __addon__.setSetting('scraper', _scraperdict[_idx]['module'])
-        __addon__.setSetting('setscraper', _scraperdict[_idx]['shortname'])
+        ADDON.setSetting('scraper', _scraperdict[_idx]['module'])
+        ADDON.setSetting('setscraper', _scraperdict[_idx]['shortname'])
 
 # convert datetime string to timestamp with workaround python bug (http://bugs.python.org/issue7980) - Thanks to BJ1
-
-def date2timeStamp(date, format):
-    try:
-        dtime = datetime.datetime.strptime(date, format)
-    except TypeError:
-        try:
-            dtime = datetime.datetime.fromtimestamp(time.mktime(time.strptime(date, format)))
-        except ValueError:
-            return False
-    except Exception:
-        return False
-    return int(time.mktime(dtime.timetuple()))
-
 
 def utc_to_local_datetime(utc_datetime):
     delta = utc_datetime - EPOCH
@@ -188,15 +119,6 @@ def utc_to_local_datetime(utc_datetime):
 # get pvr channelname, translate from Scraper to pvr channelname if necessary
 
 def channelName2pvrId(channelname):
-    query = {
-            "jsonrpc": "2.0",
-            "method": "PVR.GetChannels",
-            "params": {"channelgroupid": "alltv"},
-            "id": 1
-            }
-    res = json.loads(xbmc.executeJSONRPC(json.dumps(query, encoding='utf-8')))
-
-    # translate via json if necessary
     translations = json.loads(str(ChannelTranslate))
     for translation in translations:
         for names in translation['name']:
@@ -204,54 +126,57 @@ def channelName2pvrId(channelname):
                 writeLog("Translating %s to %s" % (channelname, translation['pvrname']))
                 channelname = translation['pvrname']
                 break
-    
-    if 'result' in res and 'channels' in res['result']:
-        res = res['result'].get('channels')
-        for channels in res:
+
+    query = {
+            "method": "PVR.GetChannels",
+            "params": {"channelgroupid": "alltv"},
+            }
+    res = jsonrpc(query)
+    try:
+        for channels in res.get('channels'):
 
             # prefer HD Channel if available
-            if __prefer_hd__ and  (channelname + " HD").lower() == channels['label'].lower():
-                writeLog("GTO found HD priorized channel %s" % (channels['label']))
-                return channels['channelid']
 
-            if channelname.lower() == channels['label'].lower():
-                writeLog("GTO found channel %s" % (channels['label']))
-                return channels['channelid']
+            if OPT_PREFER_HD and  (channelname + " HD").lower() == channels.get('label').lower():
+                writeLog("GTO found HD priorized channel %s" % (channels.get('label')))
+                return channels.get('channelid')
+
+            if channelname.lower() == channels.get('label').lower():
+                writeLog("GTO found channel %s" % (channels.get('label')))
+                return channels.get('channelid')
+    except AttributeError, e:
+        writeLog('Could not get ID from %s: %s' % (channelname, e.message), xbmc.LOGERROR)
     return False
 
 # get pvr channelname by id
 
 def getPvrChannelName(channelid, fallback):
     query = {
-            "jsonrpc": "2.0",
             "method": "PVR.GetChannels",
             "params": {"channelgroupid": "alltv"},
-            "id": 1
             }
-    res = json.loads(xbmc.executeJSONRPC(json.dumps(query, encoding='utf-8')))
-    if 'result' in res and 'channels' in res['result']:
-        res = res['result'].get('channels')
-        for channels in res:
-            if channels['channelid'] == channelid:
-                writeLog("GTO found id for channel %s" % (channels['label']))
-                return channels['label']
+    res = jsonrpc(query)
+    try:
+        for channels in res.get('channels'):
+            if channels.get('channelid') == channelid:
+                writeLog("GTO found id for channel %s" % (channels.get('label')))
+                return channels.get('label')
+    except AttributeError, e:
+        writeLog('Could not get station name: %s' % (e.message), level=xbmc.LOGERROR)
     return fallback + '*'
 
 # get pvr channel logo url
 
 def getStationLogo(channelid, fallback):
     query = {
-            "jsonrpc": "2.0",
             "method": "PVR.GetChannelDetails",
             "params": {"channelid": channelid, "properties": ["thumbnail"]},
-            "id": 1
             }
-    res = json.loads(xbmc.executeJSONRPC(json.dumps(query, encoding='utf-8')))
+    res = jsonrpc(query)
     try:
-        if 'result' in res and 'channeldetails' in res['result'] and 'thumbnail' in res['result']['channeldetails']:
-            return urllib.unquote_plus(res['result']['channeldetails']['thumbnail']).split('://', 1)[1][:-1]
-    except IndexError, e:
-            writeLog('Could not get station logo: %s' % (e.message), level=xbmc.LOGERROR)
+        return urllib.unquote_plus(res.get('channeldetails').get('thumbnail')).split('://', 1)[1][:-1]
+    except (AttributeError, IndexError,), e:
+        writeLog('Could not get station logo: %s' % (e.message), level=xbmc.LOGERROR)
     return fallback
 
 def switchToChannel(pvrid):
@@ -261,13 +186,11 @@ def switchToChannel(pvrid):
     '''
     writeLog('Switch to channel id %s' % (pvrid))
     query = {
-        "jsonrpc": "2.0",
-        "id": 1,
         "method": "Player.Open",
         "params": {"item": {"channelid": int(pvrid)}}
         }
-    res = json.loads(xbmc.executeJSONRPC(json.dumps(query, encoding='utf-8')))
-    if 'result' in res and res['result'] == 'OK':
+    res = jsonrpc(query)
+    if res == 'OK':
         writeLog('Successfull switched to channel id %s' % (pvrid))
     else:
         writeLog('Couldn\'t switch to channel id %s' % (pvrid))
@@ -282,19 +205,15 @@ def getRecordingCapabilities(pvrid, datetime2):
     params = {'broadcastid': None, 'hastimer': False}
     if not pvrid: return params
     query = {
-        "jsonrpc": "2.0",
-        "id": 1,
         "method": "PVR.GetBroadcasts",
         "params": {"channelid": pvrid,
                    "properties": ["title", "starttime", "hastimer"]}
     }
-    res = json.loads(xbmc.executeJSONRPC(json.dumps(query, encoding='utf-8', ensure_ascii=False)))
-    if 'result' in res and 'broadcasts' in res['result']:
-        for broadcast in res['result']['broadcasts']:
-            _ltt = utc_to_local_datetime(parser.parse(broadcast['starttime'])).strftime(RSS_TIME_FORMAT)
-            # writeLog('%s: %s' % (_lt, broadcast['title']))
-            if _ltt == datetime2:
-                params.update({'broadcastid': broadcast['broadcastid'], 'hastimer': broadcast['hastimer']})
+    res = jsonrpc(query)
+    for broadcast in res.get('broadcasts'):
+        _ltt = utc_to_local_datetime(parser.parse(broadcast['starttime'])).strftime(LOCAL_DATE_FORMAT)
+        if _ltt == datetime2:
+            params.update({'broadcastid': broadcast['broadcastid'], 'hastimer': broadcast['hastimer']})
     return params
 
 
@@ -304,16 +223,14 @@ def setTimer(broadcastId, blobId):
     :return:            none
     '''
     query = {
-        "jsonrpc": "2.0",
-        "id": 1,
         "method": "PVR.AddTimer",
         "params": {"broadcastid": int(broadcastId)}
     }
-    res = json.loads(xbmc.executeJSONRPC(json.dumps(query, encoding='utf-8')))
-    if 'result' in res and res['result'] == 'OK':
+    res = jsonrpc(query)
+    if res == 'OK':
         writeLog('Timer of blob #%s successful added' % (blobId))
         blob = eval(HOME.getProperty('GTO.%s' % (blobId)))
-        blob.update(getRecordingCapabilities(blob['pvrid'], blob['datetime2']))
+        blob.update(getRecordingCapabilities(blob['pvrid'], blob['datetime']))
         HOME.setProperty('GTO.%s' % (blobId), str(blob))
         HOME.setProperty('GTO.timestamp', str(int(time.time()) / 5))
     else:
@@ -335,7 +252,7 @@ def isInDataBase(title):
 
     titlepart = re.findall('[:-]', title)
     params = {'isInDB': False}
-    query = {"jsonrpc": "2.0", "id": 1, "method": "VideoLibrary.GetMovies"}
+    query = {"method": "VideoLibrary.GetMovies"}
     rpcQuery = [{"params": {"properties": ["title", "originaltitle", "fanart", "trailer", "rating", "userrating"],
                        "sort": {"method": "label"},
                        "filter": {"field": "title", "operator": "is", "value": title}}},
@@ -353,7 +270,7 @@ def isInDataBase(title):
     for i in range(0, len(rpcQuery) + 1):
         if i == 0:
             writeLog('Try exact matching of search pattern')
-            query.update(rpcQuery[i])
+            # query.update(rpcQuery[i])
         elif i == 1:
             writeLog('No movie(s) with exact pattern found, try fuzzy filters')
             if len(title.split()) < 3:
@@ -372,25 +289,25 @@ def isInDataBase(title):
             return params
 
         query.update(rpcQuery[i])
-        res = json.loads(xbmc.executeJSONRPC(json.dumps(query, encoding='utf-8')))
-        if 'movies' in res['result']: break
+        res = jsonrpc(query)
+        if 'movies' in res: break
 
-    writeLog('Found %s matches for movie(s) in database, select first' % (len(res['result']['movies'])))
+    writeLog('Found %s matches for movie(s) in database, select first' % (len(res['movies'])))
 
     try:
-        _fanart = urllib.unquote_plus(res['result']['movies'][0]['fanart']).split('://', 1)[1][:-1]
+        _fanart = urllib.unquote_plus(res['movies'][0]['fanart']).split('://', 1)[1][:-1]
     except IndexError:
-        writeLog('Fanart: %s' % (urllib.unquote_plus(res['result']['movies'][0]['fanart'])))
+        writeLog('Fanart: %s' % (urllib.unquote_plus(res['movies'][0]['fanart'])))
         _fanart = ''
 
     _userrating = '0'
-    if res['result']['movies'][0]['userrating'] != '': _userrating = res['result']['movies'][0]['userrating']
+    if res['movies'][0]['userrating'] != '': _userrating = res['movies'][0]['userrating']
     params.update({'isInDB': True,
-                   'db_title': unicode(res['result']['movies'][0]['title']),
-                   'db_originaltitle': unicode(res['result']['movies'][0]['originaltitle']),
+                   'db_title': unicode(res['movies'][0]['title']),
+                   'db_originaltitle': unicode(res['movies'][0]['originaltitle']),
                    'db_fanart': unicode(_fanart),
-                   'db_trailer': unicode(res['result']['movies'][0]['trailer']),
-                   'db_rating': round(float(res['result']['movies'][0]['rating']), 1),
+                   'db_trailer': unicode(res['movies'][0]['trailer']),
+                   'db_rating': round(float(res['movies'][0]['rating']), 1),
                    'db_userrating': int(_userrating)})
     return params
 
@@ -401,10 +318,10 @@ def clearInfoProperties():
     for property in infoprops:
         HOME.clearProperty('GTO.Info.%s' % (property))
 
-def refreshWidget(handle=None, notify=__enableinfo__):
+def refreshWidget(handle=None, notify=OPT_ENABLE_INFO):
 
     blobs = int(HOME.getProperty('GTO.blobs') or '0') + 1
-    notifyOSD(__LS__(30010), __LS__(30109) % ((Scraper().shortname).decode('utf-8')), icon=getScraperIcon(Scraper().icon), enabled=notify)
+    notifyOSD(LOC(30010), LOC(30109) % ((Scraper().shortname).decode('utf-8')), icon=getScraperIcon(Scraper().icon), enabled=notify)
 
     widget = 1
     for i in range(1, blobs, 1):
@@ -416,7 +333,7 @@ def refreshWidget(handle=None, notify=__enableinfo__):
             writeLog('Could not read blob #%s properly' % (i))
             continue
 
-        if __pvronly__ and not blob['pvrid']:
+        if OPT_PVR_ONLY and not blob['pvrid']:
             writeLog("Channel %s is not in PVR, discard entry" % (blob['channel']))
             HOME.setProperty('PVRisReady', 'no')
             continue
@@ -429,8 +346,8 @@ def refreshWidget(handle=None, notify=__enableinfo__):
         wid.setArt({'thumb': blob['thumb'], 'logo': blob['logo']})
 
         wid.setProperty('DateTime', blob['datetime'])
-        wid.setProperty('StartTime', blob['datetime'].split()[1][0:5])
-        wid.setProperty('EndTime', blob['enddate'].split()[1][0:5])
+        # wid.setProperty('StartTime', parser.parse(blob['datetime']).split()[1][0:5])
+        wid.setProperty('EndTime', datetime.datetime.strftime(parser.parse(blob['enddate']), getTimeFormat()))
         wid.setProperty('ChannelID', str(blob['pvrid']))
         wid.setProperty('BlobID', str(i))
         wid.setProperty('isInDB', str(blob['isInDB']))
@@ -450,12 +367,12 @@ def refreshWidget(handle=None, notify=__enableinfo__):
         HOME.setProperty('GTO.timestamp', str(int(time.time()) / 5))
     xbmc.executebuiltin('Container.Refresh')
 
-def scrapeGTOPage(enabled=__enableinfo__):
+def scrapeGTOPage(enabled=OPT_ENABLE_INFO):
 
     data = Scraper()
-    data.err404 = os.path.join(__path__, 'resources', 'lib', 'media', data.err404)
+    data.err404 = os.path.join(ADDON_PATH, 'resources', 'lib', 'media', data.err404)
 
-    notifyOSD(__LS__(30010), __LS__(30018) % ((data.shortname).decode('utf-8')), icon=getScraperIcon(data.icon), enabled=enabled)
+    notifyOSD(LOC(30010), LOC(30018) % ((data.shortname).decode('utf-8')), icon=getScraperIcon(data.icon), enabled=enabled)
     writeLog('Start scraping from %s' % (data.rssurl))
 
     content = getUnicodePage(data.rssurl, container=data.selector)
@@ -487,32 +404,34 @@ def scrapeGTOPage(enabled=__enableinfo__):
         writeLog('Scraping details from %s' % (data.detailURL))
         data.scrapeDetailPage(details, data.detailselector)
 
+        '''
         now = datetime.datetime.now()
         try:
             end = parser.parse(data.enddate)
         except ValueError:
             writeLog('Could not determine end of broadcast, discard blob', xbmc.LOGERROR)
             continue
+        '''
 
-        if end < now:
+        if data.enddate < datetime.datetime.now():
             writeLog('Broadcast has finished already, discard blob')
             continue
 
-        _datetime = datetime.datetime.strftime( parser.parse(data.startdate), getDateFormat())
+        # _datetime = datetime.datetime.strftime( parser.parse(data.startdate), getDateFormat())
         blob = {
                 'title': unicode(entity2unicode(data.title)),
                 'thumb': unicode(data.thumb),
-                'datetime': _datetime,
-                'datetime2': data.startdate,
+                # 'datetime': _datetime,
+                # 'datetime2': data.startdate,
+                'datetime': datetime.datetime.strftime(data.startdate, LOCAL_DATE_FORMAT),
                 'runtime': data.runtime,
-                'enddate': data.enddate,
+                'enddate': datetime.datetime.strftime(data.enddate, LOCAL_DATE_FORMAT),
                 'channel': unicode(data.channel),
                 'pvrchannel': unicode(channel),
                 'pvrid': pvrid,
                 'logo': unicode(logoURL),
                 'genre': unicode(entity2unicode(data.genre)),
                 'plot': unicode(entity2unicode(data.plot)),
-                # 'popup': unicode(data.detailURL),
                 'cast': unicode(entity2unicode(data.cast)),
                 'rating': data.rating
                }
@@ -523,7 +442,7 @@ def scrapeGTOPage(enabled=__enableinfo__):
 
         # check timer capabilities
 
-        blob.update(getRecordingCapabilities(blob['pvrid'], blob['datetime2']))
+        blob.update(getRecordingCapabilities(blob['pvrid'], blob['datetime']))
 
         writeLog('')
         writeLog('blob:            #%s' % (idx))
@@ -538,7 +457,7 @@ def scrapeGTOPage(enabled=__enableinfo__):
             writeLog('   User rating:  %s' % blob['db_userrating'])
         writeLog('Thumb:           %s' % (blob['thumb']))
         writeLog('Date & time:     %s' % (blob['datetime']))
-        writeLog('Date & time (2): %s' % (blob['datetime2']))
+        # writeLog('Date & time (2): %s' % (blob['datetime2']))
         writeLog('End date:        %s' % (blob['enddate']))
         writeLog('Running time:    %s' % (blob['runtime']))
         writeLog('Channel (GTO):   %s' % (blob['channel']))
@@ -559,7 +478,7 @@ def scrapeGTOPage(enabled=__enableinfo__):
     HOME.setProperty('GTO.blobs', str(idx - 1))
     writeLog('%s items scraped and written to blobs' % (idx - 1))
     if (idx - 1) == 0:
-        notifyOSD(__LS__(30010), __LS__(30132), icon=getScraperIcon(Scraper().icon), enabled=enabled)
+        notifyOSD(LOC(30010), LOC(30132), icon=getScraperIcon(Scraper().icon), enabled=enabled)
     HOME.setProperty('GTO.timestamp', str(int(time.time()) / 5))
     xbmc.executebuiltin('Container.Refresh')
 
@@ -573,7 +492,7 @@ def showInfoWindow(blobId, showWindow=True):
         return False
 
     blob = eval(HOME.getProperty('GTO.%s' % (blobId)))
-    blob.update(getRecordingCapabilities(blob['pvrid'], blob['datetime2']))
+    blob.update(getRecordingCapabilities(blob['pvrid'], blob['datetime']))
 
     clearInfoProperties()
 
@@ -584,7 +503,7 @@ def showInfoWindow(blobId, showWindow=True):
             HOME.setProperty("GTO.Info.hasTimer", str(blob['hastimer']))
 
         _now = datetime.datetime.now()
-        _start = parser.parse(blob['datetime2'])
+        _start = parser.parse(blob['datetime'])
         _end = parser.parse(blob['enddate'])
 
         if _start >= _now:
@@ -597,7 +516,7 @@ def showInfoWindow(blobId, showWindow=True):
     HOME.setProperty("GTO.Info.BlobID", str(blobId))
     HOME.setProperty("GTO.Info.Title", blob['title'])
     HOME.setProperty("GTO.Info.Picture", blob['thumb'])
-    HOME.setProperty("GTO.Info.Description", blob['plot'] or __LS__(30140))
+    HOME.setProperty("GTO.Info.Description", blob['plot'] or LOC(30140))
     HOME.setProperty("GTO.Info.Channel", blob['pvrchannel'])
     HOME.setProperty("GTO.Info.ChannelID", str(blob['pvrid']))
     HOME.setProperty("GTO.Info.Logo", blob['logo'])
@@ -617,7 +536,7 @@ def showInfoWindow(blobId, showWindow=True):
         HOME.setProperty("GTO.Info.dbUserRating", str(blob['db_userrating']))
 
     if showWindow:
-        Popup = xbmcgui.WindowXMLDialog(__xml__, __path__)
+        Popup = xbmcgui.WindowXMLDialog(INFO_XML, ADDON_PATH)
         Popup.doModal()
         del Popup
 

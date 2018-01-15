@@ -1,11 +1,7 @@
 #!/usr/bin/python
 
-import re
-import urllib2
-import datetime
+from tools import *
 from dateutil import parser
-
-RSS_TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 
 
 class Scraper():
@@ -61,10 +57,9 @@ class Scraper():
         self.reset()
 
         try:
-            self.starttime = re.compile('<title>(.+?)</title>', re.DOTALL).findall(content)[0].split(' | ')[0]
             _ts = re.compile('<title>(.+?)</title>', re.DOTALL).findall(content)[0].split(' | ')[0]
             _ds = datetime.datetime.today()
-            self.startdate = datetime.datetime.strftime(_ds.replace(hour=int(_ts[0:2]), minute=int(_ts[3:5])), RSS_TIME_FORMAT)
+            self.startdate = _ds.replace(hour=int(_ts[0:2]), minute=int(_ts[3:5]))
             self.channel = re.compile('<title>(.+?)</title>', re.DOTALL).findall(content)[0].split(' | ')[1]
             self.title = re.compile('<title>(.+?)</title>', re.DOTALL).findall(content)[0].split(' | ')[2]
             self.detailURL = re.compile('<link>(.+?)</link>', re.DOTALL).findall(content)[0]
@@ -89,16 +84,14 @@ class Scraper():
 
                 # Broadcast Info (stop)
 
-                _start = parser.parse(self.startdate)
                 try:
                     _s = re.compile('<span class="time">(.+?)</span>', re.DOTALL).findall(content)[2].split(' - ')[1]
-                    _stop = _start.replace(hour=int(_s[0:2]), minute=int(_s[3:5]))
+                    self.enddate = self.startdate.replace(hour=int(_s[0:2]), minute=int(_s[3:5]))
                 except IndexError:
-                    _stop = _start
+                    self.enddate = self.startdate
 
-                if _start > _stop: _stop += datetime.timedelta(days=1)
-                self.enddate = datetime.datetime.strftime(_stop, RSS_TIME_FORMAT)
-                self.runtime = str((_stop - _start).seconds / 60)
+                if self.startdate > self.enddate: self.enddate += datetime.timedelta(days=1)
+                self.runtime = str((self.enddate - self.startdate).seconds / 60)
 
                 # Cast
                 try:

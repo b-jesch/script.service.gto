@@ -1,12 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import re
-import urllib2
-import datetime
+from tools import *
 from dateutil import parser
-
-RSS_TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 
 class Scraper():
     def __init__(self):
@@ -66,7 +62,8 @@ class Scraper():
             pass
 
         try:
-            self.startdate = (re.compile('<dc:date>(.+?)</dc:date>', re.DOTALL).findall(content)[0][0:19]).replace('T', ' ').replace('.', '-')
+            self.startdate = parser.parse((re.compile('<dc:date>(.+?)</dc:date>',
+                                                  re.DOTALL).findall(content)[0][0:19]).replace('T', ' ').replace('.', '-'))
         except IndexError:
             pass
 
@@ -102,16 +99,15 @@ class Scraper():
 
                 # Enddate
 
-                _start = parser.parse(self.startdate)
                 try:
-                    _s = re.compile('<div class="day">(.+?)<div class="labels">', re.DOTALL).findall(content)[0].split('/')[1].split(' - ')[1].strip()
-                    _stop = _start.replace(hour=int(_s[0:2]), minute=int(_s[3:5]))
+                    _s = re.compile('<div class="day">(.+?)<div class="labels">',
+                                    re.DOTALL).findall(content)[0].split('/')[1].split(' - ')[1].strip()
+                    self.enddate = self.startdate.replace(hour=int(_s[0:2]), minute=int(_s[3:5]))
                 except IndexError:
-                    _stop = _start
+                    self.enddate = self.startdate
 
-                if _start > _stop: _stop += datetime.timedelta(days=1)
-                self.enddate = datetime.datetime.strftime(_stop, RSS_TIME_FORMAT)
-                self.runtime = str((_stop - _start).seconds / 60)
+                if self.startdate > self.enddate: self.enddate += datetime.timedelta(days=1)
+                self.runtime = str((self.enddate - self.startdate).seconds / 60)
 
         except TypeError:
             pass

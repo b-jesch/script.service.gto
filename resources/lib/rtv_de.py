@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
-import re
-import urllib2
+from tools import *
+from dateutil import parser
 
 class Scraper():
 

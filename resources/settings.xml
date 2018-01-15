@@ -7,5 +7,5 @@
     <setting id="screenrefresh" type="labelenum" label="30128" lvalues="30151|30152|30153|30154|30155|30156" default="15 mins" />
     <setting id="pvronly" type="bool" label="30126" default="false" />
     <setting id="prefer_hd" type="bool" label="30113" default="true" />
-    <setting id="scraper" value="resources.lib.rtv_de" default="resources.lib.klack_de" />
+    <setting id="scraper" value="resources.lib.rtv_de" default="resources.lib.scraper.klack_de" />
 </settings>
