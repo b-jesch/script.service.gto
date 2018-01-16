@@ -12,9 +12,9 @@ The script has a service which runs at Kodi start and fetches the data depending
 
 ## Skintegration:
 
-Um die TV Highlights des Tages in Confluence zu integrieren, bitte die Hinweise in der README.txt im Ordner integration beachten! Ansonsten lässt sich das Addon auch als TV-Widget in andere Skins einbinden. Dazu benutzt das Addon eine Methode namens "Dynamic List Content". Die Integration durch den Skinner erfolgt durch den Aufruf von
+Um die TV Highlights des Tages in Esturay zu integrieren, bitte die Hinweise in der README.txt im Ordner integration beachten! Ansonsten lässt sich das Addon auch als TV-Widget in andere Skins einbinden. Dazu benutzt das Addon eine Methode namens "Dynamic List Content". Die Integration durch den Skinner erfolgt durch den Aufruf von
 
-To integrate the TV highlights of the day in Confluence, please follow the instructions in the README.txt in the folder integration! Otherwise, the addon can be integrated into other skins as a TV Widget too. The addon use a method called "Dynamic List Content". The integration by the skinner is done by calling:
+To integrate the TV highlights of the day in Estuary, please follow the instructions in the README.txt in the folder integration! Otherwise, the addon can be integrated into other skins as a TV Widget too. The addon use a method called "Dynamic List Content". The integration by the skinner is done by calling:
 
     <content target="pvr">plugin://script.service.gto?action=getcontent&amp;ts=$INFO[Window(Home).Property(GTO.timestamp)]</content>
 
@@ -75,7 +75,6 @@ Als Condition lässt sich das Vorhandensein einer Broadcast-ID verwenden. Danebe
     - ListItem.Duration               Laufzeit in Minuten / Runtime in minutes
 
     - ListItem.Property(DateTime)     Startdatum und Zeit, wie in Kodi Einstellungen Datum und Zeit (ohne Sek.) / Datetime of broadcast start
-    - ListItem.Property(StartTime)    Startzeit (20:15) / start time
     - ListItem.Property(EndTime)      Ende der Sendung (22:00) / end time
     - ListItem.Property(ChannelID)    PVR Channel ID, wird zum Umschalten per json benötigt / Channel ID of PVR, needed for channel switch
     - ListItem.Property(BlobID)       ID der Datenblase zur Sendung ID / data blob ID of the broadcast
@@ -103,6 +102,7 @@ Als Condition lässt sich das Vorhandensein einer Broadcast-ID verwenden. Danebe
     - GTO.Info.StartTime              Startzeit (hh:mm) / start time
     - GTO.Info.EndTime                Endzeit (hh:mm) / end time
     - GTO.Info.Cast                   Darsteller / cast
+    - GTO.Info.Rating                 Rating
     - GTO.Info.hasTimer               gesetzter Aufnahmetimer (True/False) /active recording timer
     - GTO.Info.BroadcastID            Broadcast-ID des Timers
     - GTO.Info.isInDB                 'True|False' (ähnlicher) Film existiert bereits in Bibliothek / (similar) movie already exists in database
