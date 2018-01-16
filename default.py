@@ -212,10 +212,14 @@ def getRecordingCapabilities(pvrid, datetime2):
                    "properties": ["title", "starttime", "hastimer"]}
     }
     res = jsonrpc(query)
-    for broadcast in res.get('broadcasts'):
-        _ltt = utc_to_local_datetime(parser.parse(broadcast['starttime'])).strftime(LOCAL_DATE_FORMAT)
-        if _ltt == datetime2:
-            params.update({'broadcastid': broadcast['broadcastid'], 'hastimer': broadcast['hastimer']})
+    try:
+        for broadcast in res.get('broadcasts'):
+            _ltt = utc_to_local_datetime(parser.parse(broadcast['starttime'])).strftime(LOCAL_DATE_FORMAT)
+            if _ltt == datetime2:
+                params.update({'broadcastid': broadcast['broadcastid'], 'hastimer': broadcast['hastimer']})
+                break
+    except AttributeError, e:
+        writeLog('Could not determine broadcast for pvr ID %s: %s' % (pvrid, e.message), xbmc.LOGERROR)
     return params
 
 
