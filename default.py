@@ -218,7 +218,7 @@ def getRecordingCapabilities(pvrid, datetime2):
             if _ltt == datetime2:
                 params.update({'broadcastid': broadcast['broadcastid'], 'hastimer': broadcast['hastimer']})
                 break
-    except AttributeError, e:
+    except TypeError, e:
         writeLog('Could not determine broadcast for pvr ID %s: %s' % (pvrid, e.message), xbmc.LOGERROR)
     return params
 

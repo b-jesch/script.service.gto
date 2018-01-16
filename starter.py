@@ -39,7 +39,6 @@ class Starter():
     def start(self):
         writeLog('Starting %s V.%s' % (ADDON_NAME, ADDON_VERSION), level=xbmc.LOGNOTICE)
         loadSettings()
-        xbmc.executebuiltin('XBMC.RunScript(script.service.gto,action=scrape)')
 
         HOME.setProperty('PVRisReady', 'no')
 
