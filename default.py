@@ -13,6 +13,8 @@ import time
 
 from dateutil import parser
 
+loadSettings()
+
 try:
     mod = __import__(OPT_PREFERRED_SCRAPER, locals(), globals(), fromlist=['Scraper'])
 except ImportError:
@@ -270,7 +272,6 @@ def isInDataBase(title):
     for i in range(0, len(rpcQuery) + 1):
         if i == 0:
             writeLog('Try exact matching of search pattern')
-            # query.update(rpcQuery[i])
         elif i == 1:
             writeLog('No movie(s) with exact pattern found, try fuzzy filters')
             if len(title.split()) < 3:
@@ -346,7 +347,6 @@ def refreshWidget(handle=None, notify=OPT_ENABLE_INFO):
         wid.setArt({'thumb': blob['thumb'], 'logo': blob['logo']})
 
         wid.setProperty('DateTime', blob['datetime'])
-        # wid.setProperty('StartTime', parser.parse(blob['datetime']).split()[1][0:5])
         wid.setProperty('EndTime', datetime.datetime.strftime(parser.parse(blob['enddate']), getTimeFormat()))
         wid.setProperty('ChannelID', str(blob['pvrid']))
         wid.setProperty('BlobID', str(i))
@@ -404,25 +404,13 @@ def scrapeGTOPage(enabled=OPT_ENABLE_INFO):
         writeLog('Scraping details from %s' % (data.detailURL))
         data.scrapeDetailPage(details, data.detailselector)
 
-        '''
-        now = datetime.datetime.now()
-        try:
-            end = parser.parse(data.enddate)
-        except ValueError:
-            writeLog('Could not determine end of broadcast, discard blob', xbmc.LOGERROR)
-            continue
-        '''
-
         if data.enddate < datetime.datetime.now():
             writeLog('Broadcast has finished already, discard blob')
             continue
 
-        # _datetime = datetime.datetime.strftime( parser.parse(data.startdate), getDateFormat())
         blob = {
                 'title': unicode(entity2unicode(data.title)),
                 'thumb': unicode(data.thumb),
-                # 'datetime': _datetime,
-                # 'datetime2': data.startdate,
                 'datetime': datetime.datetime.strftime(data.startdate, LOCAL_DATE_FORMAT),
                 'runtime': data.runtime,
                 'enddate': datetime.datetime.strftime(data.enddate, LOCAL_DATE_FORMAT),
@@ -457,7 +445,6 @@ def scrapeGTOPage(enabled=OPT_ENABLE_INFO):
             writeLog('   User rating:  %s' % blob['db_userrating'])
         writeLog('Thumb:           %s' % (blob['thumb']))
         writeLog('Date & time:     %s' % (blob['datetime']))
-        # writeLog('Date & time (2): %s' % (blob['datetime2']))
         writeLog('End date:        %s' % (blob['enddate']))
         writeLog('Running time:    %s' % (blob['runtime']))
         writeLog('Channel (GTO):   %s' % (blob['channel']))
@@ -521,11 +508,11 @@ def showInfoWindow(blobId, showWindow=True):
     HOME.setProperty("GTO.Info.ChannelID", str(blob['pvrid']))
     HOME.setProperty("GTO.Info.Logo", blob['logo'])
     HOME.setProperty("GTO.Info.Date", blob['datetime'])
-    HOME.setProperty("GTO.Info.StartTime", blob['datetime'].split()[1][0:5])
     HOME.setProperty("GTO.Info.RunTime", blob['runtime'])
-    HOME.setProperty("GTO.Info.EndTime", blob['enddate'].split()[1][0:5])
+    HOME.setProperty("GTO.Info.EndTime", datetime.datetime.strftime(parser.parse(blob['enddate']), LOCAL_TIME_FORMAT))
     HOME.setProperty("GTO.Info.Genre", blob['genre'])
     HOME.setProperty("GTO.Info.Cast", blob['cast'])
+    HOME.setProperty("GTO.Info.Rating", blob['rating']),
     HOME.setProperty("GTO.Info.isInDB", str(blob['isInDB']))
     if blob['isInDB']:
         HOME.setProperty("GTO.Info.dbTitle", blob['db_title'])

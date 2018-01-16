@@ -38,19 +38,6 @@ class Scraper():
         self.endtime = '00:00'
 
 
-    def checkResource(self, resource, fallback):
-        if not resource: return fallback
-        _req = urllib2.Request(resource)
-        try:
-            _res = urllib2.urlopen(_req, timeout=5)
-        except urllib2.HTTPError as e:
-            if e.code == '404': return fallback
-        except urllib2.URLError as e:
-            return fallback
-        else:
-            return resource
-        return fallback
-
     def scrapeRSS(self, content):
 
         self.reset()
@@ -58,7 +45,7 @@ class Scraper():
         try:
             self.channel = re.compile('<description>(.+?),', re.DOTALL).findall(content)[0]
             self.thumb = re.compile('<media:content url="(.+?)" type="image/jpeg"/>', re.DOTALL).findall(content)[0]
-            self.thumb = self.checkResource(self.thumb, self.err404)
+            self.thumb = checkResource(self.thumb, self.err404)
             self.detailURL = re.compile('<link>(.+?)</link>', re.DOTALL).findall(content)[0]
             self.title = ', '.join(re.compile('<title>(.+?)</title>', re.DOTALL).findall(content)[0].split(' - ')[:-1])
         except IndexError:
@@ -97,7 +84,7 @@ class Scraper():
                             self.thumb = re.compile('<img class="kalooga_12730" src="(.+?)"', re.DOTALL).findall(content)[0]
                         except IndexError:
                             self.thumb = 'image://%s' % (self.err404)
-                    self.thumb = self.checkResource(self.thumb, self.err404)
+                    self.thumb = checkResource(self.thumb, self.err404)
 
                 # Broadcast Info (stop)
                 try:

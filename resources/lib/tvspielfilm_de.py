@@ -37,21 +37,6 @@ class Scraper():
         self.rating = ''
 
 
-    def checkResource(self, resource, fallback):
-        if not resource or resource == '': return fallback
-        _req = urllib2.Request(resource)
-        try:
-            _res = urllib2.urlopen(_req, timeout=5)
-        except urllib2.HTTPError as e:
-            if e.code == '404': return fallback
-        except urllib2.URLError as e:
-            return fallback
-        else:
-            return resource
-        return fallback
-
-    # Feed Scraper
-
     def scrapeRSS(self, content):
 
         self.reset()
@@ -110,7 +95,7 @@ class Scraper():
                 except IndexError:
                     self.thumb = 'image://%s' % (self.err404)
 
-                self.thumb = self.checkResource(self.thumb, self.err404)
+                self.thumb = checkResource(self.thumb, self.err404)
 
         except TypeError:
             pass
