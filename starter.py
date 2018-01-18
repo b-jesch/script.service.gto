@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 from resources.lib.tools import *
+import time
 
 
 __addon__ = xbmcaddon.Addon()
@@ -25,6 +26,7 @@ class MyMonitor(xbmc.Monitor):
         xbmc.Monitor.__init__(self)
         self.settingsChanged = False
 
+
     def onSettingsChanged(self):
         self.settingsChanged = True
         loadSettings()
@@ -39,11 +41,11 @@ class Starter():
     def start(self):
         writeLog('Starting %s V.%s' % (ADDON_NAME, ADDON_VERSION), level=xbmc.LOGNOTICE)
         loadSettings()
-
-        HOME.setProperty('PVRisReady', 'no')
+        HOME.setProperty('GTO.timestamp', str(int(time.time()) / 5))
+        xbmc.executebuiltin('XBMC.RunScript(script.service.gto,action=scrape)')
+        xbmc.executebuiltin('XBMC.RunScript(script.service.gto,action=refresh)')
 
         _c = 0
-        _attempts = 4
 
         monitor = MyMonitor()
 
@@ -51,14 +53,7 @@ class Starter():
 
             if monitor.settingsChanged:
                 _c = 0
-                _attempts = 4
                 monitor.settingsChanged = False
-
-            while HOME.getProperty('PVRisReady') == 'no' and _attempts > 0:
-                if monitor.waitForAbort(DELAY): return
-                if HOME.getProperty('PVRisReady') == 'yes': break
-                xbmc.executebuiltin('XBMC.RunScript(script.service.gto,action=refresh)')
-                _attempts -= 1
 
             writeLog('Next action %s seconds remaining' % (OPT_SCREENREFRESH))
             if monitor.waitForAbort(OPT_SCREENREFRESH): break

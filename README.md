@@ -75,6 +75,7 @@ Als Condition lässt sich das Vorhandensein einer Broadcast-ID verwenden. Danebe
     - ListItem.Duration               Laufzeit in Minuten / Runtime in minutes
 
     - ListItem.Property(DateTime)     Startdatum und Zeit, wie in Kodi Einstellungen Datum und Zeit (ohne Sek.) / Datetime of broadcast start
+    - ListItem.Property(StartTime)    Startzeit / Starting time (20:15) of broadcast 
     - ListItem.Property(EndTime)      Ende der Sendung (22:00) / end time
     - ListItem.Property(ChannelID)    PVR Channel ID, wird zum Umschalten per json benötigt / Channel ID of PVR, needed for channel switch
     - ListItem.Property(BlobID)       ID der Datenblase zur Sendung ID / data blob ID of the broadcast
