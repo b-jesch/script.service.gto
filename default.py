@@ -396,7 +396,7 @@ def scrapeGTOPage(enabled=OPT_ENABLE_INFO):
 
     HOME.setProperty('GTO.blobs', '0')
     HOME.setProperty('GTO.provider', data.shortname)
-    
+
     for container in content:
 
         data.scrapeRSS(container)
