@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 from resources.lib.tools import *
+import time
 
 __addon__ = xbmcaddon.Addon()
 __addonID__ = __addon__.getAddonInfo('id')
@@ -31,6 +32,10 @@ class MyMonitor(xbmc.Monitor):
 
 class Starter():
 
+
+    class pvrResponseTimeout(Exception):
+        writeLog('PVR not responsible', xbmc.LOGERROR)
+
     def __init__(self):
         pass
 
@@ -44,18 +49,36 @@ class Starter():
     def start(self):
         writeLog('Starting %s V.%s' % (ADDON_NAME, ADDON_VERSION), level=xbmc.LOGNOTICE)
         self.loadSettings()
-        xbmc.executebuiltin('XBMC.RunScript(script.service.gto,action=refresh)')
 
         _c = 0
-
         monitor = MyMonitor()
 
         while not monitor.abortRequested():
+
+            _st = int(time.time())
+            _attempts = 6
+            _haspvr = False
 
             if monitor.settingsChanged:
                 _c = 0
                 self.loadSettings()
                 monitor.settingsChanged = False
+
+            while not _haspvr and _attempts > 0:
+                query = {'method': 'PVR.GetProperties',
+                         'params': {'properties': ['available']}}
+                response = jsonrpc(query)
+                _haspvr = True if (response is not None and response.get('available', False)) else False
+                if _haspvr: break
+                if monitor.waitForAbort(5): break
+                _attempts -= 1
+
+            writeLog('Waiting %s seconds for PVR response' % (int(time.time()) - _st))
+            if not _haspvr:
+                raise self.pvrResponseTimeout()
+
+            writeLog('Service initiates refreshing of content')
+            xbmc.executebuiltin('XBMC.RunScript(script.service.gto,action=refresh)')
 
             writeLog('Next action %s seconds remaining' % (self.OPT_SCREENREFRESH or 120))
             if monitor.waitForAbort(self.OPT_SCREENREFRESH or 120): break
@@ -65,9 +88,6 @@ class Starter():
                 writeLog('Service initiates scraping of content provider')
                 xbmc.executebuiltin('XBMC.RunScript(script.service.gto,action=scrape)')
                 _c = 0
-
-            writeLog('Service initiates refreshing of content')
-            xbmc.executebuiltin('XBMC.RunScript(script.service.gto,action=refresh)')
 
 if __name__ == '__main__':
     starter = Starter()
