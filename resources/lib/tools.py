@@ -52,39 +52,6 @@ def getAddonSetting(setting, sType=STRING, multiplicator=1):
         return ADDON.getSetting(setting)
 
 OPT_ENABLE_INFO = getAddonSetting('enableinfo', BOOL)
-OPT_PREFER_HD = getAddonSetting('prefer_hd', BOOL)
-OPT_MDELAY = getAddonSetting('mdelay', NUM, 60)
-OPT_PVR_ONLY = getAddonSetting('pvronly', BOOL)
-OPT_SCREENREFRESH = getAddonSetting('screenrefresh', NUM, 60)
-REFRESH_RATIO = OPT_MDELAY / OPT_SCREENREFRESH
-OPT_PREFERRED_SCRAPER = getAddonSetting('scraper')
-
-def loadSettings():
-
-    global OPT_PREFER_HD
-    global OPT_ENABLE_INFO
-    global OPT_PVR_ONLY
-    global OPT_PREFERRED_SCRAPER
-    global OPT_SCREENREFRESH
-    global OPT_MDELAY
-    global REFRESH_RATIO
-
-    OPT_ENABLE_INFO = getAddonSetting('enableinfo', BOOL)
-    OPT_PREFER_HD = getAddonSetting('prefer_hd', BOOL)
-    OPT_PVR_ONLY = getAddonSetting('pvronly', BOOL)
-    OPT_PREFERRED_SCRAPER = getAddonSetting('scraper')
-    OPT_MDELAY = getAddonSetting('mdelay', NUM, 60)
-    OPT_SCREENREFRESH = getAddonSetting('screenrefresh', NUM, 60)
-    REFRESH_RATIO = OPT_MDELAY / OPT_SCREENREFRESH
-
-    writeLog('Settings (re)loaded')
-    writeLog('preferred scraper module: %s' % (OPT_PREFERRED_SCRAPER))
-    writeLog('Show notifications:       %s' % (OPT_ENABLE_INFO))
-    writeLog('Prefer HD channels:       %s' % (OPT_PREFER_HD))
-    writeLog('Prefer PVR channels only: %s' % (OPT_PVR_ONLY))
-    writeLog('Refresh interval content: %s secs' % (OPT_MDELAY))
-    writeLog('Refresh interval widget:  %s secs' % (OPT_SCREENREFRESH))
-    writeLog('Refreshing ratio:         %s' % (REFRESH_RATIO))
 
 # Helpers
 
@@ -115,9 +82,6 @@ def getTimeFormat():
     except IndexError:
         return '%s:%s' % (tf[0][0:2], tf[1])                         # time format is 24h with or w/o leading zero
 
-LOCAL_DATE_FORMAT = getDateFormat()
-LOCAL_TIME_FORMAT = getTimeFormat()
-
 def jsonrpc(query):
     querystring = {"jsonrpc": "2.0", "id": 1}
     querystring.update(query)
@@ -142,5 +106,6 @@ def checkResource(resource, fallback):
         return fallback
     return resource
 
-
 # End Helpers
+
+

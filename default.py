@@ -13,7 +13,16 @@ import time
 
 from dateutil import parser
 
-loadSettings()
+OPT_ENABLE_INFO = getAddonSetting('enableinfo', BOOL)
+OPT_PREFER_HD = getAddonSetting('prefer_hd', BOOL)
+OPT_MDELAY = getAddonSetting('mdelay', NUM, 60)
+OPT_PVR_ONLY = getAddonSetting('pvronly', BOOL)
+OPT_SCREENREFRESH = getAddonSetting('screenrefresh', NUM, 60)
+REFRESH_RATIO = OPT_MDELAY / OPT_SCREENREFRESH
+OPT_PREFERRED_SCRAPER = getAddonSetting('scraper')
+
+LOCAL_DATE_FORMAT = getDateFormat()
+LOCAL_TIME_FORMAT = getTimeFormat()
 
 try:
     mod = __import__(OPT_PREFERRED_SCRAPER, locals(), globals(), fromlist=['Scraper'])
@@ -564,6 +573,7 @@ if len(arguments) > 1:
     writeLog('provided parameter hash: %s' % (arguments[1]))
 
     if action == 'scrape':
+        writeLog('Scraping feeds')
         scrapeGTOPage()
 
     elif action == 'getcontent':
