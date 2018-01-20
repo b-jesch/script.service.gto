@@ -25,13 +25,12 @@ class MyMonitor(xbmc.Monitor):
         xbmc.Monitor.__init__(self)
         self.settingsChanged = False
 
-
     def onSettingsChanged(self):
         self.settingsChanged = True
+        xbmc.executebuiltin('XBMC.RunScript(script.service.gto,action=scrape)')
 
 
 class Starter():
-
 
     class pvrResponseTimeout(Exception):
         writeLog('PVR not responsible', xbmc.LOGERROR)
