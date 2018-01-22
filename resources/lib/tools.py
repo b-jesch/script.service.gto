@@ -102,7 +102,6 @@ def checkResource(resource, fallback):
         urllib2.urlopen(_req, timeout=5)
     except (urllib2.HTTPError, urllib2.URLError), e:
         writeLog('Ressource %s not available: %s' % (resource, e.message), xbmc.LOGERROR)
-        if e.code == '404': writeLog('Access forbidden: %s' % (e.code), xbmc.LOGERROR)
         return fallback
     return resource
 
