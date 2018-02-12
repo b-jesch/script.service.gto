@@ -54,6 +54,16 @@ class Scraper():
     def scrapeDetailPage(self, content, contentID):
 
         try:
+
+            # Thumbnail
+            try:
+                self.thumb = re.compile('<meta property="og:image" content="(.+?)" />', re.DOTALL).findall(content)[0]
+            except IndexError:
+                self.thumb = 'image://%s' % (self.err404)
+
+            self.thumb = checkResource(self.thumb, self.err404)
+            self.genre = re.compile('<meta property="og:title" content="(.+?)" />', re.DOTALL).findall(content)[0].split(' - ')[1]
+
             if contentID in content:
 
                 container = content.split(contentID)
@@ -61,15 +71,15 @@ class Scraper():
                 content = container[0]
 
                 try:
-                    self.plot = re.compile('<div class="description-text">(.+?)</p>', re.DOTALL).findall(content)[0].split('<p>')[1]
-                    self.genre = re.compile('<span class="genre">(.+?)</span>', re.DOTALL).findall(content)[0].split(', ')[0]
+                    self.plot = re.compile('<section class="broadcast-detail__description">(.+?)</section>', re.DOTALL).findall(content)[0]
+                    self.plot = re.compile('<p>(.+?)</p>', re.DOTALL).findall(self.plot)[0]
                 except IndexError:
                     pass
 
                 # Broadcast Info (stop)
 
                 try:
-                    _s = re.compile('<span class="time">(.+?)</span>', re.DOTALL).findall(content)[2].split(' - ')[1]
+                    _s = re.compile('<span class="text-row">(.+?)</span>', re.DOTALL).findall(content)[0].split(' - ')[1][0:5]
                     self.enddate = self.startdate.replace(hour=int(_s[0:2]), minute=int(_s[3:5]))
                 except IndexError:
                     self.enddate = self.startdate
@@ -85,16 +95,6 @@ class Scraper():
                     self.cast = ', '.join(cast)
                 except IndexError:
                     pass
-
-                # Thumbnail
-                try:
-                    self.thumb = re.compile('<div class="gallery-box">(.+?)</div', re.DOTALL).findall(content)[0]
-                    self.thumb = re.compile('href="(.+?)"', re.DOTALL).findall(self.thumb)[0]
-
-                except IndexError:
-                    self.thumb = 'image://%s' % (self.err404)
-
-                self.thumb = checkResource(self.thumb, self.err404)
 
         except TypeError:
             pass
