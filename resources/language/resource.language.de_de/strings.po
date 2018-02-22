@@ -37,6 +37,10 @@ msgctxt "#30104"
 msgid "Highlights of the day"
 msgstr "TV Highlights des Tages"
 
+msgctxt "#30105"
+msgid "loading..."
+msgstr "lade..."
+
 msgctxt "#30106"
 msgid "Service started"
 msgstr "Dienst gestartet"

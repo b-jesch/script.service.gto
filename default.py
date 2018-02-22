@@ -383,8 +383,11 @@ def refreshWidget(handle=None, notify=OPT_ENABLE_INFO):
 
 def scrapeGTOPage(enabled=OPT_ENABLE_INFO):
 
+
+    HOME.setProperty('GTO.provider', LOC(30105))
     data = Scraper()
     data.err404 = os.path.join(ADDON_PATH, 'resources', 'lib', 'media', data.err404)
+    provider = data.shortname
 
     notifyOSD(LOC(30010), LOC(30018) % ((data.shortname).decode('utf-8')), icon=getScraperIcon(data.icon), enabled=enabled)
     writeLog('Start scraping from %s' % (data.rssurl))
@@ -404,7 +407,7 @@ def scrapeGTOPage(enabled=OPT_ENABLE_INFO):
         content.pop(0)
 
     HOME.setProperty('GTO.blobs', '0')
-    HOME.setProperty('GTO.provider', data.shortname)
+    # HOME.setProperty('GTO.provider', data.shortname)
 
     for container in content:
 
@@ -476,6 +479,7 @@ def scrapeGTOPage(enabled=OPT_ENABLE_INFO):
         HOME.setProperty('GTO.%s' % (idx), str(blob))
         idx += 1
 
+    HOME.setProperty('GTO.provider', provider)
     HOME.setProperty('GTO.blobs', str(idx - 1))
     writeLog('%s items scraped and written to blobs' % (idx - 1))
     if (idx - 1) == 0:
