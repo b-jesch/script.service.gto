@@ -30,8 +30,8 @@ Hierfür bitte README.txt im Ordner 'integration' beachten.
         <email>birger.jesch@gmail.com</email>
         <website>http://vdr4bj1.no-ip.org/index.php?action=list&amp;item=addon</website>
         <news>
-- 2.1.5: Workaround for urllib2 SSL error
-- 2.1.3: Scraper updated (TV Spielfilm)
+- 2.1.5: Workaround for urllib2 SSL error[CR]
+- 2.1.3: Scraper updated (TV Spielfilm)[CR]
 - 2.1.1: minor Bugfixes, new time structures[CR]- 2.0.29: Scraper for TVGuide UK added[CR]- Smaller Bugfixes[CR]- Support for Estuary Mod V2 (Kodi 18)[CR]- Recording capabilities added, some new tv/sports scrapers added
         </news>
         <assets>
