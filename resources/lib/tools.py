@@ -100,11 +100,9 @@ def checkResource(resource, fallback):
     _req = urllib2.Request(resource)
     try:
         urllib2.urlopen(_req, timeout=5)
-    except (urllib2.HTTPError, urllib2.URLError), e:
-        writeLog('Ressource %s not available: %s' % (resource, e.message), xbmc.LOGERROR)
+    except urllib2.HTTPError, e:
+        writeLog('Resource %s not available: %s' % (resource, e.message), xbmc.LOGERROR)
         return fallback
+    except urllib2.URLError:
+        writeLog('Request failed for %s, resource possibly unavailable' % (resource), xbmc.LOGERROR)
     return resource
-
-# End Helpers
-
-
