@@ -15,7 +15,7 @@
 				<param name="posy" value="200"/>
 			</include>
 			<control type="panel" id="$PARAM[list_id]">
-				<left>0</left>
+				<left>-13</left>
 				<top>120</top>
 				<right>0</right>
 				<height>430</height>
@@ -28,11 +28,19 @@
 					<control type="group">
 						<left>70</left>
 						<control type="image">
-							<width>319</width>
+							<width>320</width>
 							<height>340</height>
-							<texture>dialogs/dialog-bg-nobo.png</texture>
+							<texture colordiffuse="$VAR[BorderColorVar]">dialogs/dialog-bg-nobo.png</texture>
 							<bordertexture border="21">overlays/shadow.png</bordertexture>
 							<bordersize>20</bordersize>
+						</control>
+						<control type="image">
+							<width>320</width>
+							<height>340</height>
+							<texture colordiffuse="$VAR[BorderColorVar]">dialogs/border-movielayout.png</texture>
+							<bordertexture border="21">overlays/shadow.png</bordertexture>
+							<bordersize>20</bordersize>
+							<visible>Skin.HasSetting(show_borders)</visible>
 						</control>
 						<control type="image">
 							<top>43</top>
@@ -69,8 +77,24 @@
 							<top>22</top>
 							<width>48</width>
 							<height>48</height>
-							<texture>movie.png</texture>
+							<texture>special://skin/extras/icons/movie.png</texture>
 							<visible>String.IsEqual(ListItem.Property(isInDB),True)</visible>
+						</control>
+						<control type="image">
+							<left>210</left>
+							<top>22</top>
+							<width>48</width>
+							<height>48</height>
+							<texture>special://skin/extras/icons/timer.png</texture>
+							<visible>String.IsEqual(ListItem.Property(hasTimer),True) + String.IsEqual(ListItem.Property(isInDB),True)</visible>
+						</control>
+						<control type="image">
+							<left>243</left>
+							<top>22</top>
+							<width>48</width>
+							<height>48</height>
+							<texture>special://skin/extras/icons/timer.png</texture>
+							<visible>String.IsEqual(ListItem.Property(hasTimer),True) + !String.IsEqual(ListItem.Property(isInDB),True)</visible>
 						</control>
 					</control>
 				</itemlayout>
@@ -85,14 +109,14 @@
 							<effect type="zoom" start="110" end="100" time="200" tween="sine" easing="inout" center="240,100" />
 						</animation>
 						<control type="image">
-							<width>319</width>
+							<width>320</width>
 							<height>340</height>
 							<texture>dialogs/dialog-bg-nobo.png</texture>
 							<bordertexture border="21">overlays/shadow.png</bordertexture>
 							<bordersize>20</bordersize>
 						</control>
 						<control type="image">
-							<width>319</width>
+							<width>320</width>
 							<height>340</height>
 							<texture colordiffuse="button_focus">colors/grey.png</texture>
 							<bordersize>20</bordersize>
@@ -135,7 +159,7 @@
 							<top>22</top>
 							<width>48</width>
 							<height>48</height>
-							<texture>movie.png</texture>
+							<texture>special://skin/extras/icons/movie.png</texture>
 							<visible>String.IsEqual(ListItem.Property(isInDB),True)</visible>
 						</control>
 						<control type="image">
@@ -143,7 +167,7 @@
 							<top>22</top>
 							<width>48</width>
 							<height>48</height>
-							<texture>timer.png</texture>
+							<texture>special://skin/extras/icons/timer.png</texture>
 							<visible>String.IsEqual(ListItem.Property(hasTimer),True) + String.IsEqual(ListItem.Property(isInDB),True)</visible>
 						</control>
 						<control type="image">
@@ -151,7 +175,7 @@
 							<top>22</top>
 							<width>48</width>
 							<height>48</height>
-							<texture>timer.png</texture>
+							<texture>special://skin/extras/icons/timer.png</texture>
 							<visible>String.IsEqual(ListItem.Property(hasTimer),True) + !String.IsEqual(ListItem.Property(isInDB),True)</visible>
 						</control>
 					</control>

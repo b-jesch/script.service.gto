@@ -247,7 +247,7 @@ def setTimer(broadcastId, blobId):
         blob = eval(HOME.getProperty('GTO.%s' % (blobId)))
         blob.update(getRecordingCapabilities(blob['pvrid'], blob['datetime']))
         HOME.setProperty('GTO.%s' % (blobId), str(blob))
-        HOME.setProperty('GTO.timestamp', str(int(time.time()) / 5))
+        HOME.setProperty('GTO.timestamp', str(int(time.time() / 5)))
     else:
         writeLog('Timer couldn\'t set', xbmc.LOGFATAL)
 
@@ -354,6 +354,13 @@ def refreshWidget(handle=None, notify=OPT_ENABLE_INFO):
 
         HOME.setProperty('PVRisReady', 'yes')
 
+        tmr_status = bool(blob['hastimer'])
+        blob.update(getRecordingCapabilities(blob['pvrid'], blob['datetime']))
+
+        if tmr_status ^ blob['hastimer']:
+            writeLog('Timer status for GTO.%s has changed, persisting' % (i))
+            HOME.setProperty('GTO.%s' % (i), str(blob))
+
         wid = xbmcgui.ListItem(label=blob['title'], label2=blob['pvrchannel'])
         wid.setInfo('video', {'title': blob['title'], 'genre': blob['genre'], 'plot': blob['plot'],
                               'cast': blob['cast'].split(','), 'duration': int(blob['runtime'])*60})
@@ -365,6 +372,7 @@ def refreshWidget(handle=None, notify=OPT_ENABLE_INFO):
         wid.setProperty('ChannelID', str(blob['pvrid']))
         wid.setProperty('BlobID', str(i))
         wid.setProperty('isInDB', str(blob['isInDB']))
+        wid.setProperty('hasTimer', str(blob['hastimer']))
         if blob['isInDB']:
             wid.setProperty('dbTitle', blob['db_title'])
             wid.setInfo('video', {'originaltitle': blob['db_originaltitle'],
@@ -377,8 +385,8 @@ def refreshWidget(handle=None, notify=OPT_ENABLE_INFO):
 
     if handle is not None:
         xbmcplugin.endOfDirectory(handle=handle, updateListing=True)
+        HOME.setProperty('GTO.timestamp', str(int(time.time() / 5)))
 
-        HOME.setProperty('GTO.timestamp', str(int(time.time()) / 5))
     xbmc.executebuiltin('Container.Refresh')
 
 def scrapeGTOPage(enabled=OPT_ENABLE_INFO):
@@ -407,7 +415,6 @@ def scrapeGTOPage(enabled=OPT_ENABLE_INFO):
         content.pop(0)
 
     HOME.setProperty('GTO.blobs', '0')
-    # HOME.setProperty('GTO.provider', data.shortname)
 
     for container in content:
 
@@ -484,7 +491,7 @@ def scrapeGTOPage(enabled=OPT_ENABLE_INFO):
     writeLog('%s items scraped and written to blobs' % (idx - 1))
     if (idx - 1) == 0:
         notifyOSD(LOC(30010), LOC(30132), icon=getScraperIcon(Scraper().icon), enabled=enabled)
-    HOME.setProperty('GTO.timestamp', str(int(time.time()) / 5))
+    HOME.setProperty('GTO.timestamp', str(int(time.time() / 5)))
     xbmc.executebuiltin('Container.Refresh')
 
 # Set details to Window (INFO Labels)
@@ -546,7 +553,7 @@ def showInfoWindow(blobId, showWindow=True):
         del Popup
 
     HOME.setProperty('GTO.%s' % (blobId), str(blob))
-    HOME.setProperty('GTO.timestamp', str(int(time.time()) / 5))
+    HOME.setProperty('GTO.timestamp', str(int(time.time() / 5)))
 
 # _______________________________
 #

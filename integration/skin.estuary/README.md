@@ -9,7 +9,8 @@ If You want to use the plugin as widget you have to perfom following steps. The 
 
 1. Kopieren des Scraper-Icons und des Widgets in den Skin Ordner / Copy skin icon and widget to Estuary folder:
 
-        sudo cp icons/*.png /usr/share/kodi/addons/skin.estuary/media/
+        sudo mkdir -p /usr/share/kodi/addons/skin.estuary/extras/icons
+        sudo cp icons/*.png /usr/share/kodi/addons/skin.estuary/extras/icons/
         sudo cp skin.estuary/gto-widget.xml /usr/share/kodi/addons/skin.estuary/xml/
 
 2. Das Widget als include anmelden / Register the include:
