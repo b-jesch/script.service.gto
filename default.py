@@ -334,11 +334,17 @@ def clearInfoProperties():
 
 def refreshWidget(handle=None, notify=OPT_ENABLE_INFO):
 
-    blobs = int(HOME.getProperty('GTO.blobs') or '0') + 1
+    blobs = int(HOME.getProperty('GTO.blobs') or '0')
+
+    _attempts = 10
+    while not blobs and _attempts > 0:
+        if monitor.waitForAbort(3): break
+        _attempts -= 1
+
     notifyOSD(LOC(30010), LOC(30109) % ((Scraper().shortname).decode('utf-8')), icon=getScraperIcon(Scraper().icon), enabled=notify)
 
     widget = 1
-    for i in range(1, blobs, 1):
+    for i in range(1, blobs + 1, 1):
 
         writeLog('Processing blob GTO.%s for widget #%s' % (i, widget))
         try:
@@ -582,6 +588,7 @@ if len(arguments) > 1:
     broadcastid = urllib.unquote_plus(params.get('broadcastid', ''))
 
     writeLog('provided parameter hash: %s' % (arguments[1]))
+    monitor = xbmc.Monitor()
 
     if action == 'scrape':
         writeLog('Scraping feeds')
