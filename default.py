@@ -438,7 +438,7 @@ def scrapeGTOPage(enabled=OPT_ENABLE_INFO):
         writeLog('Scraping details from %s' % (data.detailURL))
         data.scrapeDetailPage(details, data.detailselector)
 
-        if type(data.enddate) == 'datetime.datetime' and data.enddate < datetime.datetime.now():
+        if isinstance(data.enddate, datetime.datetime) and data.enddate < datetime.datetime.now():
             writeLog('Broadcast has finished already, discard blob')
             continue
 
