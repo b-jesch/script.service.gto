@@ -49,10 +49,10 @@ class Scraper():
         except IndexError:
             pass
         try:
-            _string = re.compile('<strong>(.+?)</strong>', re.DOTALL).findall(content)[0]
-            self.genre =_string.split(' | ')[0]
-            self.cast = _string.split(' | ')[1]
-            self.runtime = _string.split(' | ')[-1].split(' ')[0]
+            _string = re.compile('<strong>(.+?)</strong>', re.DOTALL).findall(content)[0].split(' | ')
+            self.genre =_string[0]
+            self.cast = (' | ').join(_string[1:-1])
+            self.runtime = _string[-1].split()[0]
             self.enddate = self.startdate + datetime.timedelta(minutes=int(self.runtime))
         except IndexError:
             pass
