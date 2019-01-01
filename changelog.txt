@@ -1,3 +1,5 @@
+WILL NOT BE CONTINUED - SEE addon.xml
+
 2.0.23
 - minor fixes
 

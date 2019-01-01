@@ -61,7 +61,6 @@ def getUnicodePage(url, container=None):
         req = urllib2.urlopen(url.encode('utf-8'), timeout=30)
     except UnicodeDecodeError:
         req = urllib2.urlopen(url)
-
     except ValueError:
         return False
     except urllib2.URLError, e:
@@ -69,6 +68,9 @@ def getUnicodePage(url, container=None):
         return False
     except socket.timeout:
         writeLog('Socket timeout', xbmc.LOGERROR)
+        return False
+    except ssl.SSLError, e:
+        writeLog(str(e.reason), xbmc.LOGERROR)
         return False
 
     encoding = 'utf-8'
@@ -431,12 +433,9 @@ def scrapeGTOPage(enabled=OPT_ENABLE_INFO):
         channel = getPvrChannelName(pvrid, data.channel)
         details = getUnicodePage(data.detailURL)
 
-        if not details:
-            writeLog('Could not get details from %s' % (data.detailURL), xbmc.LOGERROR)
-            continue
-
-        writeLog('Scraping details from %s' % (data.detailURL))
-        data.scrapeDetailPage(details, data.detailselector)
+        if hasattr(data, 'scrapeDetailPage') and callable(getattr(data, 'scrapeDetailPage')) and details:
+            writeLog('Scraping details from %s' % (data.detailURL))
+            data.scrapeDetailPage(details, data.detailselector)
 
         if isinstance(data.enddate, datetime.datetime) and data.enddate < datetime.datetime.now():
             writeLog('Broadcast has finished already, discard blob')

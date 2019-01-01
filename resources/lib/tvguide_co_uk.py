@@ -59,6 +59,8 @@ class Scraper():
 
         try:
             self.startdate = parser.parse((re.compile('<span class="datetime">(.+?)</span>', re.DOTALL).findall(content)[0]))
+        except ValueError:
+            self.startdate = parser.parse((re.compile('<span class="datetime">(.+?)</span>', re.DOTALL).findall(content)[0]).split()[0])
         except IndexError:
             pass
 

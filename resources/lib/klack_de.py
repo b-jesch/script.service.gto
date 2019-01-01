@@ -73,7 +73,7 @@ class Scraper():
                 # Broadcast Info (stop)
 
                 try:
-                    _s = re.compile('<span style="color: #d10159!important">(.+?)</span>', re.DOTALL).findall(content)[0].split()[2]
+                    _s = re.compile('<span style="color: #d10159!important">(.+?)</span>', re.DOTALL).findall(content)[0].split(' - ')[1]
                     self.enddate = self.startdate.replace(hour=int(_s[0:2]), minute=int(_s[3:5]))
                 except IndexError:
                     self.enddate = self.startdate

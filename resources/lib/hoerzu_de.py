@@ -18,7 +18,7 @@ class Scraper():
         self.shortname = 'HÖRZU'
         self.icon = 'hoerzu.png'
         self.selector = '<item>'
-        self.detailselector = '<div id="main-content">'
+        self.detailselector = '<div class="infos header">'
         self.err404 = 'hoerzu_dummy.jpg'
 
 
@@ -78,7 +78,7 @@ class Scraper():
 
                 # Thumbnail
                 try:
-                    self.thumb = re.compile('<img src="(.+?)" itemprop="image"', re.DOTALL).findall(content)[0]
+                    self.thumb = re.compile('<div><img src="(.+?)" itemprop="image"', re.DOTALL).findall(content)[0]
                 except IndexError:
                     self.thumb = 'image://%s' % (self.err404)
 

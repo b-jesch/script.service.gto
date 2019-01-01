@@ -9,7 +9,7 @@ class Scraper():
 
         # Properties
 
-        self.enabled = True
+        self.enabled = False
         self.baseurl = 'http://www.klack.de'
         self.lang = 'de_DE'
         self.rssurl = 'http://www.klack.de/xml/motorsportRSS.xml'
