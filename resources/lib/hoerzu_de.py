@@ -18,7 +18,7 @@ class Scraper():
         self.shortname = 'HÖRZU'
         self.icon = 'hoerzu.png'
         self.selector = '<item>'
-        self.detailselector = '<div class="infos header">'
+        self.detailselector = '<div class="body-content">'
         self.err404 = 'hoerzu_dummy.jpg'
 
 
