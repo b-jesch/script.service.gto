@@ -5,6 +5,7 @@ from resources.lib.tools import *
 
 import urllib
 import urllib2
+import ssl
 import sys
 import socket
 import xbmcvfs
@@ -33,16 +34,19 @@ Scraper = getattr(mod, 'Scraper')
 if not os.path.isfile(USER_TRANSLATIONS):
     xbmcvfs.copy(os.path.join(ADDON_PATH, 'ChannelTranslate.json'), USER_TRANSLATIONS)
 
-writeLog('Getting PVR translations from %s' % (USER_TRANSLATIONS), xbmc.LOGDEBUG)
+writeLog('Getting PVR translations from %s' % USER_TRANSLATIONS, xbmc.LOGDEBUG)
 with open(USER_TRANSLATIONS, 'r') as transfile:
-    ChannelTranslate=transfile.read().rstrip('\n')
+    ChannelTranslate = transfile.read().rstrip('\n')
 
-infoprops = ['Title', 'Picture', 'Subtitle', 'Description', 'Channel', 'ChannelID', 'Logo', 'Date', 'StartTime', 'RunTime', 'EndTime', 'Genre', 'Cast', 'isRunning', 'isInFuture', 'isInDB', 'dbTitle', 'dbOriginalTitle', 'Fanart', 'dbTrailer', 'dbRating', 'dbUserRating', 'BroadcastID', 'hasTimer', 'BlobID']
+infoprops = ['Title', 'Picture', 'Subtitle', 'Description', 'Channel', 'ChannelID', 'Logo', 'Date', 'StartTime',
+             'RunTime', 'EndTime', 'Genre', 'Cast', 'isRunning', 'isInFuture', 'isInDB', 'dbTitle', 'dbOriginalTitle',
+             'Fanart', 'dbTrailer', 'dbRating', 'dbUserRating', 'BroadcastID', 'hasTimer', 'BlobID']
 
 # convert HTML Entities to unicode chars
 
-entities = {'&lt;':'<', '&gt;':'>', '&nbsp;':' ', '&amp;':'&', '&quot;':'"'}
-tags = {'<br/>':' ', '<hr/>': ''}
+entities = {'&lt;': '<', '&gt;': '>', '&nbsp;': ' ', '&amp;': '&', '&quot;': '"'}
+tags = {'<br/>': ' ', '<hr/>': ''}
+
 
 def entity2unicode(text):
     for entity in entities.iterkeys():
@@ -55,6 +59,7 @@ def entity2unicode(text):
     return text
 
 # get remote URL, replace '\' and optional split into css containers
+
 
 def getUnicodePage(url, container=None):
     try:
@@ -70,7 +75,7 @@ def getUnicodePage(url, container=None):
         writeLog('Socket timeout', xbmc.LOGERROR)
         return False
     except ssl.SSLError, e:
-        writeLog(str(e.reason), xbmc.LOGERROR)
+        writeLog(str(e), xbmc.LOGERROR)
         return False
 
     encoding = 'utf-8'
@@ -82,15 +87,16 @@ def getUnicodePage(url, container=None):
 
 # get parameter hash, convert into parameter/value pairs, return dictionary
 
+
 def ParamsToDict(parameters):
-    paramDict = {}
+    params = dict()
     if parameters:
-        paramPairs = parameters.split("&")
-        for paramsPair in paramPairs:
-            paramSplits = paramsPair.split('=')
-            if (len(paramSplits)) == 2:
-                paramDict[paramSplits[0]] = paramSplits[1]
-    return paramDict
+        pairs = parameters.split("&")
+        for pair in pairs:
+            key_value = pair.split('=')
+            if (len(key_value)) == 2:
+                params.update({key_value[0]: key_value[1]})
+    return params
 
 # determine and change scraper modules
 
@@ -159,7 +165,7 @@ def channelName2pvrId(channelname):
                 return channels.get('channelid')
     except AttributeError, e:
         writeLog('Could not get ID from %s: %s' % (channelname, e.message), xbmc.LOGERROR)
-    return False
+    return None
 
 # get pvr channelname by id
 
@@ -209,28 +215,56 @@ def switchToChannel(pvrid):
         writeLog('Couldn\'t switch to channel id %s' % (pvrid))
 
 
-def getRecordingCapabilities(pvrid, datetime2):
+def getBroadcast(pvrid, datetime2):
     '''
     :param pvrid:       str PVR-ID of the broadcast station
     :param datetime2:   str datetime in TIME_FORMAT e.g. '2017-07-20 20:15:00'
-    :return:            dict: int unique broadcastID of the broadcast or None, bool hastimer
+    :return:            dict: int unique broadcastID of the broadcast or None
     '''
-    params = {'broadcastid': None, 'hastimer': False}
+    params = {'broadcastid': None}
     if not pvrid: return params
     query = {
         "method": "PVR.GetBroadcasts",
         "params": {"channelid": pvrid,
-                   "properties": ["title", "starttime", "hastimer"]}
+                   "properties": ["title", "starttime"]}
     }
     res = jsonrpc(query)
-    try:
-        for broadcast in res.get('broadcasts'):
-            _ltt = utc_to_local_datetime(parser.parse(broadcast['starttime'])).strftime(LOCAL_DATE_FORMAT)
-            if _ltt == datetime2:
-                params.update({'broadcastid': broadcast['broadcastid'], 'hastimer': broadcast['hastimer']})
-                break
-    except (TypeError, AttributeError,), e:
-        writeLog('Could not determine broadcast for pvr ID %s: %s' % (pvrid, e.message), xbmc.LOGERROR)
+    if res.get('broadcasts', False):
+        try:
+            for broadcast in res.get('broadcasts'):
+                _ltt = utc_to_local_datetime(parser.parse(broadcast['starttime'])).strftime(LOCAL_DATE_FORMAT)
+                if _ltt == datetime2:
+                    params.update({'broadcastid': broadcast['broadcastid']})
+                    writeLog('Broadcast #%s of ChannelID #%s found' % (broadcast['broadcastid'], pvrid))
+                    break
+        except (TypeError, AttributeError,), e:
+            writeLog('Could not determine broadcast of ChannelID %s: %s' % (pvrid, e.message), xbmc.LOGERROR)
+    return params
+
+
+def hasTimer(pvrid, broadcastid):
+    '''
+    :param pvrid:       str PVR-ID of the broadcast station
+    :param broadcastid: str Broadcast-ID (or epguid)
+    :return:            dict: bool hastimer of the broadcast or False
+    '''
+    params = {'hastimer': False}
+    if not pvrid or not broadcastid: return params
+
+    query = {
+        "method": "PVR.getTimers",
+        "params": {"properties": ["title", "channelid", "epguid"]}
+    }
+    res = jsonrpc(query)
+    if res.get('timers', False):
+        try:
+            for timer in res.get('timers'):
+                if timer['channelid'] == pvrid and timer['epguid'] == broadcastid:
+                    params.update({'hastimer': True})
+                    writeLog('Timer active for broadcast #%s (%s) on pvrID #%s' % (timer['epguid'], timer['title'], timer['channelid']))
+                    break
+        except (TypeError, AttributeError,), e:
+            writeLog('Error while executing JSON request PVR.GetTimers: %s' %  (e.message), xbmc.LOGERROR)
     return params
 
 
@@ -245,16 +279,14 @@ def setTimer(broadcastId, blobId):
     }
     res = jsonrpc(query)
     if res == 'OK':
-        writeLog('Timer of blob #%s successful added' % (blobId))
-        blob = eval(HOME.getProperty('GTO.%s' % (blobId)))
-        blob.update(getRecordingCapabilities(blob['pvrid'], blob['datetime']))
-        HOME.setProperty('GTO.%s' % (blobId), str(blob))
-        HOME.setProperty('GTO.timestamp', str(int(time.time() / 5)))
+        HOME.setProperty('GTO.timestamp', str(int(time.time())))
+        xbmc.executebuiltin('Container.Refresh')
+        writeLog('Timer of blob #%s added' % (blobId))
     else:
-        writeLog('Timer couldn\'t set', xbmc.LOGFATAL)
+        writeLog('Timer couldn\'t set', xbmc.LOGERROR)
 
 
-def isInDataBase(title):
+def isInVideoDB(title):
     '''
     search for a title if already present in database, search with different fuzzy parameters in 4 steps:
     1. match exact
@@ -336,74 +368,99 @@ def clearInfoProperties():
 
 def refreshWidget(handle=None, notify=OPT_ENABLE_INFO):
 
-    blobs = int(HOME.getProperty('GTO.blobs') or '0')
+    isbusy = waitForScraper()
 
-    _attempts = 10
-    while not blobs and _attempts > 0:
-        if monitor.waitForAbort(3): break
-        _attempts -= 1
+    blobs = int(HOME.getProperty('GTO.blobs') or '0')
+    if blobs == 0 or isbusy:
+        writeLog('Scraper is busy or returns no data, aborting', xbmc.LOGERROR)
+        notifyOSD(LOC(30010), LOC(30132), enabled=True)
+        return
 
     notifyOSD(LOC(30010), LOC(30109) % ((Scraper().shortname).decode('utf-8')), icon=getScraperIcon(Scraper().icon), enabled=notify)
 
     widget = 1
     for i in range(1, blobs + 1, 1):
 
-        writeLog('Processing blob GTO.%s for widget #%s' % (i, widget))
+        writeLog('Processing blob GTO.%s for item #%s' % (i, widget))
         try:
             blob = eval(HOME.getProperty('GTO.%s' % (i)))
         except SyntaxError:
             writeLog('Could not read blob #%s properly' % (i))
             continue
 
-        if OPT_PVR_ONLY and not blob['pvrid']:
-            writeLog("Channel %s is not in PVR, discard entry" % (blob['channel']))
-            HOME.setProperty('PVRisReady', 'no')
+        if OPT_PVR_ONLY and hasPVR(timeout=10) and not blob['pvrid']:
+            writeLog("Channel %s isn't in PVR or PVR not ready, discard entry" % (blob['channel']))
             continue
 
-        HOME.setProperty('PVRisReady', 'yes')
-
-        tmr_status = bool(blob['hastimer'])
-        blob.update(getRecordingCapabilities(blob['pvrid'], blob['datetime']))
-
-        if tmr_status ^ blob['hastimer']:
-            writeLog('Timer status for GTO.%s has changed, persisting' % (i))
-            HOME.setProperty('GTO.%s' % (i), str(blob))
+        if time.mktime(parser.parse(blob['enddate'], dayfirst=True).timetuple()) < time.time():
+            writeLog('Discard blob, outdated')
+            continue
 
         wid = xbmcgui.ListItem(label=blob['title'], label2=blob['pvrchannel'])
         wid.setInfo('video', {'title': blob['title'], 'genre': blob['genre'], 'plot': blob['plot'],
                               'cast': blob['cast'].split(','), 'duration': int(blob['runtime'])*60})
         wid.setArt({'thumb': blob['thumb'], 'logo': blob['logo']})
 
+        if handle is None:
+
+            # check for broadcasts and timers
+
+            writeLog('')
+
+            blob.update(getBroadcast(blob['pvrid'], blob['datetime']))
+            blob.update(hasTimer(blob['pvrid'], blob['broadcastid']))
+
+            writeLog('Broadcast ID:    %s' % (blob['broadcastid']))
+            writeLog('has Timer:       %s' % (blob['hastimer']))
+
+            wid.setProperty('hasTimer', str(blob['hastimer']))
+
+            # check for titles in videoDB
+
+            blob.update(isInVideoDB(blob['title']))
+
+            writeLog('is in Database:  %s' % (blob['isInDB']))
+            if blob['isInDB']:
+                writeLog('   Title:        %s' % blob['db_title'])
+                writeLog('   orig. Title:  %s' % blob['db_originaltitle'])
+                writeLog('   Fanart:       %s' % blob['db_fanart'])
+                writeLog('   Trailer:      %s' % blob['db_trailer'])
+                writeLog('   Rating:       %s' % blob['db_rating'])
+                writeLog('   User rating:  %s' % blob['db_userrating'])
+
+                wid.setProperty('dbTitle', blob['db_title'])
+                wid.setInfo('video', {'originaltitle': blob['db_originaltitle'],
+                                      'trailer': blob['db_trailer'], 'rating': blob['db_rating'],
+                                      'userrating': blob['db_userrating']})
+                wid.setArt({'fanart': blob['db_fanart']})
+
+            writeLog('')
+            HOME.setProperty('GTO.%s' % (i), str(blob))
+
         wid.setProperty('DateTime', blob['datetime'])
         wid.setProperty('StartTime', datetime.datetime.strftime(parser.parse(blob['datetime']), getTimeFormat()))
         wid.setProperty('EndTime', datetime.datetime.strftime(parser.parse(blob['enddate']), getTimeFormat()))
         wid.setProperty('ChannelID', str(blob['pvrid']))
         wid.setProperty('BlobID', str(i))
-        wid.setProperty('isInDB', str(blob['isInDB']))
-        wid.setProperty('hasTimer', str(blob['hastimer']))
-        if blob['isInDB']:
-            wid.setProperty('dbTitle', blob['db_title'])
-            wid.setInfo('video', {'originaltitle': blob['db_originaltitle'],
-                                  'trailer': blob['db_trailer'], 'rating': blob['db_rating'],
-                                  'userrating': blob['db_userrating']})
-            wid.setArt({'fanart': blob['db_fanart']})
 
         if handle is not None: xbmcplugin.addDirectoryItem(handle=handle, url='', listitem=wid)
         widget += 1
 
     if handle is not None:
         xbmcplugin.endOfDirectory(handle=handle, updateListing=True)
-        HOME.setProperty('GTO.timestamp', str(int(time.time() / 5)))
+        writeLog('Widget with handle #%s filled' % (handle))
+    else:
+        HOME.setProperty('GTO.timestamp', str(int(time.time())))
+        xbmc.executebuiltin('Container.Refresh')
+        writeLog('Finished, initiate container refresh')
 
-    xbmc.executebuiltin('Container.Refresh')
 
 def scrapeGTOPage(enabled=OPT_ENABLE_INFO):
 
-
     HOME.setProperty('GTO.provider', LOC(30105))
+    HOME.setProperty('GTO.busy', 'true')
     data = Scraper()
     data.err404 = os.path.join(ADDON_PATH, 'resources', 'lib', 'media', data.err404)
-    provider = data.shortname
 
     notifyOSD(LOC(30010), LOC(30018) % ((data.shortname).decode('utf-8')), icon=getScraperIcon(data.icon), enabled=enabled)
     writeLog('Start scraping from %s' % (data.rssurl))
@@ -440,9 +497,6 @@ def scrapeGTOPage(enabled=OPT_ENABLE_INFO):
         if not isinstance(data.enddate, datetime.datetime):
             writeLog('No endtime available, discard blob')
             continue
-        if data.enddate < datetime.datetime.now():
-            writeLog('Broadcast has finished already, discard blob')
-            continue
 
         blob = {
                 'title': unicode(entity2unicode(data.title)),
@@ -460,25 +514,9 @@ def scrapeGTOPage(enabled=OPT_ENABLE_INFO):
                 'rating': data.rating
                }
 
-        # look for similar database entries
-
-        blob.update(isInDataBase(blob['title']))
-
-        # check timer capabilities
-
-        blob.update(getRecordingCapabilities(blob['pvrid'], blob['datetime']))
-
         writeLog('')
         writeLog('blob:            #%s' % (idx))
         writeLog('Title:           %s' % (blob['title']))
-        writeLog('is in Database:  %s' % (blob['isInDB']))
-        if blob['isInDB']:
-            writeLog('   Title:        %s' % blob['db_title'])
-            writeLog('   orig. Title:  %s' % blob['db_originaltitle'])
-            writeLog('   Fanart:       %s' % blob['db_fanart'])
-            writeLog('   Trailer:      %s' % blob['db_trailer'])
-            writeLog('   Rating:       %s' % blob['db_rating'])
-            writeLog('   User rating:  %s' % blob['db_userrating'])
         writeLog('Thumb:           %s' % (blob['thumb']))
         writeLog('Date & time:     %s' % (blob['datetime']))
         writeLog('End date:        %s' % (blob['enddate']))
@@ -486,11 +524,9 @@ def scrapeGTOPage(enabled=OPT_ENABLE_INFO):
         writeLog('Channel (GTO):   %s' % (blob['channel']))
         writeLog('Channel (PVR):   %s' % (blob['pvrchannel']))
         writeLog('ChannelID (PVR): %s' % (blob['pvrid']))
-        writeLog('Broadcast ID:    %s' % (blob['broadcastid']))
-        writeLog('has Timer:       %s' % (blob['hastimer']))
         writeLog('Channel logo:    %s' % (blob['logo']))
         writeLog('Genre:           %s' % (blob['genre']))
-        writeLog('Plot:            %s' % (blob['plot']))
+        writeLog('Plot:            %s...' % (blob['plot'][0:40]))
         writeLog('Cast:            %s' % (blob['cast']))
         writeLog('Rating:          %s' % (blob['rating']))
         writeLog('')
@@ -498,13 +534,13 @@ def scrapeGTOPage(enabled=OPT_ENABLE_INFO):
         HOME.setProperty('GTO.%s' % (idx), str(blob))
         idx += 1
 
-    HOME.setProperty('GTO.provider', provider)
+    HOME.setProperty('GTO.provider', data.shortname)
     HOME.setProperty('GTO.blobs', str(idx - 1))
+    HOME.setProperty('GTO.busy', 'false')
     writeLog('%s items scraped and written to blobs' % (idx - 1))
     if (idx - 1) == 0:
-        notifyOSD(LOC(30010), LOC(30132), icon=getScraperIcon(Scraper().icon), enabled=enabled)
-    HOME.setProperty('GTO.timestamp', str(int(time.time() / 5)))
-    xbmc.executebuiltin('Container.Refresh')
+        writeLog('Scraper returns no data', xbmc.LOGERROR)
+        notifyOSD(LOC(30010), LOC(30132), icon=getScraperIcon(Scraper().icon), enabled=True)
 
 # Set details to Window (INFO Labels)
 
@@ -516,13 +552,15 @@ def showInfoWindow(blobId, showWindow=True):
         return False
 
     blob = eval(HOME.getProperty('GTO.%s' % (blobId)))
-    blob.update(getRecordingCapabilities(blob['pvrid'], blob['datetime']))
+
+    blob.update(getBroadcast(blob['pvrid'], blob['datetime']))
+    blob.update(hasTimer(blob['pvrid'], blob['broadcastid']))
 
     clearInfoProperties()
 
     if blob['pvrid']:
         if blob['broadcastid']:
-            writeLog('PVR record function capable (BroadcastID %s)' % (blob['broadcastid']))
+            writeLog('PVR recording possible (BroadcastID %s)' % (blob['broadcastid']))
             HOME.setProperty("GTO.Info.BroadcastID", str(blob['broadcastid']))
             HOME.setProperty("GTO.Info.hasTimer", str(blob['hastimer']))
 
@@ -565,7 +603,6 @@ def showInfoWindow(blobId, showWindow=True):
         del Popup
 
     HOME.setProperty('GTO.%s' % (blobId), str(blob))
-    HOME.setProperty('GTO.timestamp', str(int(time.time() / 5)))
 
 # _______________________________
 #
@@ -597,11 +634,10 @@ if len(arguments) > 1:
     monitor = xbmc.Monitor()
 
     if action == 'scrape':
-        writeLog('Scraping feeds')
         scrapeGTOPage()
+        if not waitForScraper(timeout=180): refreshWidget()
 
     elif action == 'getcontent':
-        writeLog('Filling widget with handle #%s' % (_addonHandle))
         refreshWidget(handle=_addonHandle, notify=False)
 
     elif action == 'refresh':

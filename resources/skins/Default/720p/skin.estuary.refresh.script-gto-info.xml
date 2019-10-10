@@ -195,7 +195,8 @@
                 <include content="InfoDialogButton">
 						<param name="id" value="23" />
 						<param name="icon" value="close.png" />
-                        <param name="onclick_1" value="Dialog.Close(all)" />
+						<param name="onclick_1" value="RunScript(script.service.gto,action=refresh)"/>
+                        <param name="onclick_2" value="Dialog.Close(all)" />
 						<param name="label" value="$LOCALIZE[40015]" />
 					</include>
                 <onup>139</onup>

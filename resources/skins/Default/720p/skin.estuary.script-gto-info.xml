@@ -170,7 +170,8 @@
                     <param name="id" value="23" />
                     <param name="width" value="220"/>
                     <param name="label" value="$ADDON[script.service.gto 30119]"/>
-                    <param name="onclick" value="Dialog.Close(all)"/>
+                    <param name="onclick" value="RunScript(script.service.gto,action=refresh)"/>
+                    <param name="onclick_2" value="Dialog.Close(all)"/>
                 </include>
                 <onup>1</onup>
                 <ondown>1</ondown>

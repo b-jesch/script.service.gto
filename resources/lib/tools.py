@@ -34,6 +34,7 @@ SCRAPER_DEFAULT = '%s.%s' % (SCRAPER_MODULPATH, 'klack_de')
 INFO_XML = xbmc.translatePath('special://skin').split(os.sep)[-2] + '.script-gto-info.xml'
 USER_TRANSLATIONS = xbmc.translatePath(os.path.join(ADDON_PROFILES, 'ChannelTranslate.json'))
 
+monitor = xbmc.Monitor()
 
 def strToBool(par):
     return True if par.upper() == 'TRUE' else False
@@ -106,3 +107,27 @@ def checkResource(resource, fallback):
     except urllib2.URLError:
         writeLog('Request failed for %s, resource possibly unavailable' % (resource), xbmc.LOGERROR)
     return resource
+
+def hasPVR(timeout=30):
+    _attempts = timeout / 5
+    _haspvr = False
+    while not _haspvr and _attempts > 0:
+        query = {'method': 'PVR.GetProperties',
+                 'params': {'properties': ['available']}}
+        response = jsonrpc(query)
+        _haspvr = True if (response is not None and response.get('available', False)) else False
+        if _haspvr or monitor.waitForAbort(5): break
+        _attempts -= 1
+    return _haspvr
+
+def waitForScraper(timeout=120):
+    _attempts = timeout / 5
+    while _attempts > 0:
+        if monitor.waitForAbort(5):
+            writeLog('Abort requested')
+            break
+        _isBusy = strToBool(HOME.getProperty('GTO.busy'))
+        if not _isBusy: break
+        writeLog('Scraper is busy...')
+        _attempts -= 1
+    return _isBusy
