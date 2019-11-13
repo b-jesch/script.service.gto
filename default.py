@@ -440,6 +440,7 @@ def refreshWidget(handle=None, notify=OPT_ENABLE_INFO):
         wid.setProperty('DateTime', blob['datetime'])
         wid.setProperty('StartTime', datetime.datetime.strftime(parser.parse(blob['datetime']), getTimeFormat()))
         wid.setProperty('EndTime', datetime.datetime.strftime(parser.parse(blob['enddate']), getTimeFormat()))
+        wid.setProperty('RunTime', str(blob['runtime']))
         wid.setProperty('ChannelID', str(blob['pvrid']))
         wid.setProperty('BlobID', str(i))
 

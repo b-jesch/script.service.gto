@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- plugin.widget.gto - InfoWindow German Telecast Offers' - START -->
-<!-- Estuary Skin adapted -->
+<!-- Estuary Refresh Skin adapted -->
 <window>
     <defaultcontrol always="true">23</defaultcontrol>
     <include>DefaultDialogButton</include>
