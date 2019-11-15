@@ -165,7 +165,7 @@ def channelName2pvrId(channelname):
                 return channels.get('channelid')
     except AttributeError, e:
         writeLog('Could not get ID from %s: %s' % (channelname, e.message), xbmc.LOGERROR)
-    return None
+    return False
 
 # get pvr channelname by id
 
