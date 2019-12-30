@@ -18,10 +18,7 @@ If You want to use the plugin as widget you have to perfom following steps:
 
     - Search for the first occurence of ```<onup condition="!Control.IsVisible(90010) + !Control.IsVisible(90020)">9000</onup>```
     - Change the onup condition to ```<onup condition="!Control.IsVisible(90010) + !Control.IsVisible(90020) + Control.IsVisible(5777)">5777</onup>``` (Beware this is an One-Liner)
-    - Import the widget. Search for 
-
-4. Import the widget
-    - search for ```<!-- NextRecording -->```. Place following above this line: 
+    - Import the widget. Search for: ```<!-- NextRecording -->```. Place following above this line: 
         ```
         <!-- GTO Widget -->
         <include condition="System.HasAddon(script.service.gto)">HomeRecentlyAddedGTO</include>    
