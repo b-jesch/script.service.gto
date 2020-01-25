@@ -14,12 +14,12 @@ class Scraper():
         self.baseurl = 'https://www.quarantine.hs-mittweida.de/~jesch/knftv'
         self.lang = 'de_DE'
         self.rssurl = 'https://www.quarantine.hs-mittweida.de/~jesch/knftv/broadcasts.php'
-        self.friendlyname = 'Kodinerds Community freeTV Highlights'
+        self.friendlyname = 'KN Community freeTV Highlights'
         self.shortname = 'Kodinerds freeTV'
-        self.icon = 'klack.png'
+        self.icon = 'knftv.png'
         self.selector = '<knftv>'
         self.detailselector = None
-        self.err404 = 'klackde_dummy.jpg'
+        self.err404 = 'knftv_dummy.jpg'
 
 
     def reset(self):

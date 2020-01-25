@@ -98,9 +98,10 @@ def jsonrpc(query):
 
 def checkResource(resource, fallback):
     if not resource: return fallback
+    if resource.split('://', 1) == 'file': return fallback
     _req = urllib2.Request(resource)
     try:
-        urllib2.urlopen(_req, timeout=5)
+        urllib2.urlopen(_req, timeout=3)
     except urllib2.HTTPError, e:
         writeLog('Resource %s not available: %s' % (resource, e.message), xbmc.LOGERROR)
         return fallback
