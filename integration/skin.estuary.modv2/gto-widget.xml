@@ -78,7 +78,7 @@
 							<width>48</width>
 							<height>48</height>
 							<texture>special://skin/extras/icons/movie.png</texture>
-							<visible>String.IsEqual(ListItem.Property(isInDB),True)</visible>
+							<visible>String.IsEqual(ListItem.Property(isInDB),'True')</visible>
 						</control>
 						<control type="image">
 							<left>210</left>
@@ -86,7 +86,7 @@
 							<width>48</width>
 							<height>48</height>
 							<texture>special://skin/extras/icons/timer.png</texture>
-							<visible>String.IsEqual(ListItem.Property(hasTimer),True) + String.IsEqual(ListItem.Property(isInDB),True)</visible>
+							<visible>String.IsEqual(ListItem.Property(hasTimer),'True') + String.IsEqual(ListItem.Property(isInDB),'True')</visible>
 						</control>
 						<control type="image">
 							<left>243</left>
@@ -94,7 +94,7 @@
 							<width>48</width>
 							<height>48</height>
 							<texture>special://skin/extras/icons/timer.png</texture>
-							<visible>String.IsEqual(ListItem.Property(hasTimer),True) + !String.IsEqual(ListItem.Property(isInDB),True)</visible>
+							<visible>String.IsEqual(ListItem.Property(hasTimer),'True') + !String.IsEqual(ListItem.Property(isInDB),'True')</visible>
 						</control>
 					</control>
 				</itemlayout>
@@ -160,7 +160,7 @@
 							<width>48</width>
 							<height>48</height>
 							<texture>special://skin/extras/icons/movie.png</texture>
-							<visible>String.IsEqual(ListItem.Property(isInDB),True)</visible>
+							<visible>String.IsEqual(ListItem.Property(isInDB),'True')</visible>
 						</control>
 						<control type="image">
 							<left>210</left>
@@ -168,7 +168,7 @@
 							<width>48</width>
 							<height>48</height>
 							<texture>special://skin/extras/icons/timer.png</texture>
-							<visible>String.IsEqual(ListItem.Property(hasTimer),True) + String.IsEqual(ListItem.Property(isInDB),True)</visible>
+							<visible>String.IsEqual(ListItem.Property(hasTimer),'True') + String.IsEqual(ListItem.Property(isInDB),'True')</visible>
 						</control>
 						<control type="image">
 							<left>243</left>
@@ -176,7 +176,7 @@
 							<width>48</width>
 							<height>48</height>
 							<texture>special://skin/extras/icons/timer.png</texture>
-							<visible>String.IsEqual(ListItem.Property(hasTimer),True) + !String.IsEqual(ListItem.Property(isInDB),True)</visible>
+							<visible>String.IsEqual(ListItem.Property(hasTimer),'True') + !String.IsEqual(ListItem.Property(isInDB),'True')</visible>
 						</control>
 					</control>
 				</focusedlayout>

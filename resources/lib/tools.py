@@ -98,7 +98,7 @@ def jsonrpc(query):
 
 def checkResource(resource, fallback):
     if not resource: return fallback
-    if resource.split('://', 1) == 'file': return fallback
+    if resource.split('://', 1)[0] == 'file': return fallback
     _req = urllib2.Request(resource)
     try:
         urllib2.urlopen(_req, timeout=3)
