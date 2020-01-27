@@ -54,8 +54,8 @@ class Scraper():
             else:
                 self.plot = knftv.find('Plot').text
 
-            self.startdate = parser.parse(knftv.find('Date').text)
-            self.enddate = self.startdate.replace(hour=int(knftv.find('EndTime').text[0:2]), minute=int(knftv.find('EndTime').text[3:5]))
+            self.startdate = parser.parse(knftv.find('Date').text, dayfirst=True)
+            self.enddate = self.startdate.replace(hour=int(knftv.find('EndTime').text[:2]), minute=int(knftv.find('EndTime').text[-2:]))
             if self.startdate > self.enddate: self.enddate += datetime.timedelta(days=1)
             self.runtime = str((self.enddate - self.startdate).seconds / 60)
 

@@ -89,7 +89,7 @@ def jsonrpc(query):
     try:
         response = json.loads(xbmc.executeJSONRPC(json.dumps(querystring, encoding='utf-8')))
         if 'result' in response: return response['result']
-    except TypeError, e:
+    except TypeError as e:
         writeLog('Error executing JSON RPC: %s' % (e.message), xbmc.LOGFATAL)
     return None
 
@@ -102,11 +102,9 @@ def checkResource(resource, fallback):
     _req = urllib2.Request(resource)
     try:
         urllib2.urlopen(_req, timeout=3)
-    except urllib2.HTTPError, e:
+    except (urllib2.HTTPError, urllib2.URLError) as e:
         writeLog('Resource %s not available: %s' % (resource, e.message), xbmc.LOGERROR)
         return fallback
-    except urllib2.URLError:
-        writeLog('Request failed for %s, resource possibly unavailable' % (resource), xbmc.LOGERROR)
     return resource
 
 def hasPVR(timeout=30):
