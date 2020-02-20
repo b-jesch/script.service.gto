@@ -589,7 +589,7 @@ def showInfoWindow(blobId, showWindow=True):
     if blob['rating'] is None:
         HOME.setProperty("GTO.Info.Genre", blob['genre'])
     else:
-        HOME.setProperty('GTO.Info.Genre', blob['genre'] + ' | ' + blob['rating'])
+        HOME.setProperty('GTO.Info.Genre', blob['genre'] + ' | IMDb: ' + blob['rating'])
     HOME.setProperty("GTO.Info.Cast", blob['cast'])
     HOME.setProperty("GTO.Info.Rating", blob['rating']),
     HOME.setProperty("GTO.Info.isInDB", str(blob['isInDB']))
