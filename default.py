@@ -586,7 +586,10 @@ def showInfoWindow(blobId, showWindow=True):
     HOME.setProperty("GTO.Info.Date", blob['datetime'])
     HOME.setProperty("GTO.Info.RunTime", blob['runtime'])
     HOME.setProperty("GTO.Info.EndTime", datetime.datetime.strftime(parser.parse(blob['enddate']), LOCAL_TIME_FORMAT))
-    HOME.setProperty("GTO.Info.Genre", blob['genre'])
+    if blob['rating'] is None:
+        HOME.setProperty("GTO.Info.Genre", blob['genre'])
+    else:
+        HOME.setProperty('GTO.Info.Genre', blob['genre'] + ' | ' + blob['rating'])
     HOME.setProperty("GTO.Info.Cast", blob['cast'])
     HOME.setProperty("GTO.Info.Rating", blob['rating']),
     HOME.setProperty("GTO.Info.isInDB", str(blob['isInDB']))

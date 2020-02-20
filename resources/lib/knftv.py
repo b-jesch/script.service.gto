@@ -36,7 +36,7 @@ class Scraper():
         self.genre = ''
         self.plot = ''
         self.cast = ''
-        self.rating = ''
+        self.rating = None
 
 
     def scrapeRSS(self, content):
@@ -44,18 +44,19 @@ class Scraper():
         self.reset()
         knftv = ET.fromstring((self.selector + content).replace('</events>', ''))
         try:
-            self.channel = knftv.find('ChannelName').text
-            self.title = knftv.find('Title').text or knftv.find('EpgEventTitle').text or ''
-            self.thumb = knftv.find('Icon').text
-            self.genre = knftv.find('Genre').text
+            self.channel = knftv.findtext('ChannelName')
+            self.title = knftv.findtext('Title') or knftv.findtext('EpgEventTitle') or None
+            self.thumb = knftv.findtext('Icon')
+            self.genre = knftv.findtext('Genre')
+            self.rating = knftv.findtext('Rating')
 
-            if knftv.find('Nickname').text != '':
+            if knftv.findtext('Nickname')is not None:
                 self.plot = '%s\n\nEmpfohlen von %s' % (knftv.find('Plot').text, knftv.find('Nickname').text)
             else:
-                self.plot = knftv.find('Plot').text
+                self.plot = knftv.findtext('Plot')
 
-            self.startdate = parser.parse(knftv.find('Date').text, dayfirst=True)
-            self.enddate = self.startdate.replace(hour=int(knftv.find('EndTime').text[:2]), minute=int(knftv.find('EndTime').text[-2:]))
+            self.startdate = parser.parse(knftv.findtext('Date'), dayfirst=True)
+            self.enddate = self.startdate.replace(hour=int(knftv.findtext('EndTime')[:2]), minute=int(knftv.findtext('EndTime')[-2:]))
             if self.startdate > self.enddate: self.enddate += datetime.timedelta(days=1)
             self.runtime = str((self.enddate - self.startdate).seconds / 60)
 

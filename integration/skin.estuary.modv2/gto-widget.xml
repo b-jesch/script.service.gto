@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <includes>
 	<include name="WidgetListGTO">
-		<param name="item_limit">15</param>
+		<param name="item_limit" value="$PARAM[item_limit]"/>
 		<param name="icon">$INFO[ListItem.Icon]</param>
 		<param name="label">$INFO[ListItem.Label]</param>
 		<param name="label2">$INFO[ListItem.Title]</param>
