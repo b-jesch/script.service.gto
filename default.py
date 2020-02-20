@@ -586,7 +586,7 @@ def showInfoWindow(blobId, showWindow=True):
     HOME.setProperty("GTO.Info.Date", blob['datetime'])
     HOME.setProperty("GTO.Info.RunTime", blob['runtime'])
     HOME.setProperty("GTO.Info.EndTime", datetime.datetime.strftime(parser.parse(blob['enddate']), LOCAL_TIME_FORMAT))
-    if blob['rating'] is None:
+    if blob['rating'] is None or blob['rating'] == '':
         HOME.setProperty("GTO.Info.Genre", blob['genre'])
     else:
         HOME.setProperty('GTO.Info.Genre', blob['genre'] + ' | IMDb: ' + blob['rating'])
