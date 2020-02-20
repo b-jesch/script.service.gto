@@ -4,7 +4,7 @@ Skintegration in Estuary:
 Because Estuary is the default skin of Kodi Jarvis and above and possibly resides in a read-only area of the system (LibreElec, Corelec, ...), you have to place a copy of the system skin folder to the addons folder:
         
         cp -R /usr/share/kodi/addons/skin.estuary $HOME/.kodi/addons/
-        cd $HOME/.kodi/addons/script.service.gto/integration/
+        cd $HOME/.kodi/addons/script.service.gto/integration/skin.estuary
          
 If You want to use the plugin as widget you have to perfom following steps:
 
