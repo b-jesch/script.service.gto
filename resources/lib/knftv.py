@@ -50,8 +50,10 @@ class Scraper():
             self.genre = knftv.findtext('Genre')
             self.rating = knftv.findtext('Rating')
 
-            if knftv.findtext('Nickname')is not None:
-                self.plot = '%s\n\nEmpfohlen von %s' % (knftv.find('Plot').text, knftv.find('Nickname').text)
+            _v = list()
+            for voter in knftv.find('Recommendations').findall('User'): _v.append(voter.text)
+            if len(_v) > 0:
+                self.plot = '%s\n\nEmpfohlen von %s' % (knftv.find('Plot').text, ', '.join(_v))
             else:
                 self.plot = knftv.findtext('Plot')
 
