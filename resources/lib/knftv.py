@@ -11,9 +11,9 @@ class Scraper():
         # Properties
 
         self.enabled = True
-        self.baseurl = 'https://www.quarantine.hs-mittweida.de/~jesch/knftv'
+        self.baseurl = 'https://www.staff.hs-mittweida.de/~jesch/knftv'
         self.lang = 'de_DE'
-        self.rssurl = 'https://www.quarantine.hs-mittweida.de/~jesch/knftv/broadcasts.php'
+        self.rssurl = 'https://www.staff.hs-mittweida.de/~jesch/knftv/broadcasts.php'
         self.friendlyname = 'KN Community freeTV Highlights'
         self.shortname = 'Kodinerds freeTV'
         self.icon = 'knftv.png'

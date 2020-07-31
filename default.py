@@ -125,6 +125,7 @@ def changeScraper():
         writeLog('selected scrapermodule is %s' % (_scraperdict[_idx]['module']))
         ADDON.setSetting('scraper', _scraperdict[_idx]['module'])
         ADDON.setSetting('setscraper', _scraperdict[_idx]['shortname'])
+        HOME.setProperty('GTO.timestamp', str(int(time.time())))
 
 # convert datetime string to timestamp with workaround python bug (http://bugs.python.org/issue7980) - Thanks to BJ1
 
