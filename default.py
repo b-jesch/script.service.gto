@@ -100,7 +100,9 @@ def ParamsToDict(parameters):
 
 # determine and change scraper modules
 
+
 def changeScraper():
+    global Scraper
     _scrapers = []
     _scraperdict = []
     for module in os.listdir(SCRAPER_FOLDER):
@@ -125,9 +127,11 @@ def changeScraper():
         writeLog('selected scrapermodule is %s' % (_scraperdict[_idx]['module']))
         ADDON.setSetting('scraper', _scraperdict[_idx]['module'])
         ADDON.setSetting('setscraper', _scraperdict[_idx]['shortname'])
+        Scraper = getattr(__import__(_scraperdict[_idx]['module'], locals(), globals(), fromlist=['Scraper']), 'Scraper')
         HOME.setProperty('GTO.timestamp', str(int(time.time())))
 
 # convert datetime string to timestamp with workaround python bug (http://bugs.python.org/issue7980) - Thanks to BJ1
+
 
 def utc_to_local_datetime(utc_datetime):
     delta = utc_datetime - EPOCH
@@ -137,6 +141,7 @@ def utc_to_local_datetime(utc_datetime):
     return datetime.datetime(*dt_args)
 
 # get pvr channelname, translate from Scraper to pvr channelname if necessary
+
 
 def channelName2pvrId(channelname):
     translations = json.loads(str(ChannelTranslate))
@@ -170,6 +175,7 @@ def channelName2pvrId(channelname):
 
 # get pvr channelname by id
 
+
 def getPvrChannelName(channelid, fallback):
     query = {
             "method": "PVR.GetChannels",
@@ -187,6 +193,7 @@ def getPvrChannelName(channelid, fallback):
 
 # get pvr channel logo url
 
+
 def getStationLogo(channelid, fallback):
     query = {
             "method": "PVR.GetChannelDetails",
@@ -198,6 +205,7 @@ def getStationLogo(channelid, fallback):
     except (AttributeError, IndexError,), e:
         writeLog('Could not get station logo: %s' % (e.message), level=xbmc.LOGERROR)
     return fallback
+
 
 def switchToChannel(pvrid):
     '''
@@ -340,6 +348,9 @@ def isInVideoDB(title):
         query.update(rpcQuery[i])
         res = jsonrpc(query)
         if 'movies' in res: break
+
+    if not 'movies' in res:
+        return params
 
     writeLog('Found %s matches for movie(s) in database, select first' % (len(res['movies'])))
 
@@ -659,6 +670,7 @@ if len(arguments) > 1:
 
     elif action == 'change_scraper':
         changeScraper()
+        scrapeGTOPage()
 
     elif action == 'record':
         setTimer(broadcastid, blob)

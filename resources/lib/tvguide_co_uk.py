@@ -9,7 +9,7 @@ class Scraper():
 
         # Properties
 
-        self.enabled = True
+        self.enabled = False
         self.baseurl = 'http://www.tvguide.co.uk'
         self.lang = 'en_GB'
         self.rssurl = 'http://www.tvguide.co.uk/TVhighlights.asp'

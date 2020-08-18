@@ -12,8 +12,8 @@ class Scraper():
         self.enabled = True
         self.baseurl = 'http://www.klack.de'
         self.lang = 'de_DE'
-        self.rssurl = 'http://www.klack.de/xml/tippsRSS.xml'
-        self.friendlyname = 'klack.de - TV Highlights'
+        self.rssurl = 'http://www.klack.de/xml/topRSS.xml'
+        self.friendlyname = 'klack.de - Top 30 Auswahl'
         self.shortname = 'klack.de'
         self.icon = 'klack.png'
         self.selector = '<item>'
@@ -79,7 +79,7 @@ class Scraper():
                     self.enddate = self.startdate
 
                 if self.startdate > self.enddate: self.enddate += datetime.timedelta(days=1)
-                self.runtime = str((self.enddate - self.startdate).seconds / 60)
+                self.runtime = str((self.enddate - self.startdate).seconds // 60)
 
                 # Genre
                 try:
