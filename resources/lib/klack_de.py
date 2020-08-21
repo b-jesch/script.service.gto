@@ -44,7 +44,7 @@ class Scraper():
 
         try:
             self.channel = re.compile('<title>(.+?)</title>', re.DOTALL).findall(content)[0].split(': ')[0]
-            self.detailURL = re.compile('<link>(.+?)</link>', re.DOTALL).findall(content)[0]
+            self.detailURL = re.compile('<link>(.+?)</link>', re.DOTALL).findall(content)[0].replace('/.html', '')
             self.title = re.compile('<title>(.+?)</title>', re.DOTALL).findall(content)[0].split(': ', 1)[1]
             self.thumb = re.compile('<img align="left" src="(.+?)"', re.DOTALL).findall(content)[0].replace('150x100.jpg', '500x333.jpg')
         except IndexError:

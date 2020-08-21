@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<addon id="script.service.gto" name="German Telecast Offers" version="2.1.20" provider-name="Birger Jesch">
+<addon id="script.service.gto" name="German Telecast Offers" version="2.1.21" provider-name="Birger Jesch">
     <requires>
         <import addon="xbmc.python" version="2.25.0"/>
         <import addon="xbmc.json" version="7.0.0"/>
@@ -30,6 +30,7 @@ Hierfür bitte README.md im Ordner 'integration' des jeweiligen Skins beachten.
         <email>birger.jesch@gmail.com</email>
         <website>http://vdr4bj1.no-ip.org/index.php?action=list&amp;item=addon</website>
         <news>
+- 2.1.21: klack.de sometimes send malformed URL of detail description. Fixed
 - 2.1.20: klack.de Scraper modified, UK Scraper temporary disabled
 - 2.1.17: Changes in KNFTV Scraper
 - 2.1.15: New Scraper: Kodinerds Community freeTV Highlights
