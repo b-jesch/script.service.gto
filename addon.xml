@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<addon id="script.service.gto" name="German Telecast Offers" version="3.0.0+matrix" provider-name="Birger Jesch">
+    <requires>
+        <import addon="xbmc.python" version="3.0.0"/>
+        <import addon="xbmc.json" version="7.0.0"/>
+        <import addon="script.module.dateutil" version="2.5.3"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="main.py">
+        <provides/>
+    </extension>
+    <extension point="xbmc.service" library="starter.py" start="startup">
+    </extension>
+
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <summary lang="en_GB">Fetch todays TV Offers from different scrapers</summary>
+        <summary lang="de_DE">Holt TV Tipps aus den RSS-Feeds und Webseiten diverser Anbieter</summary>
+        <language>de</language>
+        <description lang="en_GB">Fetch todays TV Offers from different scrapers
+
+This plugin needs a integration into the skin!
+Please refer to the README.md into the folder named 'integration' of your preferred skin.
+        </description>
+        <description lang="de_DE">Holt die TV Tipps des Tages aus den RSS-Feeds diverser Webseiten.
+
+Dieses Plugin benoetigt eine Skin-Integration!
+Hierfür bitte README.md im Ordner 'integration' des jeweiligen Skins beachten.
+        </description>
+        <license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
+        <source>https://github.com/b-jesch/script.service.gto</source>
+        <forum>http://www.kodinerds.net/index.php/Thread/50943-Release-TV-Widget-German-Telecast-Offers/</forum>
+        <email />
+        <website />
+        <news>
+Initial commit for Kodi "Matrix"
+Skin support for Estuary, Confluence
+        </news>
+        <assets>
+            <icon>icon.png</icon>
+            <fanart>fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon>

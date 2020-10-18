@@ -1,0 +1,76 @@
+<?xml version="1.0" ?>
+<settings version="1">
+	<section id="script.service.gto">
+		<category help="" id="einstellungen" label="30011">
+			<group id="1">
+				<setting help="" id="scraper" label="30111" type="string">
+					<level>0</level>
+					<default>klack.de</default>
+					<control format="action" type="button">
+						<data>RunPlugin(plugin://script.service.gto/?action=change_scraper&amp;source=setup)</data>
+						<close>false</close>
+					</control>
+				</setting>
+				<setting help="" id="enableinfo" label="30114" type="boolean">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+				</setting>
+			</group>
+			<group id="2">
+				<setting help="" id="mdelay" label="30127" type="string">
+					<level>1</level>
+					<default>30160</default>
+					<constraints>
+						<options>
+							<option label="30154">30154</option>
+							<option label="30156">30156</option>
+							<option label="30157">30157</option>
+							<option label="30158">30158</option>
+							<option label="30159">30159</option>
+							<option label="30160">30160</option>
+							<option label="30161">30161</option>
+							<option label="30162">30162</option>
+							<option label="30163">30163</option>
+							<option label="30164">30164</option>
+						</options>
+					</constraints>
+					<control format="string" type="spinner"/>
+				</setting>
+				<setting help="" id="screenrefresh" label="30128" type="string">
+					<level>1</level>
+					<default>30153</default>
+					<constraints>
+						<options>
+							<option label="30151">30151</option>
+							<option label="30152">30152</option>
+							<option label="30153">30153</option>
+							<option label="30154">30154</option>
+							<option label="30155">30155</option>
+							<option label="30156">30156</option>
+						</options>
+					</constraints>
+					<control format="string" type="spinner"/>
+				</setting>
+				<setting help="" id="pvronly" label="30126" type="boolean">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+				</setting>
+				<setting help="" id="prefer_hd" label="30113" type="boolean">
+					<level>0</level>
+					<default>true</default>
+					<control type="toggle"/>
+				</setting>
+				<setting help="" id="preferred" type="string">
+					<level>0</level>
+					<default>resources.lib.modules.scraper.klack_de</default>
+					<visible>false</visible>
+					<control format="string" type="edit">
+						<heading/>
+					</control>
+				</setting>
+			</group>
+		</category>
+	</section>
+</settings>
