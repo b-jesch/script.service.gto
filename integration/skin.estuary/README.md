@@ -14,17 +14,45 @@ If You want to use the plugin as widget you have to perfom following steps:
         cp -R icons $HOME/.kodi/addons/skin.estuary/extras/icons
         cp gto-widget.xml $HOME/.kodi/addons/skin.estuary/xml/
 
-2. Register the include:
+2. Register the include and submenu buttons:
 
         nano $HOME/.kodi/addons/skin.estuary/xml/Includes_Home.xml
         
    Insert in line 3 (after `<includes>`):
    
         <include file="gto-widget.xml"/>
+        <include name="GtoSubmenuItems">
+            <content>
+                <item>
+                    <label>$ADDON[script.service.gto 30115]</label>
+                    <onclick>RunPlugin(plugin://script.service.gto?action=change_scrape)</onclick>
+                    <thumb>newspaper.png</thumb>
+                    <visible>System.AddonIsEnabled(script.service.gto)</visible>
+                </item>
+            </content>
+            <content>
+                <item>
+                    <label>$ADDON[script.service.gto 30116]</label>
+                    <onclick>RunPlugin(plugin://script.service.gto?action=scrape)</onclick>
+                    <thumb>update.png</thumb>
+                    <visible>System.AddonIsEnabled(script.service.gto)</visible>
+                </item>
+            </content>
 
-   Save changes and exit
+3. Enable additional Buttons in the widget list category
+   
+   Search for the ```<include name="WidgetListCategories>``` and insert an additional parameter below (assume that Includes_Home.xml is still open):
+        
+            <param name="additional_pvr_items">true</param>
+            
+   Two lines behind starts a ```<definition>``` Block. Search for the correspondive ```</definition>``` Tag and insert 
+   before the ```</control>``` Tag above (within the ```<include condition=...>``` group):
+
+		        <include condition="$PARAM[additional_pvr_items]" content="GtoSubmenuItems" />
+               
+   Save changes (CTRL-o) and exit (CTRL-x)
     
-3. Insert the widget into the PVR section of the skin. Open the Home.xml and search for the PVR includes.
+4. Insert the widget into the PVR section of the skin. Open the Home.xml and search for the PVR includes.
    
         nano $HOME/.kodi/addons/skin.estuary/xml/Home.xml
         
@@ -43,8 +71,6 @@ If You want to use the plugin as widget you have to perfom following steps:
             <param name="label" value="$INFO[ListItem.label2]$INFO[ListItem.Property(StartTime), (,)]"/>
             <param name="label2" value="$INFO[ListItem.label]"/>
         </include>
-        
-    Save changes (CTRL-o) and exit (CTRL-x)
 
     Example:
     
@@ -73,8 +99,7 @@ If You want to use the plugin as widget you have to perfom following steps:
             </include>
         </control>
     
-			
-4. Extend DefaultDialogButton with 2nd click
+5. Extend DefaultDialogButton with 2nd click
 
         nano $HOME/.kodi/addons/skin.estuary/xml/Includes_Buttons.xml
     
