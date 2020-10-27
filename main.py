@@ -40,7 +40,15 @@ def get_url(**kwargs):
 
 def list_offers():
     if not os.path.isfile(SCRAPER_CONTENT):
-        return
+        loop = 30
+        while loop > 0:
+            if xbmc.Monitor().abortRequested(): break
+            xbmc.sleep(2000)
+            if HOME.getProperty('GTO.busy') == 'false': break
+            loop -= 1
+        if loop == 0 or not os.path.isfile(SCRAPER_CONTENT):
+            writeLog('No scraper data to display', xbmc.LOGERROR)
+            return
 
     with open(SCRAPER_CONTENT, 'r') as f:
         content = json.load(f)

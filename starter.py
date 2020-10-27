@@ -69,4 +69,6 @@ if __name__ == '__main__':
     starter = Starter()
     starter.start()
     HOME.clearProperty('GTO.timestamp')
+    if os.path.isfile(SCRAPER_CONTENT):
+        os.remove(SCRAPER_CONTENT)
     del starter
