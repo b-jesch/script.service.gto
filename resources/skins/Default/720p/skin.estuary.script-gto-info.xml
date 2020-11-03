@@ -138,17 +138,15 @@
                 <top>445</top>
                 <width>660</width>
                 <align>center</align>
-                <!-- Prepared for the new reminder timer in Matrix -->
-                <!--
                 <include content="DefaultDialogButton">
                     <description>Switchtimer button</description>
                     <param name="id" value="20" />
                     <param name="width" value="190"/>
                     <param name="label" value="$ADDON[script.service.gto 30107]"/>
-                    <param name="onclick" value="RunPlugin(plugin://script.service.gto?action=switchtimer&amp;broadcastid=$INFO[Window(Home).Property(GTO.Info.BroadcastID)]&amp;item=$INFO[Window(Home).Property(GTO.Info.Item)])"/>
+                    <param name="onclick" value="RunPlugin(plugin://script.service.gto?action=reminder&amp;broadcastid=$INFO[Window(Home).Property(GTO.Info.BroadcastID)]&amp;item=$INFO[Window(Home).Property(GTO.Info.Item)])"/>
                     <param name="onclick_2" value="Dialog.Close(all)"/>
-                    <param name="visible">!String.IsEmpty(Window(Home).Property(GTO.Info.BroadcastID)) + String.IsEqual(Window(Home).Property(GTO.Info.isInFuture),True)</param>
-                </include> -->
+                    <param name="visible">!String.IsEmpty(Window(Home).Property(GTO.Info.BroadcastID)) + String.IsEqual(Window(Home).Property(GTO.Info.hasTimer),False) + String.IsEqual(Window(Home).Property(GTO.Info.isInFuture),True)</param>
+                </include>
                 <include content="DefaultDialogButton">
                     <description>Switch now button</description>
                     <param name="id" value="21" />
@@ -156,7 +154,7 @@
                     <param name="label" value="$ADDON[script.service.gto 30108]"/>
                     <param name="onclick" value="RunPlugin(plugin://script.service.gto?action=switch_channel&amp;pvrid=$INFO[Window(Home).Property(GTO.Info.ChannelID)]&amp;item=$INFO[Window(Home).Property(GTO.Info.Item)])"/>
                     <param name="onclick_2" value="Dialog.Close(all)"/>
-                    <param name="visible">String.IsEqual(Window(Home).Property(GTO.Info.isRunning),True)</param>
+                    <param name="visible">String.IsEqual(Window(Home).Property(GTO.Info.isRunning),True) + !String.IsEqual(Window(Home).Property(GTO.Info.ChannelID),False)</param>
                 </include>
 				<include content="DefaultDialogButton">
                     <description>Timer button</description>

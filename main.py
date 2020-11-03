@@ -259,8 +259,8 @@ def router(paramstring):
             elif params['action'] == 'record':
                 setTimer(params['broadcastid'], params['item'])
 
-            elif params['action'] == 'switchtimer':
-                setSwitchTimer(params['broadcastid'], params['item'])
+            elif params['action'] == 'reminder':
+                setTimer(params['broadcastid'], params['item'], reminder=True)
 
             elif params['action'] == 'switch_channel':
                 switchToChannel(params['pvrid'], params['item'])

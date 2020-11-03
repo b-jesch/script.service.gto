@@ -286,56 +286,42 @@ def hasTimer(pvrid, broadcastid):
 
     query = {
         "method": "PVR.getTimers",
-        "params": {"properties": ["title", "channelid", "epguid"]}
+        "params": {"properties": ["title", "channelid", "epguid", "isreminder"]}
     }
+    hastimer = False
     res = jsonrpc(query)
     if res.get('timers', False):
         try:
             for timer in res.get('timers'):
                 if timer['channelid'] == pvrid and timer['epguid'] == broadcastid:
-                    writeLog('active timer for broadcast #{} ({}) on pvrID #{}'.format(timer['epguid'],
-                                                                                       timer['title'],
-                                                                                       timer['channelid']))
-                    return True
+                    reminder = "reminder" if timer['isreminder'] else "timer"
+                    writeLog('active {} for broadcast #{} ({}) on pvrID #{}'.format(reminder,
+                                                                                    timer['epguid'],
+                                                                                    timer['title'],
+                                                                                    timer['channelid']))
+                    hastimer = True
         except (TypeError, AttributeError,) as e:
             writeLog('Error while executing JSON request PVR.GetTimers: {}'.format(e.args), xbmc.LOGERROR)
-    return False
+    return hastimer
 
 
-def setTimer(broadcastId, item):
+def setTimer(broadcastId, item, reminder=False):
     """
     :param broadcastId: str unique broadcastID of the broadcast
     :return:            bool (true on success, else false)
     """
     query = {
         "method": "PVR.AddTimer",
-        "params": {"broadcastid": int(broadcastId)}
+        "params": {"broadcastid": int(broadcastId), "reminder": reminder}
     }
     res = jsonrpc(query)
     if res == 'OK':
-        writeLog('Timer of item #{} added'.format(item))
+        writeLog('Timer/reminder of item #{} added'.format(item))
         return True
     else:
-        writeLog('Timer couldn\'t set', xbmc.LOGERROR)
+        writeLog('Timer/reminder couldn\'t set', xbmc.LOGERROR)
         return False
 
-
-def setSwitchTimer(broadcastId, item):
-    """
-    :param broadcastId: str unique broadcastID of the broadcast
-    :return:            bool (true on success, else false)
-    """
-    query = {
-        "method": "PVR.ToggleTimer",
-        "params": {"broadcastid": int(broadcastId)}
-    }
-    res = jsonrpc(query)
-    if res == 'OK':
-        writeLog('Timer of item #%s added' % item)
-        return True
-    else:
-        writeLog('Timer couldn\'t set', xbmc.LOGERROR)
-        return False
 
 def hasPVR(timeout=30):
     _attempts = timeout / 5
@@ -348,6 +334,7 @@ def hasPVR(timeout=30):
         if pvr or monitor.waitForAbort(5): break
         _attempts -= 1
     return pvr
+
 
 def waitForScraper(timeout=60):
     isBusy = True

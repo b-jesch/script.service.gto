@@ -150,7 +150,7 @@
                 <top>470</top>
                 <width>520</width>
                 <control type="button" id="20">
-                        <description>Set Switchtimer button</description>
+                        <description>Switchtimer button</description>
                         <left>0</left>
                         <width>135</width>
                         <height>40</height>
@@ -163,11 +163,11 @@
                         <onright>21</onright>
                         <onup>855655</onup>
                         <ondown>855655</ondown>
-                        <enable>!IsEmpty(Window(Home).Property(GTO.Info.isInFuture)) + System.HasAddon(service.kn.switchtimer)</enable>
-                        <onclick>RunScript(service.kn.switchtimer,action=add,channel=$INFO[Window(Home).Property(GTO.Info.Channel)],icon=$INFO[Window(Home).Property(GTO.Info.Logo)],date=$INFO[Window(Home).Property(GTO.Info.Date)],title=$INFO[Window(Home).Property(GTO.Info.Title)])</onclick>
+                        <enable>!String.IsEmpty(Window(Home).Property(GTO.Info.BroadcastID)) + String.IsEqual(Window(Home).Property(GTO.Info.hasTimer),False) + String.IsEqual(Window(Home).Property(GTO.Info.isInFuture),True)</enable>
+                        <onclick>RunPlugin(plugin://script.service.gto?action=reminder&amp;broadcastid=$INFO[Window(Home).Property(GTO.Info.BroadcastID)]&amp;item=$INFO[Window(Home).Property(GTO.Info.Item)])</onclick>
                 </control>
                 <control type="button" id="21">
-                        <description>Switch to channel button</description>
+                        <description>Switch now button</description>
                         <left>140</left>
                         <width>135</width>
                         <height>40</height>
@@ -180,7 +180,7 @@
                         <onright>22</onright>
                         <onup>855655</onup>
                         <ondown>855655</ondown>
-                        <enable>!IsEmpty(Window(Home).Property(GTO.Info.isRunning)) + System.HasAddon(service.kn.switchtimer)</enable>
+                        <enable>String.IsEqual(Window(Home).Property(GTO.Info.isRunning),True) + !String.IsEqual(Window(Home).Property(GTO.Info.ChannelID),False)</enable>
                         <onclick>RunScript(script.service.gto,action=switch_channel&amp;pvrid=$INFO[Window(Home).Property(GTO.Info.ChannelID)])</onclick>
                         <onclick>PreviousMenu</onclick>
                 </control>

@@ -25,7 +25,7 @@ If You want to use the plugin as widget you have to perfom following steps:
             <content>
                 <item>
                     <label>$ADDON[script.service.gto 30115]</label>
-                    <onclick>RunPlugin(plugin://script.service.gto?action=change_scrape)</onclick>
+                    <onclick>RunPlugin(plugin://script.service.gto?action=change_scraper)</onclick>
                     <thumb>newspaper.png</thumb>
                     <visible>System.AddonIsEnabled(script.service.gto)</visible>
                 </item>
