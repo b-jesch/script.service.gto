@@ -119,12 +119,16 @@ msgctxt "#30133"
 msgid "Invalid function call"
 msgstr "Ungültiger Funktionsaufruf"
 
+msgctxt "#30134"
+msgid "Timer couldn't set. Check EPG start time of broadcast."
+msgstr "Ein Timer konnte nicht gesetzt werden. Überprüfe die EPG-Startzeit der Sendung"
+
 msgctxt "#30140"
 msgid "Oh sorry! Details are not accessible at this time."
 msgstr "Es liegen leider keine weiteren Informationen vor."
 
 msgctxt "#30141"
-msgid "This or a similar tittle is already in the database."
+msgid "This or a similar title is already in the database."
 msgstr "Dieser oder ein ähnlicher Titel befindet sich bereits in der Bibliothek"
 
 msgctxt "#30142"

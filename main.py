@@ -128,7 +128,7 @@ def scrape_page():
 
         record = {
             'item': item_nr,
-            'title': entity2unicode(scraper.title),
+            'title': entity2char(scraper.title),
             'thumb': scraper.thumb,
             'datetime': rDatetime,
             'runtime': scraper.runtime,
@@ -137,9 +137,9 @@ def scrape_page():
             'pvrchannel': channel,
             'pvrid': pvrid,
             'logo': logoURL,
-            'genre': entity2unicode(scraper.genre),
-            'plot': entity2unicode(scraper.plot),
-            'cast': entity2unicode(scraper.cast),
+            'genre': entity2char(scraper.genre),
+            'plot': entity2char(scraper.plot),
+            'cast': entity2char(scraper.cast),
             'rating': scraper.rating
         }
         if pvrid: record.update(getBroadcast(pvrid, rDatetime))
@@ -257,10 +257,12 @@ def router(paramstring):
                 show_info(params['item'])
 
             elif params['action'] == 'record':
-                setTimer(params['broadcastid'], params['item'])
+                if not setTimer(params['broadcastid'], params['item']):
+                    notifyOSD(LOC(30010), LOC(30134), icon=xbmcgui.NOTIFICATION_ERROR, enabled=True)
 
             elif params['action'] == 'reminder':
-                setTimer(params['broadcastid'], params['item'], reminder=True)
+                if not setTimer(params['broadcastid'], params['item'], reminder=True):
+                    notifyOSD(LOC(30010), LOC(30134), icon=xbmcgui.NOTIFICATION_ERROR, enabled=True)
 
             elif params['action'] == 'switch_channel':
                 switchToChannel(params['pvrid'], params['item'])

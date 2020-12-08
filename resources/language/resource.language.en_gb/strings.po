@@ -128,14 +128,18 @@ msgctxt "#30133"
 msgid "Invalid function call"
 msgstr ""
 
-#empty strings from id 30134 to 30139
+msgctxt "#30134"
+msgid "Timer couldn't set. Check EPG start time of broadcast."
+msgstr ""
+
+#empty strings from id 30135 to 30139
 
 msgctxt "#30140"
 msgid "Oh sorry! Details are not accessible at this time."
 msgstr ""
 
 msgctxt "#30141"
-msgid "This or a similar tittle is already in the database."
+msgid "This or a similar title is already in the database."
 msgstr ""
 
 msgctxt "#30142"

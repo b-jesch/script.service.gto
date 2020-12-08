@@ -10,6 +10,7 @@ import re
 import requests
 import time
 from urllib.parse import unquote_plus
+import html
 
 # Constants
 
@@ -34,7 +35,7 @@ RSS_TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 SCRAPER_FOLDER = os.path.join(ADDON_PATH, 'resources', 'lib', 'modules', 'scraper')
 SCRAPER_MODULPATH = 'resources.lib.modules.scraper'
 SCRAPER_DEFAULT = '%s.%s' % (SCRAPER_MODULPATH, 'klack_de')
-SCRAPER_CONTENT =os.path.join(ADDON_PROFILES, 'content.json')
+SCRAPER_CONTENT = os.path.join(ADDON_PROFILES, 'content.json')
 INFO_XML = xbmcvfs.translatePath('special://skin').split(os.sep)[-2] + '.script-gto-info.xml'
 USER_TRANSLATIONS = os.path.join(ADDON_PROFILES, 'translations.json')
 FANART = os.path.join(ADDON_PATH, 'fanart.jpg')
@@ -82,20 +83,18 @@ LOCAL_DATE_FORMAT = getDateFormat()
 LOCAL_TIME_FORMAT = getTimeFormat()
 
 # Helpers
-# convert HTML Entities to unicode chars
+# convert HTML Entities to chars
 
-entities = {'&lt;': '<', '&gt;': '>', '&nbsp;': ' ', '&amp;': '&', '&quot;': '"'}
-tags = {'<br/>': ' ', '<hr/>': ''}
+tags = {'<br/>': '\n', '<hr/>': ''}
 
 
-def entity2unicode(text):
-    for entity in entities.keys():
-        text = text.replace(entity, entities[entity])
+def entity2char(text):
+    unescaped = html.unescape(text)
 
     # 2nd pass to eliminate html like '<br/>'
 
     for tag in tags.keys():
-        text = text.replace(tag, tags[tag])
+        text = unescaped.replace(tag, tags[tag])
     return text
 
 
@@ -213,7 +212,7 @@ def getPvrChannelName(channelid, fallback):
     try:
         for channels in res.get('channels'):
             if channels.get('channelid') == channelid:
-                writeLog("found id for channel #{}".format(channels.get('label')))
+                writeLog("found id for channel {}".format(channels.get('label')))
                 return channels.get('label')
     except AttributeError as e:
         writeLog('Could not get channel: {}'.format(e.args), level=xbmc.LOGERROR)
@@ -271,7 +270,7 @@ def getBroadcast(pvrid, datetime2):
                     params.update({'broadcastid': broadcast['broadcastid']})
                     writeLog('Broadcast #{} of ChannelID #{} found'.format(broadcast['broadcastid'], pvrid))
                     break
-        except (TypeError, AttributeError,) as e:
+        except (TypeError, AttributeError, KeyError) as e:
             writeLog('Could not determine broadcast of ChannelID %s: %s' % (pvrid, e.args), xbmc.LOGERROR)
     return params
 
@@ -312,14 +311,14 @@ def setTimer(broadcastId, item, reminder=False):
     """
     query = {
         "method": "PVR.AddTimer",
-        "params": {"broadcastid": int(broadcastId), "reminder": reminder}
+        "params": {"broadcastid": int(broadcastId), "reminder": reminder, "timerrule": False}
     }
     res = jsonrpc(query)
     if res == 'OK':
         writeLog('Timer/reminder of item #{} added'.format(item))
         return True
     else:
-        writeLog('Timer/reminder couldn\'t set', xbmc.LOGERROR)
+        writeLog('Timer/reminder for broadcast #{} couldn\'t set'.format(broadcastId), xbmc.LOGERROR)
         return False
 
 
