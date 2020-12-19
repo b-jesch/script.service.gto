@@ -38,6 +38,9 @@ Skin support for Estuary, Estuary Mod V2, Confluence
         <assets>
             <icon>icon.png</icon>
             <fanart>fanart.jpg</fanart>
+            <screenshot>resources/lib/screenshots/screenshot_01.png</screenshot>
+            <screenshot>resources/lib/screenshots/screenshot_02.png</screenshot>
+            <screenshot>resources/lib/screenshots/screenshot_03.png</screenshot>
         </assets>
     </extension>
 </addon>
