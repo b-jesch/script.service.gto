@@ -35,7 +35,7 @@ corresponding value. This parameter can be used by other plugins or scripts as f
     
 #### Opens a window with additional details of the selected broadcast - Important for Skinners!:
 
-Example 'onclick' of a selected element - opens a popup window (<skin.id>.script-gto-info.xml):
+Example 'onclick' of a selected element - opens a popup window named <skin.id>.script-gto-info.xml (for example skin.estuary.script-gto-info.xml):
 
     <onclick>
         RunPlugin(plugin://script.service.gto?action=info&amp;item=$INFO[ListItem.Property(Item)])
@@ -46,7 +46,13 @@ Example 'onclick' of a selected element - opens a popup window (<skin.id>.script
     <onclick>
         RunPlugin(plugin://script.service.gto?action=record&amp;broadcastid=$INFO[Window(Home).Property(GTO.Info.BroadcastID)]&amp;item=$INFO[Window(Home).Property(GTO.Info.Item)])
     </onclick>
-    
+
+#### Set a reminder timer
+
+      <onclick>
+            RunPlugin(plugin://script.service.gto?action=reminder&amp;broadcastid=$INFO[Window(Home).Property(GTO.Info.BroadcastID)]&amp;item=$INFO[Window(Home).Property(GTO.Info.Item)])
+      </onclick>onclick>
+
 #### List items, Info labels and Properties:
 
     - ListItem.Label                  Station name and start time (hh:mm)
@@ -60,7 +66,7 @@ Example 'onclick' of a selected element - opens a popup window (<skin.id>.script
     
     - ListItem.genre                  Genre
     - ListItem.plot                   Content description of broadcast
-    - ListItem.duration               Runtime in minutes
+    - ListItem.duration               Runtime in seconds
     - ListItem.rating                 Rating
     
     - ListItem.Property(StartTime)    Datetime of broadcast start, regional settings without secs
@@ -70,7 +76,7 @@ Example 'onclick' of a selected element - opens a popup window (<skin.id>.script
 
 #### Properties for Home window (resides as properties in Window(Home)):
 
-    - GTO.provider                    Provider/Anbieter (scraper.friendlyname)
+    - GTO.provider                    Broadcast provider (scraper.friendlyname)
     - GTO.items                       count of items
     - GTO.busy                        true/false - scraper is busy
     - GTO.timestamp                   Timestamp of last refresh of the widget
@@ -89,20 +95,30 @@ Example 'onclick' of a selected element - opens a popup window (<skin.id>.script
     - GTO.Info.EndTime                end time (hh:mm)
     - GTO.Info.Rating                 Genre and/or Rating
     - GTO.Info.hasTimer               'True|False' active recording timer
-    - GTO.Info.BroadcastID            Broadcast-ID of timer
+    - GTO.Info.BroadcastID            Broadcast-ID of broadcast (needed for timers/reminders)
     - GTO.Info.isInFuture             'True|False' broadcast is in future
     - GTO.Info.isRunning              'True|False' broadcast is currently running
 
-### FAQ (German only)
+### FAQ
 
-Q: Hinter den Sendernamen sind Sternchen (*), warum ist das so?
+Q: There are asterisks (*) behind the channel names, why is that?
 
-   Der ausgewiesene Sendername des Scrapers ist ein anderer als der aus der Senderliste (Bsp: RTLII <> RTL2). In diesem 
-   Fall musst die 'ChannelTranslate.json' angepasst werden, die diverse vom Scraper verwendete Sendernamen auf die PVR-Liste mappt. 
-   Damit die Transformationstabelle nicht bei jedem Update überschrieben wird, liegt diese unter
+   The channel name shown in the scraper is different from the one in the channel list (e.g. RTLII vs. RTL2). In this 
+   case, the 'ChannelTranslate.json' must be adapted, which maps various channel names used by the scraper to the PVR list. 
+   To avoid an overwriting of the transformation table, it is stored under
 
         Linux (Kodi, LibreElec): /storage/.kodi/userdata/addon_data/script.service.gto/translations.json)
         Windows: %APPDATA%\kodi\userdata\addon_data\script.service.gto\translations.json
     
-   Die 'translations.json' kann mit jedem einfachen Texteditor bearbeitet werden
+   The 'translations.json' is editable with every simple editor.
 
+Q: Where is the Info Window XML?
+
+   You find the Info Window GUI description file (xml) within the addon folder ```script.service.gto/skins/Default/720p/<skin-id>.script-gto-info.xml``` (
+   for example: ```skin.estuary.script-gto-info.xml```):
+   
+Q: Where is the Widget GUI description file (xml)?
+
+   This file is named ```gto-widget.xml``` and must reside within the xml folder of your skin. See examples in the integration
+   folder of this addon.
+   
