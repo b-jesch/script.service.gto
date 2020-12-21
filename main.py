@@ -192,41 +192,79 @@ def show_info(item):
         content = json.load(f)
 
     for property in window_properties: HOME.clearProperty('GTO.Info.{}'.format(property))
-    _item = content['items'][int(item)]
+    item = content['items'][int(item)]
+    cm = list()
 
-    if _item.get('pvrid', False) and _item.get('broadcastid', None) is not None:
-        HOME.setProperty('GTO.Info.BroadcastID', str(_item['broadcastid']))
-        HOME.setProperty('GTO.Info.hasTimer', str(hasTimer(_item['pvrid'], _item['broadcastid'])))
+    if item.get('broadcastid', None) is not None:
 
-    if parser.parse(_item['datetime']) >= datetime.datetime.now():
-        writeLog('Title \'{}\' starts @{}, enable switchtimer button'.format(_item['title'], _item['datetime']))
-        HOME.setProperty("GTO.Info.isInFuture", "True")
-    elif parser.parse(_item['datetime']) < datetime.datetime.now() < parser.parse(_item['enddate']):
-        writeLog('Title \'{}\' is currently running, enable switch button'.format(_item['title']))
-        HOME.setProperty("GTO.Info.isRunning", "True")
+        is_timer = hasTimer(item['broadcastid'])
+        HOME.setProperty('GTO.Info.BroadcastID', str(item['broadcastid']))
+        HOME.setProperty('GTO.Info.hasTimer', str(is_timer))
+        if not is_timer:
+            li = xbmcgui.ListItem(label=LOC(30112))
+            li.setProperty('url', get_url(action='record', broadcastid=item['broadcastid'], item=item))
+            cm.append(li)
 
-    HOME.setProperty("GTO.Info.Item", str(_item['item']))
-    HOME.setProperty("GTO.Info.Title", _item['title'])
-    HOME.setProperty("GTO.Info.Picture", _item['thumb'])
-    HOME.setProperty("GTO.Info.Description", _item['plot'] or LOC(30140))
-    HOME.setProperty("GTO.Info.Channel", _item['pvrchannel'])
-    HOME.setProperty("GTO.Info.ChannelID", str(_item['pvrid']))
-    HOME.setProperty("GTO.Info.Logo", _item['logo'])
-    HOME.setProperty("GTO.Info.Date", _item['datetime'])
-    HOME.setProperty("GTO.Info.RunTime", str(_item['runtime'] // 60))
-    HOME.setProperty("GTO.Info.EndTime",
-                     datetime.datetime.strftime(parser.parse(_item['enddate']), LOCAL_TIME_FORMAT))
-    if _item['rating'] is None or _item['rating'] == '':
-        HOME.setProperty("GTO.Info.Genre", _item['genre'])
+    if parser.parse(item['datetime']) >= datetime.datetime.now():
+        writeLog('Title \'{}\' starts @{}, enable switchtimer button'.format(item['title'], item['datetime']))
+
+        is_inFuture = True
+        HOME.setProperty("GTO.Info.isInFuture", str(is_inFuture))
+        if is_inFuture and not is_timer:
+            li = xbmcgui.ListItem(label=LOC(30107))
+            li.setProperty('url', get_url(action='reminder', broadcastid=item['broadcastid'], item=item))
+            cm.append(li)
+
+    elif parser.parse(item['datetime']) < datetime.datetime.now() < parser.parse(item['enddate']):
+        writeLog('Title \'{}\' is currently running, enable switch button'.format(item['title']))
+
+        is_running = True
+        HOME.setProperty("GTO.Info.isRunning", str(is_running))
+        li = xbmcgui.ListItem(label=LOC(30108))
+        li.setProperty('url', get_url(action='switch_channel', pvrid=item['pvrid'], item=item))
+        cm.append(li)
+
+    if os.path.exists(os.path.join(ADDON_PATH, 'resources', 'skins', 'Default', '720p', INFO_XML)):
+
+        HOME.setProperty("GTO.Info.Item", str(item['item']))
+        HOME.setProperty("GTO.Info.Title", item['title'])
+        HOME.setProperty("GTO.Info.Picture", item['thumb'])
+        HOME.setProperty("GTO.Info.Description", item['plot'] or LOC(30140))
+        HOME.setProperty("GTO.Info.Channel", item['pvrchannel'])
+        HOME.setProperty("GTO.Info.ChannelID", str(item['pvrid']))
+        HOME.setProperty("GTO.Info.Logo", item['logo'])
+        HOME.setProperty("GTO.Info.Date", item['datetime'])
+        HOME.setProperty("GTO.Info.RunTime", str(item['runtime'] // 60))
+        HOME.setProperty("GTO.Info.EndTime",
+                         datetime.datetime.strftime(parser.parse(item['enddate']), LOCAL_TIME_FORMAT))
+        if item['rating'] is None or item['rating'] == '':
+            HOME.setProperty("GTO.Info.Genre", item['genre'])
+        else:
+            HOME.setProperty('GTO.Info.Genre', item['genre'] + ' | IMDb: ' + str(item['rating']))
+        HOME.setProperty("GTO.Info.Cast", item['cast'])
+        HOME.setProperty("GTO.Info.Rating", str(item['rating']))
+
+        popup = xbmcgui.WindowXMLDialog(INFO_XML, ADDON_PATH)
+        popup.doModal()
+        del popup
     else:
-        HOME.setProperty('GTO.Info.Genre', _item['genre'] + ' | IMDb: ' + str(_item['rating']))
-    HOME.setProperty("GTO.Info.Cast", _item['cast'])
-    HOME.setProperty("GTO.Info.Rating", str(_item['rating']))
+        writeLog('Missing {}, creating menu instead'.format(INFO_XML))
+        _selected = xbmcgui.Dialog().select('{}: {} - {}'.format(item['title'],
+                                                                 item['pvrchannel'],
+                                                                 item['datetime']), cm, useDetails=False)
+        if _selected > -1:
+            xbmc.executebuiltin('RunPlugin(%s)' % cm[_selected].getProperty('url'))
 
-    popup = xbmcgui.WindowXMLDialog(INFO_XML, ADDON_PATH)
-    popup.doModal()
-    del popup
-
+    '''
+    li = xbmcgui.ListItem()
+    li.setInfo('pvr', {'plot': 'ASBC', 'channelname': 'BBC'})
+    li.setArt({'icon': item['thumb']})
+    win = xbmcgui.Window(10600)
+    # win.clearProperties()
+    # win.setFocus(liz)
+    win.show()
+    # xbmc.executebuiltin('ActivateWindow(pvrguideinfo)')
+    '''
 
 def router(paramstring):
     """
@@ -263,6 +301,9 @@ def router(paramstring):
             elif params['action'] == 'reminder':
                 if not setTimer(params['broadcastid'], params['item'], reminder=True):
                     notifyOSD(LOC(30010), LOC(30134), icon=xbmcgui.NOTIFICATION_ERROR, enabled=True)
+                else:
+                    # Reminders doesn't trigger a notification
+                    notifyOSD(LOC(30010), LOC(30135), enabled=True)
 
             elif params['action'] == 'switch_channel':
                 switchToChannel(params['pvrid'], params['item'])

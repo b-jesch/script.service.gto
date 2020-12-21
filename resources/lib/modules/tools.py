@@ -275,24 +275,24 @@ def getBroadcast(pvrid, datetime2):
     return params
 
 
-def hasTimer(pvrid, broadcastid):
+def hasTimer(broadcastid):
     """
     :param pvrid:       str PVR-ID of the broadcast station
     :param broadcastid: str Broadcast-ID (or epguid)
     :return:            bool hastimer of the broadcast or False
     """
-    if not pvrid or not broadcastid: return False
+    if not broadcastid: return False
 
     query = {
         "method": "PVR.getTimers",
-        "params": {"properties": ["title", "channelid", "epguid", "isreminder"]}
+        "params": {"properties": ["title", "channelid", "isreminder"]}
     }
     hastimer = False
     res = jsonrpc(query)
     if res.get('timers', False):
         try:
             for timer in res.get('timers'):
-                if timer['channelid'] == pvrid and timer['epguid'] == broadcastid:
+                if timer['epguid'] == broadcastid:
                     reminder = "reminder" if timer['isreminder'] else "timer"
                     writeLog('active {} for broadcast #{} ({}) on pvrID #{}'.format(reminder,
                                                                                     timer['epguid'],

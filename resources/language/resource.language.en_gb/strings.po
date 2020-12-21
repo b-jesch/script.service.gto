@@ -121,7 +121,7 @@ msgid "Start Scraper with delay"
 msgstr ""
 
 msgctxt "#30132"
-msgid "Scraper doesn't provide any data."
+msgid "Scraper doesn't provide any data"
 msgstr ""
 
 msgctxt "#30133"
@@ -129,7 +129,11 @@ msgid "Invalid function call"
 msgstr ""
 
 msgctxt "#30134"
-msgid "Timer couldn't set. Check EPG start time of broadcast."
+msgid "Timer couldn't set"
+msgstr ""
+
+msgctxt "#30135"
+msgid "Reminder Timer was set"
 msgstr ""
 
 #empty strings from id 30135 to 30139

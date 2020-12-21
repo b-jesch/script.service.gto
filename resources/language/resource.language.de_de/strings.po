@@ -112,16 +112,20 @@ msgid "Start Scraper with delay"
 msgstr "Scraper zeitverzögert starten"
 
 msgctxt "#30132"
-msgid "Scraper doesn't provide any data."
-msgstr "Der Scraper liefert keine Daten."
+msgid "Scraper doesn't provide any data"
+msgstr "Der Scraper liefert keine Daten"
 
 msgctxt "#30133"
 msgid "Invalid function call"
 msgstr "Ungültiger Funktionsaufruf"
 
 msgctxt "#30134"
-msgid "Timer couldn't set. Check EPG start time of broadcast."
-msgstr "Ein Timer konnte nicht gesetzt werden. Überprüfe die EPG-Startzeit der Sendung"
+msgid "Timer couldn't set"
+msgstr "Ein Timer konnte nicht gesetzt werden"
+
+msgctxt "#30135"
+msgid "Reminder Timer was set"
+msgstr "Umschalttimer wurde gesetzt"
 
 msgctxt "#30140"
 msgid "Oh sorry! Details are not accessible at this time."
