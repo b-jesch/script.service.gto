@@ -205,24 +205,24 @@ def show_info(item):
             li.setProperty('url', get_url(action='record', broadcastid=item['broadcastid'], item=item))
             cm.append(li)
 
-    if parser.parse(item['datetime']) >= datetime.datetime.now():
-        writeLog('Title \'{}\' starts @{}, enable switchtimer button'.format(item['title'], item['datetime']))
+        if parser.parse(item['datetime']) >= datetime.datetime.now():
+            writeLog('Title \'{}\' starts @{}, enable switchtimer button'.format(item['title'], item['datetime']))
 
-        is_inFuture = True
-        HOME.setProperty("GTO.Info.isInFuture", str(is_inFuture))
-        if is_inFuture and not is_timer:
-            li = xbmcgui.ListItem(label=LOC(30107))
-            li.setProperty('url', get_url(action='reminder', broadcastid=item['broadcastid'], item=item))
+            is_inFuture = True
+            HOME.setProperty("GTO.Info.isInFuture", str(is_inFuture))
+            if is_inFuture and not is_timer:
+                li = xbmcgui.ListItem(label=LOC(30107))
+                li.setProperty('url', get_url(action='reminder', broadcastid=item['broadcastid'], item=item))
+                cm.append(li)
+
+        elif parser.parse(item['datetime']) < datetime.datetime.now() < parser.parse(item['enddate']):
+            writeLog('Title \'{}\' is currently running, enable switch button'.format(item['title']))
+
+            is_running = True
+            HOME.setProperty("GTO.Info.isRunning", str(is_running))
+            li = xbmcgui.ListItem(label=LOC(30108))
+            li.setProperty('url', get_url(action='switch_channel', pvrid=item['pvrid'], item=item))
             cm.append(li)
-
-    elif parser.parse(item['datetime']) < datetime.datetime.now() < parser.parse(item['enddate']):
-        writeLog('Title \'{}\' is currently running, enable switch button'.format(item['title']))
-
-        is_running = True
-        HOME.setProperty("GTO.Info.isRunning", str(is_running))
-        li = xbmcgui.ListItem(label=LOC(30108))
-        li.setProperty('url', get_url(action='switch_channel', pvrid=item['pvrid'], item=item))
-        cm.append(li)
 
     if os.path.exists(os.path.join(ADDON_PATH, 'resources', 'skins', 'Default', '720p', INFO_XML)):
 
