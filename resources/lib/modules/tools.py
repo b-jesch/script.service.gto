@@ -284,12 +284,15 @@ def hasTimer(broadcastid):
     if not broadcastid: return False
 
     query = {
-        "method": "PVR.getTimers",
-        "params": {"properties": ["title", "channelid", "isreminder"]}
+        "method": "PVR.GetBroadcastDetails",
+        "params": {"broadcastid": broadcastid, "properties": ["hastimer", "title", "starttime"]}
     }
     hastimer = False
     res = jsonrpc(query)
-    if res.get('timers', False):
+    if res.get('broadcastdetails', False):
+        hastimer = res['broadcastdetails']['hastimer']
+        if hastimer: writeLog('Timer already set for broadcast #{}'.format(broadcastid))
+        '''
         try:
             for timer in res.get('timers'):
                 if timer['epguid'] == broadcastid:
@@ -301,6 +304,7 @@ def hasTimer(broadcastid):
                     hastimer = True
         except (TypeError, AttributeError,) as e:
             writeLog('Error while executing JSON request PVR.GetTimers: {}'.format(e.args), xbmc.LOGERROR)
+        '''
     return hastimer
 
 
