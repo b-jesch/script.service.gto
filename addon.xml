@@ -1,17 +1,16 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<addon id="script.service.gto" name="German Telecast Offers" version="3.0.2+matrix.2" provider-name="Birger Jesch">
+<addon id="script.service.gto" name="German Telecast Offers" version="3.0.3+matrix" provider-name="Birger Jesch">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
         <import addon="xbmc.json" version="7.0.0"/>
         <import addon="script.module.dateutil" version="2.5.3"/>
         <import addon="script.module.requests" version="2.22.0"/>
     </requires>
+    <extension point="xbmc.service" library="starter.py" start="startup">
+    </extension>
     <extension point="xbmc.python.pluginsource" library="main.py">
         <provides/>
     </extension>
-    <extension point="xbmc.service" library="starter.py" start="startup">
-    </extension>
-
     <extension point="xbmc.addon.metadata">
         <platform>all</platform>
         <summary lang="en_GB">Fetch todays German TV Offers from different scrapers</summary>

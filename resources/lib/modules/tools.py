@@ -289,7 +289,7 @@ def hasTimer(broadcastid):
     }
     hastimer = False
     res = jsonrpc(query)
-    if res.get('broadcastdetails', False):
+    if res is not None and res.get('broadcastdetails', False):
         hastimer = res['broadcastdetails']['hastimer']
         if hastimer: writeLog('Timer already set for broadcast #{}'.format(broadcastid))
         '''
