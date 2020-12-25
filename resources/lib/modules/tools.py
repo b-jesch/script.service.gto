@@ -277,34 +277,27 @@ def getBroadcast(pvrid, datetime2):
 
 def hasTimer(broadcastid):
     """
-    :param pvrid:       str PVR-ID of the broadcast station
     :param broadcastid: str Broadcast-ID (or epguid)
     :return:            bool hastimer of the broadcast or False
     """
     if not broadcastid: return False
 
     query = {
-        "method": "PVR.GetBroadcastDetails",
-        "params": {"broadcastid": broadcastid, "properties": ["hastimer", "title", "starttime"]}
+        "method": "PVR.GetTimers",
+        "params": {"properties": ["broadcastid", "isreminder", "title"]}
     }
     hastimer = False
-    res = jsonrpc(query)
-    if res is not None and res.get('broadcastdetails', False):
-        hastimer = res['broadcastdetails']['hastimer']
-        if hastimer: writeLog('Timer already set for broadcast #{}'.format(broadcastid))
-        '''
-        try:
-            for timer in res.get('timers'):
-                if timer['epguid'] == broadcastid:
-                    reminder = "reminder" if timer['isreminder'] else "timer"
-                    writeLog('active {} for broadcast #{} ({}) on pvrID #{}'.format(reminder,
-                                                                                    timer['epguid'],
-                                                                                    timer['title'],
-                                                                                    timer['channelid']))
-                    hastimer = True
-        except (TypeError, AttributeError,) as e:
-            writeLog('Error while executing JSON request PVR.GetTimers: {}'.format(e.args), xbmc.LOGERROR)
-        '''
+    try:
+        res = jsonrpc(query)
+        for timer in res.get('timers'):
+            if timer['broadcastid'] == broadcastid:
+                reminder = "reminder" if timer['isreminder'] else "timer"
+                writeLog('active {} for broadcast #{} ({})'.format(reminder,
+                                                                   timer['broadcastid'],
+                                                                   timer['title']))
+                hastimer = True
+    except (TypeError, AttributeError,) as e:
+        writeLog('Error while executing JSON request PVR.GetTimers: {}'.format(e.args), xbmc.LOGERROR)
     return hastimer
 
 
