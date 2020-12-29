@@ -127,6 +127,10 @@ msgctxt "#30135"
 msgid "Reminder Timer was set"
 msgstr "Umschalttimer wurde gesetzt"
 
+msgctxt "#30136"
+msgid "Missing PVR info window skin file"
+msgstr "Fehlende PVR Info Skindatei"
+
 msgctxt "#30140"
 msgid "Oh sorry! Details are not accessible at this time."
 msgstr "Es liegen leider keine weiteren Informationen vor."

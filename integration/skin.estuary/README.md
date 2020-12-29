@@ -38,10 +38,11 @@ If You want to use the plugin as widget you have to perfom following steps:
                     <visible>System.AddonIsEnabled(script.service.gto)</visible>
                 </item>
             </content>
+        </include>
 
 3. Enable additional Buttons in the widget list category
    
-   Search for the ```<include name="WidgetListCategories>``` and insert an additional parameter below (assume that Includes_Home.xml is still open):
+   Search for the ```<include name="WidgetListCategories">``` and insert an additional parameter below (assume that Includes_Home.xml is still open):
         
             <param name="additional_pvr_items">true</param>
             
@@ -104,9 +105,9 @@ If You want to use the plugin as widget you have to perfom following steps:
         nano $HOME/.kodi/addons/skin.estuary/xml/Includes_Buttons.xml
     
     search for `<include name="DefaultDialogButton">` and extend within the control group the 2nd `<onclick>$PARAM[onclick]</onclick>`:
-      
-            ```<onclick>$PARAM[onclick_2]</onclick>```
-        
+
+        <onclick>$PARAM[onclick_2]</onclick>
+
     Example:
      
              <control type="button" id="$PARAM[id]">

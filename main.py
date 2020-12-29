@@ -7,6 +7,8 @@ import xbmcgui
 import xbmcplugin
 import xbmcvfs
 
+from resources.lib.pvrinfo import InfoWin
+
 OPT_MDELAY = getAddonSetting('mdelay', NUM, 60)
 OPT_ENABLE_INFO = getAddonSetting('enableinfo', BOOL)
 OPT_PREFER_HD = getAddonSetting('prefer_hd', BOOL)
@@ -248,23 +250,14 @@ def show_info(item):
         popup.doModal()
         del popup
     else:
-        writeLog('Missing {}, creating menu instead'.format(INFO_XML))
-        _selected = xbmcgui.Dialog().select('{}: {} - {}'.format(item['title'],
-                                                                 item['pvrchannel'],
-                                                                 item['datetime']), cm, useDetails=False)
-        if _selected > -1:
-            xbmc.executebuiltin('RunPlugin(%s)' % cm[_selected].getProperty('url'))
+        writeLog('Missing PVR info window for this skin', xbmc.LOGERROR)
+        notifyOSD(LOC(30010), LOC(30136), icon=xbmcgui.NOTIFICATION_WARNING, enabled=True)
+        '''
+        win = InfoWin('DialogPVRInfo.xml', ADDON_PATH)
+        win.display()
+        del win
+        '''
 
-    '''
-    li = xbmcgui.ListItem()
-    li.setInfo('pvr', {'plot': 'ASBC', 'channelname': 'BBC'})
-    li.setArt({'icon': item['thumb']})
-    win = xbmcgui.Window(10600)
-    # win.clearProperties()
-    # win.setFocus(liz)
-    win.show()
-    # xbmc.executebuiltin('ActivateWindow(pvrguideinfo)')
-    '''
 
 def router(paramstring):
     """

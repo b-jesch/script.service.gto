@@ -136,7 +136,11 @@ msgctxt "#30135"
 msgid "Reminder Timer was set"
 msgstr ""
 
-#empty strings from id 30135 to 30139
+msgctxt "#30136"
+msgid "Missing PVR info window skin file"
+msgstr ""
+
+#empty strings from id 30137 to 30139
 
 msgctxt "#30140"
 msgid "Oh sorry! Details are not accessible at this time."

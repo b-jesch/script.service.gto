@@ -54,7 +54,7 @@ def getAddonSetting(setting, sType=STRING, multiplicator=1):
         try:
             return int(re.match('\d+', LOC(int(ADDON.getSetting(setting)))).group()) * multiplicator
         except AttributeError:
-            writeLog('Could not read setting type NUM: %s' %(setting))
+            writeLog('Couldn\'t read NUM setting: %s' % setting)
             return 0
     else:
         return ADDON.getSetting(setting)
@@ -111,9 +111,7 @@ def writeLog(message, level=xbmc.LOGDEBUG):
         try:
             xbmc.log('[%s %s]: %s' % (ADDON_ID, ADDON_VERSION,  message), level)
         except Exception:
-            xbmc.log('[%s %s]: %s' % (ADDON_ID, ADDON_VERSION,  'Fatal: Message could not displayed'), xbmc.LOGERROR)
-
-# convert datetime string to timestamp with workaround python bug (http://bugs.python.org/issue7980) - Thanks to BJ1
+            xbmc.log('[%s %s]: %s' % (ADDON_ID, ADDON_VERSION,  'Fatal: Message couldn\'t displayed'), xbmc.LOGERROR)
 
 
 def utc_to_local_datetime(utc_datetime):
@@ -190,18 +188,19 @@ def channelName2pvrId(channelname):
             # prefer HD Channel if available
 
             if OPT_PREFER_HD and (channelname + " HD").lower() == channels.get('label').lower():
-                writeLog("GTO found HD priorized channel %s" % (channels.get('label')))
+                writeLog("GTO found HD priorized channel {}".format(channels.get('label')))
                 return channels.get('channelid')
 
             if channelname.lower() == channels.get('label').lower():
-                writeLog("GTO found channel %s" % (channels.get('label')))
+                writeLog("GTO found channel {}".format(channels.get('label')))
                 return channels.get('channelid')
 
-    except AttributeError as e:
-        writeLog('Could not get ID from %s: %s' % (channelname, e.args), xbmc.LOGERROR)
+    except AttributeError:
+        writeLog('Could not get ID from {}'.format(channelname), xbmc.LOGERROR)
     return False
 
 # get pvr channelname by id
+
 
 def getPvrChannelName(channelid, fallback):
     query = {
@@ -243,9 +242,9 @@ def switchToChannel(pvrid, item):
         }
     res = jsonrpc(query)
     if res == 'OK':
-        writeLog('Switch to channel id {} from item#{}'.format(pvrid, item))
+        writeLog('Switch to channel id {} of item #{}'.format(pvrid, item))
     else:
-        writeLog('Couldn\'t switch to channel id %s' % (pvrid))
+        writeLog('Couldn\'t switch to channel id {}'.format(pvrid))
 
 
 def getBroadcast(pvrid, datetime2):
@@ -270,8 +269,8 @@ def getBroadcast(pvrid, datetime2):
                     params.update({'broadcastid': broadcast['broadcastid']})
                     writeLog('Broadcast #{} of ChannelID #{} found'.format(broadcast['broadcastid'], pvrid))
                     break
-        except (TypeError, AttributeError, KeyError) as e:
-            writeLog('Could not determine broadcast of ChannelID %s: %s' % (pvrid, e.args), xbmc.LOGERROR)
+        except (TypeError, AttributeError, KeyError):
+            writeLog('Couldn\'t determine broadcast of ChannelID #{}'.format(pvrid), xbmc.LOGERROR)
     return params
 
 
