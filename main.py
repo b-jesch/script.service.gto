@@ -60,7 +60,8 @@ def list_offers():
     xbmcplugin.setPluginFanart(_handle, FANART)
     for item in content['items']:
         liz = xbmcgui.ListItem()
-        liz.setLabel('{} ({})'.format(item.get('pvrchannel', item.get('channel')), item.get('datetime').split(' ')[1]))
+        liz.setLabel('{} ({})'.format(item.get('pvrchannel', item.get('channel')),
+                                      convert_dateformat(item.get('datetime'), dt_out=LOCAL_TIME_FORMAT)))
         liz.setLabel2('{}'.format(item.get('title')))
         liz.setInfo('video', {'genre': item.get('genre'),
                               'plot': item.get('plot'),
@@ -69,8 +70,8 @@ def list_offers():
                               'mediatype': 'video'})
         liz.setArt({'icon': item.get('thumb'), 'thumb': item.get('thumb'), 'poster': item.get('thumb'),
                     'fanart': item.get('thumb'), 'logo': item.get('logo')})
-        liz.setProperty('StartTime', item.get('datetime'))
-        liz.setProperty('EndTime', item.get('enddate'))
+        liz.setProperty('StartTime', convert_dateformat(item.get('datetime')))
+        liz.setProperty('EndTime', convert_dateformat(item.get('enddate')))
         liz.setProperty('RunTime', str(item.get('runtime') // 60))
         liz.setProperty('Item', str(item.get('item')))
         liz.setProperty('IsPlayable', 'false')
@@ -126,7 +127,7 @@ def scrape_page():
         logoURL = getStationLogo(pvrid, scraper.err404).replace('image://', '')
         channel = getPvrChannelName(pvrid, scraper.channel)
 
-        rDatetime = datetime.datetime.strftime(scraper.startdate, LOCAL_DATE_FORMAT)
+        rDatetime = datetime.datetime.strftime(scraper.startdate, RSS_TIME_FORMAT)
 
         record = {
             'item': item_nr,
@@ -134,7 +135,7 @@ def scrape_page():
             'thumb': scraper.thumb,
             'datetime': rDatetime,
             'runtime': scraper.runtime,
-            'enddate': datetime.datetime.strftime(scraper.enddate, LOCAL_DATE_FORMAT),
+            'enddate': datetime.datetime.strftime(scraper.enddate, RSS_TIME_FORMAT),
             'channel': scraper.channel,
             'pvrchannel': channel,
             'pvrid': pvrid,
@@ -202,29 +203,17 @@ def show_info(item):
         is_timer = hasTimer(item['broadcastid'])
         HOME.setProperty('GTO.Info.BroadcastID', str(item['broadcastid']))
         HOME.setProperty('GTO.Info.hasTimer', str(is_timer))
-        if not is_timer:
-            li = xbmcgui.ListItem(label=LOC(30112))
-            li.setProperty('url', get_url(action='record', broadcastid=item['broadcastid'], item=item))
-            cm.append(li)
 
-        if parser.parse(item['datetime']) >= datetime.datetime.now():
+        if parser.parse(item['datetime'], dayfirst=False) >= datetime.datetime.now():
             writeLog('Title \'{}\' starts @{}, enable switchtimer button'.format(item['title'], item['datetime']))
-
             is_inFuture = True
             HOME.setProperty("GTO.Info.isInFuture", str(is_inFuture))
-            if is_inFuture and not is_timer:
-                li = xbmcgui.ListItem(label=LOC(30107))
-                li.setProperty('url', get_url(action='reminder', broadcastid=item['broadcastid'], item=item))
-                cm.append(li)
 
-        elif parser.parse(item['datetime']) < datetime.datetime.now() < parser.parse(item['enddate']):
+        elif parser.parse(item['datetime'], dayfirst=False) < datetime.datetime.now() < parser.parse(item['enddate'], dayfirst=False):
             writeLog('Title \'{}\' is currently running, enable switch button'.format(item['title']))
 
             is_running = True
             HOME.setProperty("GTO.Info.isRunning", str(is_running))
-            li = xbmcgui.ListItem(label=LOC(30108))
-            li.setProperty('url', get_url(action='switch_channel', pvrid=item['pvrid'], item=item))
-            cm.append(li)
 
     if os.path.exists(os.path.join(ADDON_PATH, 'resources', 'skins', 'Default', '720p', INFO_XML)):
 
@@ -235,10 +224,9 @@ def show_info(item):
         HOME.setProperty("GTO.Info.Channel", item['pvrchannel'])
         HOME.setProperty("GTO.Info.ChannelID", str(item['pvrid']))
         HOME.setProperty("GTO.Info.Logo", item['logo'])
-        HOME.setProperty("GTO.Info.Date", item['datetime'])
+        HOME.setProperty("GTO.Info.Date", convert_dateformat(item['datetime']))
         HOME.setProperty("GTO.Info.RunTime", str(item['runtime'] // 60))
-        HOME.setProperty("GTO.Info.EndTime",
-                         datetime.datetime.strftime(parser.parse(item['enddate']), LOCAL_TIME_FORMAT))
+        HOME.setProperty("GTO.Info.EndTime", convert_dateformat(item['enddate']))
         if item['rating'] is None or item['rating'] == '':
             HOME.setProperty("GTO.Info.Genre", item['genre'])
         else:

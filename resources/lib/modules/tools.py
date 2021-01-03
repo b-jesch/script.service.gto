@@ -122,6 +122,11 @@ def utc_to_local_datetime(utc_datetime):
     return datetime.datetime(*dt_args)
 
 
+def convert_dateformat(datestring, dt_in=RSS_TIME_FORMAT, dt_out=LOCAL_DATE_FORMAT):
+    dt = time.strptime(datestring, dt_in)
+    return time.strftime(dt_out, dt)
+
+
 def jsonrpc(query):
     querystring = {"jsonrpc": "2.0", "id": 1}
     querystring.update(query)
@@ -264,7 +269,7 @@ def getBroadcast(pvrid, datetime2):
     if res.get('broadcasts', False):
         try:
             for broadcast in res.get('broadcasts'):
-                _ltt = utc_to_local_datetime(parser.parse(broadcast['starttime'])).strftime(LOCAL_DATE_FORMAT)
+                _ltt = utc_to_local_datetime(parser.parse(broadcast['starttime'])).strftime(RSS_TIME_FORMAT)
                 if _ltt == datetime2:
                     params.update({'broadcastid': broadcast['broadcastid']})
                     writeLog('Broadcast #{} of ChannelID #{} found'.format(broadcast['broadcastid'], pvrid))
