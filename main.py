@@ -127,13 +127,11 @@ def scrape_page():
         logoURL = getStationLogo(pvrid, scraper.err404).replace('image://', '')
         channel = getPvrChannelName(pvrid, scraper.channel)
 
-        rDatetime = datetime.datetime.strftime(scraper.startdate, RSS_TIME_FORMAT)
-
         record = {
             'item': item_nr,
             'title': entity2char(scraper.title),
             'thumb': scraper.thumb,
-            'datetime': rDatetime,
+            'datetime': datetime.datetime.strftime(scraper.startdate, RSS_TIME_FORMAT),
             'runtime': scraper.runtime,
             'enddate': datetime.datetime.strftime(scraper.enddate, RSS_TIME_FORMAT),
             'channel': scraper.channel,
@@ -145,7 +143,7 @@ def scrape_page():
             'cast': entity2char(scraper.cast),
             'rating': scraper.rating
         }
-        if pvrid: record.update(getBroadcast(pvrid, rDatetime))
+        if pvrid: record.update(getBroadcast(pvrid, datetime.datetime.strftime(scraper.startdate, RSS_TIME_FORMAT_WOS)))
 
         items.append(record)
         item_nr += 1

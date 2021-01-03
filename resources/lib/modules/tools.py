@@ -31,6 +31,7 @@ OSD = xbmcgui.Dialog()
 
 EPOCH = datetime.datetime(1970, 1, 1)
 RSS_TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
+RSS_TIME_FORMAT_WOS = '%Y-%m-%d %H:%M'
 
 SCRAPER_FOLDER = os.path.join(ADDON_PATH, 'resources', 'lib', 'modules', 'scraper')
 SCRAPER_MODULPATH = 'resources.lib.modules.scraper'
@@ -269,7 +270,7 @@ def getBroadcast(pvrid, datetime2):
     if res.get('broadcasts', False):
         try:
             for broadcast in res.get('broadcasts'):
-                _ltt = utc_to_local_datetime(parser.parse(broadcast['starttime'])).strftime(RSS_TIME_FORMAT)
+                _ltt = utc_to_local_datetime(parser.parse(broadcast['starttime'])).strftime(RSS_TIME_FORMAT_WOS)
                 if _ltt == datetime2:
                     params.update({'broadcastid': broadcast['broadcastid']})
                     writeLog('Broadcast #{} of ChannelID #{} found'.format(broadcast['broadcastid'], pvrid))
