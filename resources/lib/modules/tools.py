@@ -173,7 +173,7 @@ def checkResource(resource, fallback):
 
 
 def channelName2pvrId(channelname):
-    with open(USER_TRANSLATIONS, 'r') as f:
+    with open(USER_TRANSLATIONS, 'r', encoding='utf-8') as f:
         translations = json.load(f)
 
     for translation in translations:
