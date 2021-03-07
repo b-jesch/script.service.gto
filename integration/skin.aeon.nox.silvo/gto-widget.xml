@@ -62,31 +62,7 @@
                                                         <bordertexture border="4">button-nofocus.png</bordertexture>
                                                         <bordersize>4</bordersize>
                                                 </control>
-                                                <control type="label">
-                                                        <description>Genre</description>
-                                                        <left>20</left>
-                                                        <top>190</top>
-                                                        <width>200</width>
-                                                        <height>14</height>
-                                                        <font>font10</font>
-                                                        <textcolor>white</textcolor>
-                                                        <align>left</align>
-                                                        <aligny>top</aligny>
-                                                        <label>$INFO[ListItem.genre]</label>
-                                                </control>
-                                                <control type="label">
-                                                        <description>Movie Title</description>
-                                                        <left>20</left>
-                                                        <top>168</top>
-                                                        <width>200</width>
-                                                        <height>20</height>
-                                                        <font>font12</font>
-                                                        <textcolor>white</textcolor>
-                                                        <align>center</align>
-                                                        <aligny>center</aligny>
-                                                        <label>$INFO[ListItem.title]</label>
-                                                </control>
-                                                <control type="image">
+												<control type="image">
                                                         <description>Channellogo</description>
                                                         <left>10</left>
                                                         <top>210</top>
@@ -97,7 +73,31 @@
                                                         <aligny>top</aligny>
                                                         <texture background="false">$INFO[ListItem.Art(logo)]</texture>
                                                         <bordersize>5</bordersize>
+                                                </control>                                                
+                                                <control type="label">
+                                                        <description>Movie Title</description>
+                                                        <left>20</left>
+                                                        <top>168</top>
+                                                        <width>200</width>
+                                                        <height>20</height>
+                                                        <font>font12</font>
+                                                        <textcolor>white</textcolor>
+                                                        <align>center</align>
+                                                        <aligny>center</aligny>
+                                                        <label>$INFO[ListItem.Label2]</label>
                                                 </control>
+												<control type="label">
+                                                        <description>Sender und Startzeit</description>
+                                                        <left>20</left>
+                                                        <top>190</top>
+                                                        <width>200</width>
+                                                        <height>14</height>
+                                                        <font>font10</font>
+                                                        <textcolor>white</textcolor>
+                                                        <align>left</align>
+                                                        <aligny>top</aligny>
+                                                        <label>$INFO[ListItem.Label]</label>
+                                                </control>                                                
                                                 <control type="label">
                                                         <description>Starttime - Endtime</description>
                                                         <left>115</left>
@@ -111,7 +111,7 @@
                                                         <label>$INFO[ListItem.Property(StartTime)] - $INFO[ListItem.Property(EndTime)]</label>
                                                 </control>
                                                 <control type="label">
-                                                        <description>PVR Channel</description>
+                                                        <description>Genre</description>
                                                         <left>115</left>
                                                         <top>245</top>
                                                         <width>115</width>
@@ -120,7 +120,7 @@
                                                         <textcolor>white</textcolor>
                                                         <align>right</align>
                                                         <aligny>top</aligny>
-                                                        <label>$INFO[ListItem.Label2]</label>
+                                                        <label>$INFO[ListItem.genre]</label>
                                                 </control>
                                         </itemlayout>
                                         <focusedlayout height="300" width="240">
@@ -154,30 +154,7 @@
                                                         <bordersize>4</bordersize>
                                                         <visible>!Control.HasFocus(58051)</visible>
                                                 </control>
-                                                <control type="label">
-                                                        <left>20</left>
-                                                        <top>190</top>
-                                                        <width>200</width>
-                                                        <height>14</height>
-                                                        <font>font10</font>
-                                                        <textcolor>$VAR[ThemeHomeLabelColor]</textcolor>
-                                                        <align>left</align>
-                                                        <aligny>top</aligny>
-                                                        <label>$INFO[ListItem.genre]</label>
-                                                </control>
-                                                <control type="label">
-                                                        <left>20</left>
-                                                        <top>168</top>
-                                                        <width>200</width>
-                                                        <height>20</height>
-                                                        <font>font12</font>
-                                                        <textcolor>$VAR[ThemeHomeLabelColor]</textcolor>
-                                                        <align>center</align>
-                                                        <aligny>center</aligny>
-                                                        <label>$INFO[ListItem.Label]</label>
-                                                        <visible>true</visible>
-                                                </control>
-                                                <control type="image">
+												<control type="image">
                                                         <description>Channellogo</description>
                                                         <left>10</left>
                                                         <top>210</top>
@@ -189,7 +166,33 @@
                                                         <texture background="false">$INFO[ListItem.Art(logo)]</texture>
                                                         <bordersize>5</bordersize>
                                                 </control>
+												<control type="label">
+														<description>Titel -- Label2</description>
+                                                        <left>20</left>
+                                                        <top>168</top>
+                                                        <width>200</width>
+                                                        <height>20</height>
+                                                        <font>font12</font>
+                                                        <textcolor>$VAR[ThemeHomeLabelColor]</textcolor>
+                                                        <align>center</align>
+                                                        <aligny>center</aligny>
+                                                        <label>$INFO[ListItem.Label2]</label>
+                                                        <visible>true</visible>
+                                                </control> 
                                                 <control type="label">
+														<description>Sender und Uhrzeit -- Label</description>
+                                                        <left>20</left>
+                                                        <top>190</top>
+                                                        <width>200</width>
+                                                        <height>14</height>
+                                                        <font>font10</font>
+                                                        <textcolor>$VAR[ThemeHomeLabelColor]</textcolor>
+                                                        <align>left</align>
+                                                        <aligny>top</aligny>
+                                                        <label>$INFO[ListItem.Label]</label>
+                                                </control>,                                                                                               
+                                                <control type="label">
+														<description>Datum und Start und Endzeit</description>
                                                        <left>115</left>
                                                         <top>220</top>
                                                         <width>115</width>
@@ -201,6 +204,7 @@
                                                         <label>$INFO[ListItem.Property(StartTime)] - $INFO[ListItem.Property(EndTime)]</label>
                                                 </control>
                                                 <control type="label">
+														<description>Genre</description>
                                                         <left>115</left>
                                                         <top>245</top>
                                                         <width>115</width>
@@ -209,10 +213,10 @@
                                                         <textcolor>$VAR[ThemeHomeLabelColor]</textcolor>
                                                         <align>right</align>
                                                         <aligny>top</aligny>
-                                                        <label>$INFO[ListItem.Label2]</label>
+                                                        <label>$INFO[ListItem.genre]</label>
                                                 </control>
                                         </focusedlayout>
-                                        <onclick>RunPlugin(plugin://script.service.gto?action=infopopup&amp;item=$INFO[ListItem.Property(Item)])</onclick>
+										<onclick>RunPlugin(plugin://script.service.gto?action=info&amp;item=$INFO[ListItem.Property(Item)])</onclick>
                                         <content target="pvr">plugin://script.service.gto?action=getcontent&amp;ts=$INFO[Window(Home).Property(GTO.timestamp)]</content>
                                 </control>
                                 <control type="button">

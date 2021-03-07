@@ -82,6 +82,7 @@ def list_offers():
     xbmcplugin.endOfDirectory(_handle, succeeded=True, updateListing=True, cacheToDisc=False)
     HOME.setProperty('GTO.provider', content['scraper'])
 
+
 def scrape_page():
     HOME.setProperty('GTO.provider', LOC(30105))
     HOME.setProperty('GTO.busy', 'true')

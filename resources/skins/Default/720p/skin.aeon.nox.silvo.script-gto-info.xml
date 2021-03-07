@@ -181,7 +181,7 @@
                         <onup>855655</onup>
                         <ondown>855655</ondown>
                         <enable>String.IsEqual(Window(Home).Property(GTO.Info.isRunning),True) + !String.IsEqual(Window(Home).Property(GTO.Info.ChannelID),False)</enable>
-                        <onclick>RunScript(script.service.gto,action=switch_channel&amp;pvrid=$INFO[Window(Home).Property(GTO.Info.ChannelID)])</onclick>
+                        <onclick>RunPlugin(plugin://script.service.gto?action=switch_channel&amp;pvrid=$INFO[Window(Home).Property(GTO.Info.ChannelID)]&amp;item=$INFO[Window(Home).Property(GTO.Info.Item)])</onclick>
                         <onclick>PreviousMenu</onclick>
                 </control>
                 <control type="button" id="22">
@@ -198,7 +198,8 @@
                         <onright>23</onright>
                         <onup>855655</onup>
                         <ondown>855655</ondown>
-                        <onclick>RunScript(script.service.gto,action=record&amp;broadcastid=$INFO[Window(Home).Property(GTO.Info.BroadcastID)]&amp;blob=$INFO[Window(Home).Property(GTO.Info.BlobID)])</onclick>
+                        <enable>!String.IsEmpty(Window(Home).Property(GTO.Info.BroadcastID)) + String.IsEqual(Window(Home).Property(GTO.Info.hasTimer),False)</enable>
+                        <onclick>RunPlugin(plugin://script.service.gto?action=record&amp;broadcastid=$INFO[Window(Home).Property(GTO.Info.BroadcastID)]&amp;item=$INFO[Window(Home).Property(GTO.Info.Item)])</onclick>
                         <onclick>PreviousMenu</onclick>
                 </control>
                 <control type="button" id="23">

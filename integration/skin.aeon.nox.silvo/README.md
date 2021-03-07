@@ -16,12 +16,18 @@ If You want to use the plugin as widget you have to perfom following steps:
 
 3. Modify the navigation to the widget in ```$HOME/.kodi/addons/skin.aeon.nox.silvo/16x9/Includes_Home.xml```:
 
-    - Search for the first occurence of ```<onup condition="!Control.IsVisible(90010) + !Control.IsVisible(90020)">9000</onup>```
-    - Change the onup condition to ```<onup condition="!Control.IsVisible(90010) + !Control.IsVisible(90020) + Control.IsVisible(5777)">5777</onup>``` (Beware this is an One-Liner)
-    - Import the widget. Search for: ```<!-- NextRecording -->```. Place following above this line: 
-        ```
-        <!-- GTO Widget -->
-        <include condition="System.HasAddon(script.service.gto)">HomeRecentlyAddedGTO</include>    
-        ```
-
+      - Import the widget. Search for: ```<!-- NextRecording -->```. Place following above this line: 
+         ```
+         <!-- GTO Widget -->
+         <include condition="System.HasAddon(script.service.gto)">HomeRecentlyAddedGTO</include>    
+         ```
+    
+      - Search for ```<control type="button" id="9027">```
+      - insert next line below ```<onup condition="Control.IsVisible(5777)">5777</onup>```
+  
+      - Search for ```<!-- Layouts -->```
+      - around 17 lines below search for ```<onup condition="!Control.IsVisible(90010) + Control.IsVisible(90020) + !Control.IsVisible(9027) + !Skin.HasSetting(centermainmenu)">90020</onup>```
+      - insert below this line ```<onup condition="Control.IsVisible(5777)">5777</onup>```
+  
+Note, the option "Show Recording widget" must be activated in skin settings!
 Store all files. You are ready!
