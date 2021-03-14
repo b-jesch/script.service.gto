@@ -72,6 +72,7 @@ Example 'onclick' of a selected element - opens a popup window named <skin.id>.s
     - ListItem.Property(StartTime)    Datetime of broadcast start, regional settings without secs
     - ListItem.Property(EndTime)      End time
     - ListItem.Property(RunTime)      Runtime of broadcast in minutes
+    - ListItem.Property(HasTimer)     True|False if Timer/Reminder for this item is set
     - ListItem.Property(Item)         Item number
 
 #### Properties for Home window (resides as properties in Window(Home)):

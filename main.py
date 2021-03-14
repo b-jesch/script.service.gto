@@ -73,6 +73,7 @@ def list_offers():
         liz.setProperty('StartTime', convert_dateformat(item.get('datetime')))
         liz.setProperty('EndTime', convert_dateformat(item.get('enddate')))
         liz.setProperty('RunTime', str(item.get('runtime') // 60))
+        liz.setProperty('HasTimer', str(hasTimer(item.get('broadcastid', None))))
         liz.setProperty('Item', str(item.get('item')))
         liz.setProperty('IsPlayable', 'false')
         url = get_url(action='info', item=item.get('item'))
