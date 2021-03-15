@@ -47,6 +47,14 @@
 							<texture fallback="DefaultTVShows.png">$INFO[ListItem.Icon]</texture>
 							<aspectratio>keep</aspectratio>
 						</control>
+						<control type="image">
+                            <left>255</left>
+                            <top>27</top>
+                            <width>36</width>
+                            <height>36</height>
+                            <texture>icons/infodialogs/timer.png</texture>
+                            <visible>String.IsEqual(ListItem.Property(HasTimer),True)</visible>
+                        </control>
 						<control type="label">
 							<left>42</left>
 							<top>247</top>
@@ -103,6 +111,14 @@
 							<texture fallback="DefaultTVShows.png">$INFO[ListItem.Icon]</texture>
 							<aspectratio>keep</aspectratio>
 						</control>
+                        <control type="image">
+                            <left>255</left>
+                            <top>27</top>
+                            <width>36</width>
+                            <height>36</height>
+                            <texture>icons/infodialogs/timer.png</texture>
+                            <visible>String.IsEqual(ListItem.Property(HasTimer),True)</visible>
+                        </control>
 						<control type="label">
 							<left>42</left>
 							<top>247</top>
@@ -127,7 +143,6 @@
 							<scroll>true</scroll>
 							<aligny>top</aligny>
 						</control>
-
 					</control>
 				</focusedlayout>
 				<content target="$PARAM[widget_target]" limit="$PARAM[item_limit]">$PARAM[content_path]</content>

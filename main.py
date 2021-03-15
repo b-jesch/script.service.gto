@@ -105,10 +105,9 @@ def scrape_page():
         content.pop(0)
 
     item_nr = 0
-    timestamp = int(time.time())
     items = list()
     entry = {
-        'timestamp': timestamp,
+        'timestamp': int(time.time()),
         'scraper': scraper.friendlyname
     }
 
@@ -155,7 +154,7 @@ def scrape_page():
         json.dump(entry, f, indent=4)
 
     HOME.setProperty('GTO.busy', 'false')
-    HOME.setProperty('GTO.timestamp', str(timestamp))
+    HOME.setProperty('GTO.timestamp', str(int(time.time())))
     HOME.setProperty('GTO.provider', scraper.friendlyname)
     return item_nr
 
@@ -278,6 +277,9 @@ def router(paramstring):
             elif params['action'] == 'record':
                 if not setTimer(params['broadcastid'], params['item']):
                     notifyOSD(LOC(30010), LOC(30134), icon=xbmcgui.NOTIFICATION_ERROR, enabled=True)
+                else:
+                    HOME.setProperty('GTO.timestamp', str(int(time.time())))
+                    list_offers()
 
             elif params['action'] == 'reminder':
                 if not setTimer(params['broadcastid'], params['item'], reminder=True):
@@ -285,6 +287,8 @@ def router(paramstring):
                 else:
                     # Reminders doesn't trigger a notification
                     notifyOSD(LOC(30010), LOC(30135), enabled=True)
+                    HOME.setProperty('GTO.timestamp', str(int(time.time())))
+                    list_offers()
 
             elif params['action'] == 'switch_channel':
                 switchToChannel(params['pvrid'], params['item'])
