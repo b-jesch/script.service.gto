@@ -113,10 +113,12 @@ Q: There are asterisks (*) behind the channel names, why is that?
     
    The 'translations.json' is editable with every simple editor.
 
-Q: Where is the Info Window XML?
+Q: Where resides the Info Window XML?
 
-   You find the Info Window GUI description file (xml) within the addon folder ```script.service.gto/skins/Default/720p/<skin-id>.script-gto-info.xml``` (
-   for example: ```skin.estuary.script-gto-info.xml```):
+   The addon search at first within the current skin folder for a file named ```<skin-id>.script-gto-info.xml```. If this
+   file is not present there (e.g. unchanged or unmodified skin) the addon is parsing the addon folder itself and looks for
+   a fallback like ```script.service.gto/skins/Default/720p/<skin-id>.script-gto-info.xml``` (for example: ```skin.estuary.script-gto-info.xml```).
+   If there is no fallback, a notification occurs.
    
 Q: Where is the Widget GUI description file (xml)?
 

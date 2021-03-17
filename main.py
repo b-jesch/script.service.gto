@@ -75,9 +75,9 @@ def list_offers():
         liz.setProperty('RunTime', str(item.get('runtime') // 60))
         liz.setProperty('HasTimer', str(hasTimer(item.get('broadcastid', None))))
         liz.setProperty('Item', str(item.get('item')))
-        liz.setProperty('IsPlayable', 'false')
+        liz.setProperty('IsPlayable', 'true')
         url = get_url(action='info', item=item.get('item'))
-        xbmcplugin.addDirectoryItem(_handle, url, liz, isFolder=True)
+        xbmcplugin.addDirectoryItem(_handle, url, liz, isFolder=False)
 
     xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_NONE)
     xbmcplugin.endOfDirectory(_handle, succeeded=True, updateListing=True, cacheToDisc=False)
@@ -195,7 +195,6 @@ def show_info(item):
 
     for property in window_properties: HOME.clearProperty('GTO.Info.{}'.format(property))
     item = content['items'][int(item)]
-    cm = list()
 
     if item.get('broadcastid', None) is not None:
 
@@ -214,36 +213,30 @@ def show_info(item):
             is_running = True
             HOME.setProperty("GTO.Info.isRunning", str(is_running))
 
-    if os.path.exists(os.path.join(ADDON_PATH, 'resources', 'skins', 'Default', '720p', INFO_XML)):
+    HOME.setProperty("GTO.Info.Item", str(item['item']))
+    HOME.setProperty("GTO.Info.Title", item['title'])
+    HOME.setProperty("GTO.Info.Picture", item['thumb'])
+    HOME.setProperty("GTO.Info.Description", item['plot'] or LOC(30140))
+    HOME.setProperty("GTO.Info.Channel", item['pvrchannel'])
+    HOME.setProperty("GTO.Info.ChannelID", str(item['pvrid']))
+    HOME.setProperty("GTO.Info.Logo", item['logo'])
+    HOME.setProperty("GTO.Info.Date", convert_dateformat(item['datetime']))
+    HOME.setProperty("GTO.Info.RunTime", str(item['runtime'] // 60))
+    HOME.setProperty("GTO.Info.EndTime", convert_dateformat(item['enddate']))
+    if item['rating'] is None or item['rating'] == '':
+        HOME.setProperty("GTO.Info.Genre", item['genre'])
+    else:
+        HOME.setProperty('GTO.Info.Genre', item['genre'] + ' | IMDb: ' + str(item['rating']))
+    HOME.setProperty("GTO.Info.Cast", item['cast'])
+    HOME.setProperty("GTO.Info.Rating", str(item['rating']))
 
-        HOME.setProperty("GTO.Info.Item", str(item['item']))
-        HOME.setProperty("GTO.Info.Title", item['title'])
-        HOME.setProperty("GTO.Info.Picture", item['thumb'])
-        HOME.setProperty("GTO.Info.Description", item['plot'] or LOC(30140))
-        HOME.setProperty("GTO.Info.Channel", item['pvrchannel'])
-        HOME.setProperty("GTO.Info.ChannelID", str(item['pvrid']))
-        HOME.setProperty("GTO.Info.Logo", item['logo'])
-        HOME.setProperty("GTO.Info.Date", convert_dateformat(item['datetime']))
-        HOME.setProperty("GTO.Info.RunTime", str(item['runtime'] // 60))
-        HOME.setProperty("GTO.Info.EndTime", convert_dateformat(item['enddate']))
-        if item['rating'] is None or item['rating'] == '':
-            HOME.setProperty("GTO.Info.Genre", item['genre'])
-        else:
-            HOME.setProperty('GTO.Info.Genre', item['genre'] + ' | IMDb: ' + str(item['rating']))
-        HOME.setProperty("GTO.Info.Cast", item['cast'])
-        HOME.setProperty("GTO.Info.Rating", str(item['rating']))
-
+    try:
         popup = xbmcgui.WindowXMLDialog(INFO_XML, ADDON_PATH)
         popup.doModal()
         del popup
-    else:
+    except RuntimeError:
         writeLog('Missing PVR info window for this skin', xbmc.LOGERROR)
         notifyOSD(LOC(30010), LOC(30136), icon=xbmcgui.NOTIFICATION_WARNING, enabled=True)
-        '''
-        win = InfoWin('DialogPVRInfo.xml', ADDON_PATH)
-        win.display()
-        del win
-        '''
 
 
 def router(paramstring):
