@@ -202,16 +202,16 @@ def show_info(item):
         HOME.setProperty('GTO.Info.BroadcastID', str(item['broadcastid']))
         HOME.setProperty('GTO.Info.hasTimer', str(is_timer))
 
-        if parser.parse(item['datetime'], dayfirst=False) >= datetime.datetime.now():
-            writeLog('Title \'{}\' starts @{}, enable switchtimer button'.format(item['title'], item['datetime']))
-            is_inFuture = True
-            HOME.setProperty("GTO.Info.isInFuture", str(is_inFuture))
+    if parser.parse(item['datetime'], dayfirst=False) >= datetime.datetime.now():
+        writeLog('Title \'{}\' starts @{}, enable switchtimer button'.format(item['title'], item['datetime']))
+        is_inFuture = True
+        HOME.setProperty("GTO.Info.isInFuture", str(is_inFuture))
 
-        elif parser.parse(item['datetime'], dayfirst=False) < datetime.datetime.now() < parser.parse(item['enddate'], dayfirst=False):
-            writeLog('Title \'{}\' is currently running, enable switch button'.format(item['title']))
+    elif parser.parse(item['datetime'], dayfirst=False) < datetime.datetime.now() < parser.parse(item['enddate'], dayfirst=False):
+        writeLog('Title \'{}\' is currently running, enable switch button'.format(item['title']))
 
-            is_running = True
-            HOME.setProperty("GTO.Info.isRunning", str(is_running))
+        is_running = True
+        HOME.setProperty("GTO.Info.isRunning", str(is_running))
 
     HOME.setProperty("GTO.Info.Item", str(item['item']))
     HOME.setProperty("GTO.Info.Title", item['title'])
