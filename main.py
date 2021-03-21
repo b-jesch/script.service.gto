@@ -7,8 +7,6 @@ import xbmcgui
 import xbmcplugin
 import xbmcvfs
 
-from resources.lib.pvrinfo import InfoWin
-
 OPT_MDELAY = getAddonSetting('mdelay', NUM, 60)
 OPT_ENABLE_INFO = getAddonSetting('enableinfo', BOOL)
 OPT_PREFER_HD = getAddonSetting('prefer_hd', BOOL)
@@ -59,6 +57,7 @@ def list_offers():
     xbmcplugin.setContent(_handle, 'videos')
     xbmcplugin.setPluginFanart(_handle, FANART)
     for item in content['items']:
+        if OPT_PVR_ONLY and not item.get('pvrid', False): continue
         liz = xbmcgui.ListItem()
         liz.setLabel('{} ({})'.format(item.get('pvrchannel', item.get('channel')),
                                       convert_dateformat(item.get('datetime'), dt_out=LOCAL_TIME_FORMAT)))
@@ -125,6 +124,7 @@ def scrape_page():
             continue
 
         pvrid = channelName2pvrId(scraper.channel)
+        if OPT_PVR_ONLY and not pvrid: continue
         logoURL = getStationLogo(pvrid, scraper.err404).replace('image://', '')
         channel = getPvrChannelName(pvrid, scraper.channel)
 

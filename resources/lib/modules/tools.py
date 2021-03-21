@@ -63,6 +63,7 @@ def getAddonSetting(setting, sType=STRING, multiplicator=1):
 
 OPT_PREFER_HD = getAddonSetting('prefer_hd', BOOL)
 OPT_ENABLE_INFO = getAddonSetting('enableinfo', BOOL)
+OPT_PVR_ONLY = getAddonSetting('pvronly', BOOL)
 
 # get used dateformat of kodi
 
