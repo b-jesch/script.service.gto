@@ -193,13 +193,12 @@ def channelName2pvrId(channelname):
         for channels in res.get('channels'):
 
             # prefer HD Channel if available
+            if OPT_PREFER_HD and (channelname + " HD").lower() == channels.get('label').lower():
+                writeLog("GTO found HD priorized channel {}".format(channels.get('label')))
+                return channels.get('channelid')
 
             if channelname.lower() == channels.get('label').lower():
                 writeLog("GTO found channel {}".format(channels.get('label')))
-                return channels.get('channelid')
-
-            if OPT_PREFER_HD and (channelname + " HD").lower() == channels.get('label').lower():
-                writeLog("GTO found HD priorized channel {}".format(channels.get('label')))
                 return channels.get('channelid')
 
     except AttributeError:
