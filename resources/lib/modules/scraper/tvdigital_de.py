@@ -15,7 +15,7 @@ class Scraper():
         self.friendlyname = 'TV Digital Spielfilm Highlights'
         self.shortname = 'TV Digital'
         self.icon = 'tvd.png'
-        self.selector = '<div id="content-left" class="tv-highlights"'
+        self.selector = '<div id="content-left" class="tv-highlights">'
         self.subselector = '<div class="highlight-container">'
         self.err404 = 'tvd_dummy.jpg'
 
@@ -54,7 +54,7 @@ class Scraper():
             self.cast = (' | ').join(_string[1:-1])
             self.runtime = int(_string[-1].split()[0])
             self.enddate = self.startdate + datetime.timedelta(minutes=self.runtime)
-        except IndexError:
+        except (IndexError, ValueError):
             pass
         try:
             self.thumb = re.compile('<img src="(.+?)"', re.DOTALL).findall(content)[0]
