@@ -50,7 +50,7 @@ def list_offers():
             writeLog('No scraper data to display', xbmc.LOGERROR)
             return
 
-    with open(SCRAPER_CONTENT, 'r') as f:
+    with open(SCRAPER_CONTENT, 'r', encoding='utf-8') as f:
         content = json.load(f)
 
     xbmcplugin.setPluginCategory(_handle, content['scraper'])
@@ -151,7 +151,7 @@ def scrape_page():
 
     entry.update({'items': items})
     with open(SCRAPER_CONTENT, 'w', encoding='utf-8') as f:
-        json.dump(entry, f, indent=4)
+        json.dump(entry, f, indent=4, ensure_ascii=False)
 
     HOME.setProperty('GTO.busy', 'false')
     HOME.setProperty('GTO.timestamp', str(int(time.time())))
@@ -190,7 +190,7 @@ def show_info(item):
     if not os.path.isfile(SCRAPER_CONTENT):
         return False
 
-    with open(SCRAPER_CONTENT, 'r') as f:
+    with open(SCRAPER_CONTENT, 'r', encoding='utf-8') as f:
         content = json.load(f)
 
     for property in window_properties: HOME.clearProperty('GTO.Info.{}'.format(property))
