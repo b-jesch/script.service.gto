@@ -228,11 +228,11 @@ def getPvrChannelName(channelid, fallback):
 def getStationLogo(channelid, fallback):
     query = {
             "method": "PVR.GetChannelDetails",
-            "params": {"channelid": channelid, "properties": ["thumbnail"]},
+            "params": {"channelid": channelid, "properties": ["icon"]},
             }
     res = jsonrpc(query)
     try:
-        return unquote_plus(res.get('channeldetails').get('thumbnail', fallback))
+        return unquote_plus(res.get('channeldetails').get('icon', fallback))
     except AttributeError:
         return fallback
 
