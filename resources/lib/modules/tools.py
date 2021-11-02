@@ -223,6 +223,7 @@ def getPvrChannelName(channelid, fallback):
         writeLog('Could not get channel: {}'.format(e.args), level=xbmc.LOGERROR)
     return fallback + '*'
 
+
 # get pvr channel logo url
 
 def getStationLogo(channelid, fallback):

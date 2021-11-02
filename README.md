@@ -16,6 +16,10 @@ The integration by the skinner is done by calling:
 
 For detailed description of ListItem.Labels and ListItem.Properties see below.
 
+If you want to assign the "German Telecast Offers" as a widget via skinhelper addon, just use for calling the user defined action:
+   
+      plugin://script.service.gto?action=getcontent&amp;ts=$INFO[Window(Home).Property(GTO.timestamp)]
+
 ## Script call (Methods):
 
 The service for updating content and widgets (starter.py) calls the actual plugin via the parameter 'action' with a 
@@ -77,7 +81,7 @@ Example 'onclick' of a selected element - opens a popup window named <skin.id>.s
 
 #### Properties for Home window (resides as properties in Window(Home)):
 
-    - GTO.provider                    Broadcast provider (scraper.friendlyname)
+    - GTO.provider                    Broadcast provider (scraper.shortname)
     - GTO.items                       count of items
     - GTO.busy                        true/false - scraper is busy
     - GTO.timestamp                   Timestamp of last refresh of the widget

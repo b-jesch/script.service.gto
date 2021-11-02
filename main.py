@@ -107,7 +107,7 @@ def scrape_page():
     items = list()
     entry = {
         'timestamp': int(time.time()),
-        'scraper': scraper.friendlyname
+        'scraper': scraper.shortname
     }
 
     for item in content:
@@ -155,14 +155,14 @@ def scrape_page():
 
     HOME.setProperty('GTO.busy', 'false')
     HOME.setProperty('GTO.timestamp', str(int(time.time())))
-    HOME.setProperty('GTO.provider', scraper.friendlyname)
+    HOME.setProperty('GTO.provider', scraper.shortname)
     return item_nr
 
 
 def change_scraper():
     global Scraper
     _scrapers = list()
-    for modules in os.listdir(SCRAPER_FOLDER):
+    for modules in sorted(os.listdir(SCRAPER_FOLDER)):
         if modules in (['__init__.py']) or modules[-3:] != '.py':
             continue
         writeLog('Found scraper: {}'.format(modules))
@@ -171,7 +171,7 @@ def change_scraper():
 
         if not Scrapers().enabled:
             continue
-        li = xbmcgui.ListItem(label=Scrapers().friendlyname, label2=Scrapers().baseurl)
+        li = xbmcgui.ListItem(label=Scrapers().shortname, label2=Scrapers().friendlyname)
         li.setArt({'icon': getScraperIcon(Scrapers().icon)})
         li.setProperty('module', '{}.{}'.format(SCRAPER_MODULPATH, modules[:-3]))
         li.setProperty('shortname', Scrapers().shortname)
