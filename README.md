@@ -59,7 +59,7 @@ Example 'onclick' of a selected element - opens a popup window named <skin.id>.s
 
 #### List items, Info labels and Properties:
 
-    - ListItem.Label                  Station name and start time (hh:mm)
+    - ListItem.Label                  Station name
     - ListItem.Label2                 Title of broadcast
     - ListItem.Art(icon)              Screenshot of broadcast
     - ListItem.Art(thumb)             dto.
@@ -73,7 +73,8 @@ Example 'onclick' of a selected element - opens a popup window named <skin.id>.s
     - ListItem.duration               Runtime in seconds
     - ListItem.rating                 Rating
     
-    - ListItem.Property(StartTime)    Datetime of broadcast start, regional settings without secs
+    - ListItem.Property(StartDate)    Date + time of broadcast start, regional settings without secs
+    - ListItem.Property(StartTime)    Time if Broadcast start (hh:mm)
     - ListItem.Property(EndTime)      End time
     - ListItem.Property(RunTime)      Runtime of broadcast in minutes
     - ListItem.Property(HasTimer)     True|False if Timer/Reminder for this item is set

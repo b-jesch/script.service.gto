@@ -59,8 +59,7 @@ def list_offers():
     for item in content['items']:
         if OPT_PVR_ONLY and not item.get('pvrid', False): continue
         liz = xbmcgui.ListItem()
-        liz.setLabel('{} ({})'.format(item.get('pvrchannel', item.get('channel')),
-                                      convert_dateformat(item.get('datetime'), dt_out=LOCAL_TIME_FORMAT)))
+        liz.setLabel('{}'.format(item.get('pvrchannel', item.get('channel'))))
         liz.setLabel2('{}'.format(item.get('title')))
         liz.setInfo('video', {'genre': item.get('genre'),
                               'plot': item.get('plot'),
@@ -69,7 +68,8 @@ def list_offers():
                               'mediatype': 'video'})
         liz.setArt({'icon': item.get('thumb'), 'thumb': item.get('thumb'), 'poster': item.get('thumb'),
                     'fanart': item.get('thumb'), 'logo': item.get('logo')})
-        liz.setProperty('StartTime', convert_dateformat(item.get('datetime')))
+        liz.setProperty('StartDate', convert_dateformat(item.get('datetime')))
+        liz.setProperty('StartTime', convert_dateformat(item.get('datetime'), dt_out=LOCAL_TIME_FORMAT))
         liz.setProperty('EndTime', convert_dateformat(item.get('enddate')))
         liz.setProperty('RunTime', str(item.get('runtime') // 60))
         liz.setProperty('HasTimer', str(hasTimer(item.get('broadcastid', None))))
