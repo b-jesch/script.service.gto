@@ -163,7 +163,7 @@ def checkResource(resource, fallback):
     try:
         req = requests.get(resource, timeout=5)
         req.raise_for_status()
-    except requests.HTTPError as e:
+    except (requests.HTTPError, requests.ReadTimeout) as e:
         writeLog('Resource {} not available: {}'.format(resource, e.args), xbmc.LOGERROR)
         return fallback
     return resource
