@@ -3,6 +3,7 @@
 from .. tools import *
 from dateutil import parser
 
+
 class Scraper():
 
     def __init__(self):
@@ -20,7 +21,6 @@ class Scraper():
         self.detailselector = '<table id="content">'
         self.err404 = 'klackde_dummy.jpg'
 
-
     def reset(self):
 
         # Items
@@ -37,7 +37,6 @@ class Scraper():
         self.cast = ''
         self.rating = 0
 
-
     def scrapeRSS(self, content):
 
         self.reset()
@@ -46,7 +45,7 @@ class Scraper():
             self.channel = re.compile('<title>(.+?)</title>', re.DOTALL).findall(content)[0].split(': ')[0]
             self.detailURL = re.compile('<link>(.+?)</link>', re.DOTALL).findall(content)[0].replace('/.html', '.html')
             self.title = re.compile('<title>(.+?)</title>', re.DOTALL).findall(content)[0].split(': ', 1)[1]
-            self.thumb = re.compile('<img align="left" src="(.+?)"', re.DOTALL).findall(content)[0].replace('150x100.jpg', '500x333.jpg')
+            self.thumb = re.compile('<img align="left" src="(.+?)"', re.DOTALL).findall(content)[0].replace('/150x100/', '/1080x720/')
         except IndexError:
             pass
 
