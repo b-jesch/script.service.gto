@@ -55,7 +55,7 @@ Example 'onclick' of a selected element - opens a popup window named <skin.id>.s
 
       <onclick>
             RunPlugin(plugin://script.service.gto?action=reminder&amp;broadcastid=$INFO[Window(Home).Property(GTO.Info.BroadcastID)]&amp;item=$INFO[Window(Home).Property(GTO.Info.Item)])
-      </onclick>onclick>
+      </onclick>
 
 #### List items, Info labels and Properties:
 

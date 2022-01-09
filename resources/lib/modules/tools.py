@@ -192,12 +192,15 @@ def channelName2pvrId(channelname):
     try:
         for channels in res.get('channels'):
 
+            # remove appendixes like '(ger)' '(eng)' from channels (DVBViewer)
+            pvrchannelname = re.sub(r'\(.*\)', '', channels.get('label').lower()).strip()
+
             # prefer HD Channel if available
-            if OPT_PREFER_HD and (channelname + " HD").lower() == channels.get('label').lower():
+            if OPT_PREFER_HD and (channelname + " HD").lower() == pvrchannelname:
                 writeLog("GTO found HD priorized channel {}".format(channels.get('label')))
                 return channels.get('channelid')
 
-            if channelname.lower() == channels.get('label').lower():
+            if channelname.lower() == pvrchannelname:
                 writeLog("GTO found channel {}".format(channels.get('label')))
                 return channels.get('channelid')
 
