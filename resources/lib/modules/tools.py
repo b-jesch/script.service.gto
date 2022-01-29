@@ -25,6 +25,7 @@ ADDON_VERSION = ADDON.getAddonInfo('version')
 ADDON_PATH = xbmcvfs.translatePath(ADDON.getAddonInfo('path'))
 ADDON_PROFILES = xbmcvfs.translatePath(ADDON.getAddonInfo('profile'))
 LOC = ADDON.getLocalizedString
+COUNTRY = xbmc.getLanguage(xbmc.ISO_639_1)
 
 USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko)' + \
              ' Chrome/48.0.2564.82 Safari/537.36'

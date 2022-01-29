@@ -10,7 +10,7 @@ class Scraper():
 
         self.enabled = True
         self.baseurl = 'http://www.tvspielfilm.de'
-        self.lang = 'de_DE'
+        self.lang = 'de'
         self.rssurl = 'http://www.tvspielfilm.de/tv-programm/rss/filme.xml'
         self.friendlyname = 'TV Spielfilm Highlights'
         self.shortname = 'TV Spielfilm'

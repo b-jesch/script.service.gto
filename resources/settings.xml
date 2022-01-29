@@ -3,6 +3,11 @@
 	<section id="script.service.gto">
 		<category help="" id="einstellungen" label="30011">
 			<group id="1">
+				<setting help="" id="hide_foreign" label="30125" type="boolean">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+				</setting>
 				<setting help="" id="scraper" label="30111" type="string">
 					<level>0</level>
 					<default>klack.de</default>

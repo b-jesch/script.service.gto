@@ -11,6 +11,7 @@ OPT_MDELAY = getAddonSetting('mdelay', NUM, 60)
 OPT_ENABLE_INFO = getAddonSetting('enableinfo', BOOL)
 OPT_PREFER_HD = getAddonSetting('prefer_hd', BOOL)
 OPT_PREFERRED_SCRAPER = getAddonSetting('preferred')
+OPT_HIDE_FOREIGN = getAddonSetting('hide_foreign', BOOL)
 
 # Prerequisites
 
@@ -169,7 +170,7 @@ def change_scraper():
         module = __import__('{}.{}'.format(SCRAPER_MODULPATH, modules[:-3]), locals(), globals(), fromlist=['Scraper'])
         Scrapers = getattr(module, 'Scraper')
 
-        if not Scrapers().enabled:
+        if not Scrapers().enabled or (OPT_HIDE_FOREIGN and Scrapers().lang != COUNTRY):
             continue
         li = xbmcgui.ListItem(label=Scrapers().shortname, label2=Scrapers().friendlyname)
         li.setArt({'icon': getScraperIcon(Scrapers().icon)})
@@ -248,6 +249,7 @@ def router(paramstring):
     """
 
     writeLog('Parameter call for handle #{}: {}'.format(_handle, paramstring))
+    writeLog('Locale is set to: %s' % COUNTRY)
     params = dict(parse_qsl(paramstring))
     if params:
         try:

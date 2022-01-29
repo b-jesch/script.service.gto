@@ -12,7 +12,7 @@ class Scraper():
 
         self.enabled = True
         self.baseurl = 'https://www.hoerzu.de'
-        self.lang = 'de_DE'
+        self.lang = 'de'
         self.rssurl = 'https://www.hoerzu.de/rss/tipp/spielfilm/'
         self.friendlyname = 'HÖRZU Spielfilm Highlights'
         self.shortname = 'HÖRZU'

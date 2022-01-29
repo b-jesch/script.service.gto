@@ -100,7 +100,11 @@ msgctxt "#30119"
 msgid "Close"
 msgstr ""
 
-#empty strings from id 30120 to 30125
+#empty strings from id 30120 to 30124
+
+msgctxt "#30125"
+msgid "Hide foreign Scraper"
+msgstr ""
 
 msgctxt "#30126"
 msgid "Show stations only available in PVR Channel List"

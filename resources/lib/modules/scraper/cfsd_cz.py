@@ -10,7 +10,7 @@ class Scraper():
 
         self.enabled = True
         self.baseurl = 'https://www.csfd.cz/'
-        self.lang = 'cs_CZ'
+        self.lang = 'cz'
         self.rssurl = 'https://www.csfd.cz/televize/'
         self.friendlyname = 'TV tipy dne'
         self.shortname = 'CSFD.cz'

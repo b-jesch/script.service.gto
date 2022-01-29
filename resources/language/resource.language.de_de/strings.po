@@ -95,6 +95,12 @@ msgctxt "#30119"
 msgid "Close"
 msgstr "Schliessen"
 
+#empty strings from id 30120 to 30124
+
+msgctxt "#30125"
+msgid "Hide foreign Scraper"
+msgstr "Ausländische Scraper ausblenden"
+
 msgctxt "#30126"
 msgid "Show stations only available in PVR Channel List"
 msgstr "Zeige nur Sender, die in PVR-Senderliste vorhanden sind"

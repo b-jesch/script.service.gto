@@ -12,7 +12,7 @@ class Scraper():
 
         self.enabled = True
         self.baseurl = 'https://www.staff.hs-mittweida.de/~jesch/knftv'
-        self.lang = 'de_DE'
+        self.lang = 'de'
         self.rssurl = 'https://www.staff.hs-mittweida.de/~jesch/knftv/broadcasts.php'
         self.friendlyname = 'KN Community freeTV Highlights'
         self.shortname = 'Kodinerds freeTV'
