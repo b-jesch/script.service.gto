@@ -10,7 +10,7 @@ class Scraper():
 
         self.enabled = True
         self.baseurl = 'https://www.csfd.cz/'
-        self.lang = 'cz'
+        self.lang = 'cs'
         self.rssurl = 'https://www.csfd.cz/televize/'
         self.friendlyname = 'TV tipy dne'
         self.shortname = 'CSFD.cz'
@@ -43,7 +43,8 @@ class Scraper():
             self.title = re.compile('class="film-title-name">(.+?)</a>', re.DOTALL).findall(content)[0]
             self.plot = re.compile('<p class="p-tvtips-2row p-tvtips-2row-long">(.+?)<span', re.DOTALL).findall(content)[0].strip()
         except IndexError:
-            pass
+            if self.plot == '':
+                self.plot = re.compile('<p class="p-tvtips-2row">(.+?)<span', re.DOTALL).findall(content)[0].strip()
         try:
             _s = re.compile('<strong>(.+?)</strong>', re.DOTALL).findall(content)[0].split(' - ')[0]
             _e = re.compile('<strong>(.+?)</strong>', re.DOTALL).findall(content)[0].split(' - ')[1]
@@ -59,6 +60,10 @@ class Scraper():
         except (IndexError, ValueError):
             pass
         try:
+            _small = 'https:' + re.compile('srcset="(.+?)"', re.DOTALL).findall(content)[0].split(', ')[0].split()[0]
             self.thumb = 'https:' + re.compile('srcset="(.+?)"', re.DOTALL).findall(content)[0].split(', ')[2].split()[0]
         except (IndexError, TypeError):
-            self.thumb = os.path.join(ADDON_PATH, 'resources', 'lib', 'media', self.icon)
+            if _small:
+                self.thumb = re.sub('/cache/resized/w80h113', '', _small)
+            else:
+                self.thumb = os.path.join(ADDON_PATH, 'resources', 'lib', 'media', self.icon)
