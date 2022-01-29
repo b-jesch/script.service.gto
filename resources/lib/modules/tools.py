@@ -26,6 +26,9 @@ ADDON_PATH = xbmcvfs.translatePath(ADDON.getAddonInfo('path'))
 ADDON_PROFILES = xbmcvfs.translatePath(ADDON.getAddonInfo('profile'))
 LOC = ADDON.getLocalizedString
 
+USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko)' + \
+             ' Chrome/48.0.2564.82 Safari/537.36'
+
 HOME = xbmcgui.Window(10000)
 OSD = xbmcgui.Dialog()
 
@@ -144,7 +147,7 @@ def jsonrpc(query):
 
 def get_feed(resource, container=None):
     try:
-        req = requests.get(resource)
+        req = requests.get(resource, headers={'USER-AGENT': USER_AGENT})
         req.raise_for_status()
     except requests.exceptions.ConnectionError as e:
         writeLog('Response from {}: {}'.format(resource, e.response), xbmc.LOGERROR)

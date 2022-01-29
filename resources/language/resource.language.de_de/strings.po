@@ -18,12 +18,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 msgctxt "Addon Summary"
-msgid "Fetch todays TV Offers from different scrapers"
-msgstr "Holt die TV Tipps des Tages aus den RSS-Feeds diverser Webseiten"
+msgid "Fetch TV Offers from different scrapers"
+msgstr "Holt die TV Tipps aus den RSS-Feeds diverser Webseiten"
 
 msgctxt "Addon Description"
-msgid "Fetch todays TV Offers from different scrapers\n\nThis plugin needs a integration into the skin!\nPlease refer to the README.txt into the folder named 'integration'.\n        "
-msgstr "Holt die TV Tipps des Tages aus den RSS-Feeds diverser Webseiten.\n\nDieses Plugin benoetigt eine Skin-Integration!\nHierfür bitte README.txt im Ordner 'integration' beachten.\n        "
+msgid "Fetch TV Offers from different scrapers\n\nThis plugin needs a integration into the skin!\nPlease refer to the README.txt into the folder named 'integration'.\n        "
+msgstr "Holt die TV Tipps aus den RSS-Feeds diverser Webseiten.\n\nDieses Plugin benoetigt eine Skin-Integration!\nHierfür bitte README.txt im Ordner 'integration' beachten.\n        "
 
 msgctxt "#30010"
 msgid "Telecast Offers"
@@ -40,8 +40,8 @@ msgid "Get Infos from %s"
 msgstr "Beziehe Programminfos von %s"
 
 msgctxt "#30104"
-msgid "Highlights of the day"
-msgstr "TV Highlights des Tages"
+msgid "Highlights"
+msgstr "TV Highlights"
 
 msgctxt "#30105"
 msgid "loading..."

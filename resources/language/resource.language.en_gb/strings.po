@@ -18,11 +18,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 msgctxt "Addon Summary"
-msgid "Fetch todays TV Offers from different scrapers"
+msgid "Fetch TV Offers from different scrapers"
 msgstr ""
 
 msgctxt "Addon Description"
-msgid "Fetch todays TV Offers from different scrapers\n\nThis plugin needs a integration into the skin!\nPlease refer to the README.txt into the folder named 'integration'.\n        "
+msgid "Fetch TV Offers from different scrapers\n\nThis plugin needs a integration into the skin!\nPlease refer to the README.txt into the folder named 'integration'.\n        "
 msgstr ""
 
 
@@ -43,7 +43,7 @@ msgstr ""
 #empty strings from id 30019 to 30103
 
 msgctxt "#30104"
-msgid "Highlights of the day"
+msgid "Highlights"
 msgstr ""
 
 msgctxt "#30105"

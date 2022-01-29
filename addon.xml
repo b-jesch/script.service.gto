@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<addon id="script.service.gto" name="German Telecast Offers" version="3.0.6+matrix.3" provider-name="Birger Jesch">
+<addon id="script.service.gto" name="Telecast Offers" version="3.0.7+matrix" provider-name="Birger Jesch">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
         <import addon="xbmc.json" version="7.0.0"/>
@@ -13,15 +13,14 @@
     </extension>
     <extension point="xbmc.addon.metadata">
         <platform>all</platform>
-        <summary lang="en_GB">Fetch todays German TV Offers from different scrapers</summary>
-        <summary lang="de_DE">Holt TV Tipps aus den RSS-Feeds und Webseiten diverser deutscher Anbieter</summary>
-        <language>de</language>
-        <description lang="en_GB">Fetch todays mostly German TV Offers from different scrapers
+        <summary lang="en_GB">Fetch todays TV Offers from different scrapers</summary>
+        <summary lang="de_DE">Holt TV Tipps aus den RSS-Feeds und Webseiten diverser Anbieter</summary>
+        <description lang="en_GB">Fetch todays mostly TV Offers from different scrapers
 
 This plugin needs an integration into the skin!
 Please refer to the README.md into the folder named 'integration' of your preferred skin.
         </description>
-        <description lang="de_DE">Holt die TV Tipps des Tages aus den RSS-Feeds diverser deutscher Webseiten.
+        <description lang="de_DE">Holt die TV Tipps des Tages aus den RSS-Feeds diverser Webseiten.
 
 Dieses Plugin benoetigt eine Skin-Integration!
 Hierfür bitte README.md im Ordner 'integration' des jeweiligen Skins beachten.
