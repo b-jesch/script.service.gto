@@ -33,7 +33,7 @@ class Scraper():
         self.genre = ''
         self.plot = ''
         self.cast = ''
-        self.rating = 0
+        self.rating = None
 
 
     def scrapeRSS(self, content):

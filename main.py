@@ -72,7 +72,7 @@ def list_offers():
         liz.setProperty('StartDate', convert_dateformat(item.get('datetime')))
         liz.setProperty('StartTime', convert_dateformat(item.get('datetime'), dt_out=LOCAL_TIME_FORMAT))
         liz.setProperty('EndTime', convert_dateformat(item.get('enddate')))
-        liz.setProperty('RunTime', str(item.get('runtime') // 60))
+        # liz.setProperty('RunTime', str(item.get('runtime') // 60))
         liz.setProperty('HasTimer', str(hasTimer(item.get('broadcastid', None))))
         liz.setProperty('Item', str(item.get('item')))
         liz.setProperty('IsPlayable', 'true')
@@ -227,9 +227,9 @@ def show_info(item):
     if item['rating'] is None or item['rating'] == '':
         HOME.setProperty("GTO.Info.Genre", item['genre'])
     else:
-        HOME.setProperty('GTO.Info.Genre', item['genre'] + ' | IMDb: ' + str(item['rating']))
+        HOME.setProperty('GTO.Info.Genre', item['genre'] + ' | Rating: ' + str(item['rating']))
     HOME.setProperty("GTO.Info.Cast", item['cast'])
-    HOME.setProperty("GTO.Info.Rating", str(item['rating']))
+    # HOME.setProperty("GTO.Info.Rating", str(item['rating']))
 
     try:
         popup = xbmcgui.WindowXMLDialog(INFO_XML, ADDON_PATH)

@@ -17,6 +17,7 @@ class Scraper():
         self.icon = 'csfd.png'
         self.selector = '<div class="box-content box-content-striped-articles">'
         self.subselector = '<article class="article article-poster-78">'
+        self.detailselector = '<div class="main-movie">'
         self.err404 = 'csfd_dummy.jpg'
 
     def reset(self):
@@ -33,7 +34,7 @@ class Scraper():
         self.genre = ''
         self.plot = ''
         self.cast = ''
-        self.rating = 0
+        self.rating = None
 
     def scrapeRSS(self, content):
 
@@ -41,6 +42,7 @@ class Scraper():
         try:
             self.channel = re.compile('</strong> na <img alt="(.+?)" src', re.DOTALL).findall(content)[0]
             self.title = re.compile('class="film-title-name">(.+?)</a>', re.DOTALL).findall(content)[0]
+            self.detailURL = self.baseurl +  re.compile('<a href="(.+?)">', re.DOTALL).findall(content)[0]
             self.plot = re.compile('<p class="p-tvtips-2row p-tvtips-2row-long">(.+?)<span', re.DOTALL).findall(content)[0].strip()
         except IndexError:
             if self.plot == '':
@@ -67,3 +69,12 @@ class Scraper():
                 self.thumb = re.sub('/cache/resized/w80h113', '', _small)
             else:
                 self.thumb = os.path.join(ADDON_PATH, 'resources', 'lib', 'media', self.icon)
+
+    def scrapeDetailPage(self, content, contentID):
+
+        container = content.split(contentID)
+        container.pop(0)
+        content = container[0]
+        allcast = re.compile('<h4>Hrají: </h4>(.+?)<span', re.DOTALL).findall(content)[0]
+        self.cast = ' '.join(re.sub('<.*?>', '', allcast).split())
+
