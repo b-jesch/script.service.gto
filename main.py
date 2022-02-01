@@ -223,7 +223,7 @@ def show_info(item):
     HOME.setProperty("GTO.Info.Logo", item['logo'])
     HOME.setProperty("GTO.Info.Date", convert_dateformat(item['datetime']))
     HOME.setProperty("GTO.Info.RunTime", str(item['runtime'] // 60))
-    HOME.setProperty("GTO.Info.EndTime", convert_dateformat(item['enddate']))
+    HOME.setProperty("GTO.Info.EndTime", convert_dateformat(item['enddate'], dt_out=LOCAL_TIME_FORMAT))
     if item['rating'] is None or item['rating'] == '':
         HOME.setProperty("GTO.Info.Genre", item['genre'])
     else:

@@ -75,6 +75,10 @@ class Scraper():
         container = content.split(contentID)
         container.pop(0)
         content = container[0]
-        allcast = re.compile('<h4>Hrají: </h4>(.+?)<span', re.DOTALL).findall(content)[0]
-        self.cast = ' '.join(re.sub('<.*?>', '', allcast).split())
+        try:
+            allcast = re.compile('<h4>Hrají: </h4>(.+?)<span', re.DOTALL).findall(content)[0]
+            self.cast = ' '.join(re.sub('<.*?>', '', allcast).split())
+        except IndexError:
+            pass
+
 
