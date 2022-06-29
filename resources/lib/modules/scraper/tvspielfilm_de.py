@@ -35,7 +35,6 @@ class Scraper():
         self.cast = ''
         self.rating = None
 
-
     def scrapeRSS(self, content):
 
         self.reset()

@@ -80,6 +80,7 @@
                         <label>$INFO[Window(Home).Property(GTO.Info.Genre)]</label>
                         <align>left</align>
                         <aligny>top</aligny>
+                        <autoscroll>true</autoscroll>
                 </control>
                 <control type="label">
                         <description>Start, End</description>
@@ -89,6 +90,7 @@
                         <label>$INFO[Window(Home).Property(GTO.Info.Date)] - $INFO[Window(Home).Property(GTO.Info.EndTime)]</label>
                         <align>left</align>
                         <aligny>top</aligny>
+                        <autoscroll>true</autoscroll>
                 </control>
                 <control type="label">
                         <top>70</top>
