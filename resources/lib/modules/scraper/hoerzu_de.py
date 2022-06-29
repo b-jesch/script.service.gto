@@ -4,9 +4,9 @@
 from .. tools import *
 from dateutil import parser
 
+
 class Scraper():
     def __init__(self):
-
 
         # Properties
 
@@ -21,7 +21,6 @@ class Scraper():
         self.detailselector = '<div class="body-content">'
         self.err404 = 'hoerzu_dummy.jpg'
 
-
     def reset(self):
         self.channel = ''
         self.title = ''
@@ -34,7 +33,6 @@ class Scraper():
         self.plot = ''
         self.cast = ''
         self.rating = None
-
 
     def scrapeRSS(self, content):
 

@@ -4,6 +4,7 @@ from .. tools import *
 from dateutil import parser
 from xml.etree import ElementTree as ET
 
+
 class Scraper():
 
     def __init__(self):
@@ -21,7 +22,6 @@ class Scraper():
         self.detailselector = None
         self.err404 = 'knftv_dummy.jpg'
 
-
     def reset(self):
 
         # Items
@@ -37,7 +37,6 @@ class Scraper():
         self.plot = ''
         self.cast = ''
         self.rating = None
-
 
     def scrapeRSS(self, content):
 

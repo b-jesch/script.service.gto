@@ -62,17 +62,18 @@ def list_offers():
         liz = xbmcgui.ListItem()
         liz.setLabel('{}'.format(item.get('pvrchannel', item.get('channel'))))
         liz.setLabel2('{}'.format(item.get('title')))
-        liz.setInfo('video', {'genre': item.get('genre'),
-                              'plot': item.get('plot'),
-                              'duration': item.get('runtime'),
-                              'rating': item.get('rating'),
-                              'mediatype': 'video'})
+        # set VideoInfoTag
+        vit = liz.getVideoInfoTag()
+        vit.setGenres([item.get('genre')])
+        vit.setPlot(item.get('plot'))
+        vit.setDuration(item.get('runtime'))
+        vit.setRating(item.get('rating'))
+        vit.setMediaType('video')
         liz.setArt({'icon': item.get('thumb'), 'thumb': item.get('thumb'), 'poster': item.get('thumb'),
                     'fanart': item.get('thumb'), 'logo': item.get('logo')})
         liz.setProperty('StartDate', convert_dateformat(item.get('datetime')))
         liz.setProperty('StartTime', convert_dateformat(item.get('datetime'), dt_out=LOCAL_TIME_FORMAT))
         liz.setProperty('EndTime', convert_dateformat(item.get('enddate')))
-        # liz.setProperty('RunTime', str(item.get('runtime') // 60))
         liz.setProperty('HasTimer', str(hasTimer(item.get('broadcastid', None))))
         liz.setProperty('Item', str(item.get('item')))
         liz.setProperty('IsPlayable', 'true')
@@ -143,7 +144,7 @@ def scrape_page():
             'genre': entity2char(scraper.genre),
             'plot': entity2char(scraper.plot),
             'cast': entity2char(scraper.cast),
-            'rating': scraper.rating
+            'rating': float(scraper.rating) if scraper.rating is not None else 0
         }
         if pvrid: record.update(getBroadcast(pvrid, datetime.datetime.strftime(scraper.startdate, RSS_TIME_FORMAT_WOS)))
 

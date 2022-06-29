@@ -3,6 +3,7 @@
 from .. tools import *
 from dateutil import parser
 
+
 class Scraper():
     def __init__(self):
 
@@ -76,6 +77,6 @@ class Scraper():
             # calculate rating
             rating = re.compile('<span itemprop="ratingValue">(.+?)</span>', re.DOTALL).findall(content)[0]
             bestrating = re.compile('<span itemprop="bestRating">(.+?)</span>', re.DOTALL).findall(content)[0]
-            self.rating = '{0:2.1f}'.format((int(rating) / int(bestrating)) * 10)
+            self.rating = float('{0:2.1f}'.format((int(rating) / int(bestrating)) * 10))
         except (IndexError, TypeError):
             pass

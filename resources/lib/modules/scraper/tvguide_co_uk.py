@@ -3,6 +3,7 @@
 from .. tools import *
 from dateutil import parser
 
+
 class Scraper():
 
     def __init__(self):
@@ -21,7 +22,6 @@ class Scraper():
         self.detailselector = '<div id="divLHS">'
         self.err404 = 'tvguide.uk_logo.png'
 
-
     def reset(self):
 
         # Items
@@ -37,7 +37,6 @@ class Scraper():
         self.plot = ''
         self.cast = ''
         self.rating = None
-
 
     def scrapeRSS(self, content):
 
