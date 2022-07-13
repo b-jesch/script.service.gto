@@ -40,9 +40,9 @@ class Scraper():
 
         self.reset()
         try:
-            self.channel = re.compile('</strong> na <img alt="(.+?)" src', re.DOTALL).findall(content)[0]
+            self.channel = re.compile('alt="(.+?)">', re.DOTALL).findall(content)[1]
             self.title = re.compile('class="film-title-name">(.+?)</a>', re.DOTALL).findall(content)[0]
-            self.detailURL = self.baseurl +  re.compile('<a href="(.+?)">', re.DOTALL).findall(content)[0]
+            self.detailURL = self.baseurl + re.compile('<a href="(.+?)">', re.DOTALL).findall(content)[0]
             self.plot = re.compile('<p class="p-tvtips-2row p-tvtips-2row-long">(.+?)<span', re.DOTALL).findall(content)[0].strip()
         except IndexError:
             if self.plot == '':
@@ -61,11 +61,12 @@ class Scraper():
             self.runtime = int((self.enddate - self.startdate).total_seconds())
         except (IndexError, ValueError):
             pass
+        _small = None
         try:
             _small = 'https:' + re.compile('srcset="(.+?)"', re.DOTALL).findall(content)[0].split(', ')[0].split()[0]
             self.thumb = 'https:' + re.compile('srcset="(.+?)"', re.DOTALL).findall(content)[0].split(', ')[2].split()[0]
         except (IndexError, TypeError):
-            if _small:
+            if _small is not None:
                 self.thumb = re.sub('/cache/resized/w80h113', '', _small)
             else:
                 self.thumb = os.path.join(ADDON_PATH, 'resources', 'lib', 'media', self.icon)
