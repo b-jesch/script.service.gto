@@ -169,7 +169,7 @@ def change_scraper():
         module = __import__('{}.{}'.format(SCRAPER_MODULPATH, modules[:-3]), locals(), globals(), fromlist=['Scraper'])
         Scrapers = getattr(module, 'Scraper')
 
-        if not Scrapers().enabled or (OPT_HIDE_FOREIGN and Scrapers().lang != COUNTRY):
+        if not Scrapers().enabled or (OPT_HIDE_FOREIGN and (Scrapers().lang != COUNTRY) and COUNTRY != ""):
             continue
         li = xbmcgui.ListItem(label=Scrapers().shortname, label2=Scrapers().friendlyname)
         li.setArt({'icon': getScraperIcon(Scrapers().icon)})
