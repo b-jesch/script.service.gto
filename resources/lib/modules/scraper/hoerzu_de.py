@@ -73,7 +73,8 @@ class Scraper():
                 try:
                     self.cast = re.compile('<strong>Schauspieler:</strong></div></div><div '
                                            'class="m-accordion__item-name"><div '
-                                           'class="m-accordion__only-stars">(.+?)</div>', re.DOTALL).findall(content)[0]
+                                           'class="m-accordion__only-stars">(.+?)</div>',
+                                           re.DOTALL).findall(content)[0].strip()
                 except IndexError:
                     pass
 

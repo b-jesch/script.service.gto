@@ -2,6 +2,7 @@ from resources.lib.modules.tools import *
 import sys
 import os
 from urllib.parse import parse_qsl, urlencode
+from operator import itemgetter
 import xbmc
 import xbmcgui
 import xbmcplugin
@@ -149,7 +150,7 @@ def scrape_page():
         items.append(record)
         item_nr += 1
 
-    entry.update({'items': items})
+    entry.update({'items': sorted(items, key=itemgetter('datetime'))})
     with open(SCRAPER_CONTENT, 'w', encoding='utf-8') as f:
         json.dump(entry, f, indent=4, ensure_ascii=False)
 
@@ -186,7 +187,7 @@ def change_scraper():
         Scraper = getattr(module, 'Scraper')
 
 
-def show_info(item):
+def show_info(item_nr):
     if not os.path.isfile(SCRAPER_CONTENT):
         return False
 
@@ -194,49 +195,50 @@ def show_info(item):
         content = json.load(f)
 
     for property in window_properties: HOME.clearProperty('GTO.Info.{}'.format(property))
-    item = content['items'][int(item)]
+    for item in content['items']:
+        if item['item'] != int(item_nr): continue
 
-    if item.get('broadcastid', None) is not None:
+        if item.get('broadcastid', None) is not None:
 
-        is_timer = hasTimer(item['broadcastid'])
-        HOME.setProperty('GTO.Info.BroadcastID', str(item['broadcastid']))
-        HOME.setProperty('GTO.Info.hasTimer', str(is_timer))
+            is_timer = hasTimer(item['broadcastid'])
+            HOME.setProperty('GTO.Info.BroadcastID', str(item['broadcastid']))
+            HOME.setProperty('GTO.Info.hasTimer', str(is_timer))
 
-    if parser.parse(item['datetime'], dayfirst=False) >= datetime.datetime.now():
-        writeLog('Title \'{}\' starts @{}, enable switchtimer button'.format(item['title'], item['datetime']))
-        is_inFuture = True
-        HOME.setProperty("GTO.Info.isInFuture", str(is_inFuture))
+        if parser.parse(item['datetime'], dayfirst=False) >= datetime.datetime.now():
+            writeLog('Title \'{}\' starts @{}, enable switchtimer button'.format(item['title'], item['datetime']))
+            is_inFuture = True
+            HOME.setProperty("GTO.Info.isInFuture", str(is_inFuture))
 
-    elif parser.parse(item['datetime'], dayfirst=False) < datetime.datetime.now() < parser.parse(item['enddate'], dayfirst=False):
-        writeLog('Title \'{}\' is currently running, enable switch button'.format(item['title']))
+        elif parser.parse(item['datetime'], dayfirst=False) < datetime.datetime.now() < parser.parse(item['enddate'], dayfirst=False):
+            writeLog('Title \'{}\' is currently running, enable switch button'.format(item['title']))
 
-        is_running = True
-        HOME.setProperty("GTO.Info.isRunning", str(is_running))
+            is_running = True
+            HOME.setProperty("GTO.Info.isRunning", str(is_running))
 
-    HOME.setProperty("GTO.Info.Item", str(item['item']))
-    HOME.setProperty("GTO.Info.Title", item['title'])
-    HOME.setProperty("GTO.Info.Picture", item['thumb'])
-    HOME.setProperty("GTO.Info.Description", item['plot'] or LOC(30140))
-    HOME.setProperty("GTO.Info.Channel", item['pvrchannel'])
-    HOME.setProperty("GTO.Info.ChannelID", str(item['pvrid']))
-    HOME.setProperty("GTO.Info.Logo", item['logo'])
-    HOME.setProperty("GTO.Info.Date", convert_dateformat(item['datetime']))
-    HOME.setProperty("GTO.Info.RunTime", str(item['runtime'] // 60))
-    HOME.setProperty("GTO.Info.EndTime", convert_dateformat(item['enddate'], dt_out=LOCAL_TIME_FORMAT))
-    if item['rating'] is None or item['rating'] == '':
-        HOME.setProperty("GTO.Info.Genre", item['genre'])
-    else:
-        HOME.setProperty('GTO.Info.Genre', item['genre'] + ' | Rating: ' + str(item['rating']))
-    HOME.setProperty("GTO.Info.Cast", item['cast'])
-    # HOME.setProperty("GTO.Info.Rating", str(item['rating']))
+        HOME.setProperty("GTO.Info.Item", str(item['item']))
+        HOME.setProperty("GTO.Info.Title", item['title'])
+        HOME.setProperty("GTO.Info.Picture", item['thumb'])
+        HOME.setProperty("GTO.Info.Description", item['plot'] or LOC(30140))
+        HOME.setProperty("GTO.Info.Channel", item['pvrchannel'])
+        HOME.setProperty("GTO.Info.ChannelID", str(item['pvrid']))
+        HOME.setProperty("GTO.Info.Logo", item['logo'])
+        HOME.setProperty("GTO.Info.Date", convert_dateformat(item['datetime']))
+        HOME.setProperty("GTO.Info.RunTime", str(item['runtime'] // 60))
+        HOME.setProperty("GTO.Info.EndTime", convert_dateformat(item['enddate'], dt_out=LOCAL_TIME_FORMAT))
+        if item['rating'] is None or item['rating'] == '':
+            HOME.setProperty("GTO.Info.Genre", item['genre'])
+        else:
+            HOME.setProperty('GTO.Info.Genre', item['genre'] + ' | Rating: ' + str(item['rating']))
+        HOME.setProperty("GTO.Info.Cast", item['cast'])
 
-    try:
-        popup = xbmcgui.WindowXMLDialog(INFO_XML, ADDON_PATH)
-        popup.doModal()
-        del popup
-    except RuntimeError:
-        writeLog('Missing PVR info window for this skin', xbmc.LOGERROR)
-        notifyOSD(LOC(30010), LOC(30136), icon=xbmcgui.NOTIFICATION_WARNING, enabled=True)
+        try:
+            popup = xbmcgui.WindowXMLDialog(INFO_XML, ADDON_PATH)
+            popup.doModal()
+            del popup
+        except RuntimeError:
+            writeLog('Missing PVR info window for this skin', xbmc.LOGERROR)
+            notifyOSD(LOC(30010), LOC(30136), icon=xbmcgui.NOTIFICATION_WARNING, enabled=True)
+        return
 
 
 def router(paramstring):
