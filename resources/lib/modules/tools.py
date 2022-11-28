@@ -150,7 +150,7 @@ def get_feed(resource, container=None):
     try:
         req = requests.get(resource, headers={'USER-AGENT': USER_AGENT})
         req.raise_for_status()
-    except requests.exceptions.ConnectionError as e:
+    except (requests.exceptions.ConnectionError, requests.exceptions.MissingSchema) as e:
         writeLog('Response from {}: {}'.format(resource, e.response), xbmc.LOGERROR)
         return None
 

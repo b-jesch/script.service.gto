@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import xbmc
 
 from .. tools import *
 from dateutil import parser
@@ -13,12 +14,13 @@ class Scraper():
         self.enabled = True
         self.baseurl = 'https://www.hoerzu.de'
         self.lang = 'de'
-        self.rssurl = 'https://www.hoerzu.de/rss/tipp/spielfilm/'
+        self.rssurl = 'https://www.hoerzu.de/tv-tipps/'
         self.friendlyname = 'HÖRZU Spielfilm Highlights'
         self.shortname = 'HÖRZU'
         self.icon = 'hoerzu.png'
-        self.selector = '<item>'
-        self.detailselector = '<div class="body-content">'
+        self.selector = '<div class="o-tv-tips o-tv-tips--tipsPage">'
+        self.subselector = '<div class="uk-width-1-2 uk-width-1-4@s">'
+        self.detailselector = '/head>'
         self.err404 = 'hoerzu_dummy.jpg'
 
     def reset(self):
@@ -35,22 +37,22 @@ class Scraper():
         self.rating = None
 
     def scrapeRSS(self, content):
-
         self.reset()
-
         try:
-            self.channel = re.compile('<dc:subject>(.+?)</dc:subject>', re.DOTALL).findall(content)[0]
-            self.genre = re.compile('<title>(.+?)</title>', re.DOTALL).findall(content)[0].split(' - ')[1]
-            self.detailURL = re.compile('<link>(.+?)</link>', re.DOTALL).findall(content)[0]
-            self.title = re.compile('<title>(.+?)</title>', re.DOTALL).findall(content)[0].split(': ', 1)[1]
-        except IndexError:
-            pass
+            self.startdate = parser.parse((re.compile('<div class="m-epg-program-card__time">(.+?)</div',
+                                                      re.DOTALL).findall(content)[0]))
+            self.channel = re.compile('<div class="m-epg-program-card__channel-name">(.+?)</div>',
+                                      re.DOTALL).findall(content)[0]
+            self.detailURL = self.baseurl + \
+                             re.compile('<a class="m-epg-program-card" data-controller=\'ControllerEpgProgramCard\' '
+                                        'href=\'(.+?)\'', re.DOTALL).findall(content)[0]
+            self.title = re.compile('<h3 class="a-headline seriesName">(.+?)</h3>', re.DOTALL).findall(content)[0]
+            self.thumb = re.compile('<source srcset="(.+?)" media="\(min-width: 960px\)" />',
+                                    re.DOTALL).findall(content)[0].replace('202x147', '1280x720')
+            self.thumb = checkResource(self.thumb, self.err404)
 
-        try:
-            self.startdate = parser.parse((re.compile('<dc:date>(.+?)</dc:date>',
-                                                  re.DOTALL).findall(content)[0][0:19]).replace('T', ' ').replace('.', '-'))
         except IndexError:
-            pass
+            writeLog('main parsing of \'%s\' incomplete' % self.shortname, level=xbmc.LOGWARNING)
 
     def scrapeDetailPage(self, content, contentID):
 
@@ -62,31 +64,24 @@ class Scraper():
                 content = container[0]
 
                 try:
-                    self.plot = re.compile('<p itemprop="description">(.+?)</p>', re.DOTALL).findall(content)[0]
+                    self.plot = re.compile('<p><strong>Beschreibung</strong></p><p>(.+?)</p></div>',
+                                           re.DOTALL).findall(content)[0]
                 except IndexError:
                     pass
 
                 # Cast
                 try:
-                    castlist = re.compile('<h2>Stars</h2>(.+?)</ul>', re.DOTALL).findall(content)[0]
-                    cast = re.compile('<span itemprop="name">(.+?)</span>', re.DOTALL).findall(castlist)
-                    self.cast = ', '.join(cast)
+                    self.cast = re.compile('<strong>Schauspieler:</strong></div></div><div '
+                                           'class="m-accordion__item-name"><div '
+                                           'class="m-accordion__only-stars">(.+?)</div>', re.DOTALL).findall(content)[0]
                 except IndexError:
                     pass
-
-                # Thumbnail
-                try:
-                    self.thumb = re.compile('<div><img src="(.+?)" itemprop="image"', re.DOTALL).findall(content)[0]
-                except IndexError:
-                    self.thumb = 'image://%s' % (self.err404)
-
-                self.thumb = checkResource(self.thumb, self.err404)
 
                 # Enddate
 
                 try:
-                    _s = re.compile('<div class="day">(.+?)<div class="labels">',
-                                    re.DOTALL).findall(content)[0].split('/')[1].split(' - ')[1].strip()
+                    _s = re.compile('<span class="o-epg_stage__time--hidden">(.+?)</span>',
+                                    re.DOTALL).findall(content)[0].split()[-1]
                     self.enddate = self.startdate.replace(hour=int(_s[0:2]), minute=int(_s[3:5]))
                 except IndexError:
                     self.enddate = self.startdate
@@ -94,6 +89,13 @@ class Scraper():
                 if self.startdate > self.enddate: self.enddate += datetime.timedelta(days=1)
                 self.runtime = int((self.enddate - self.startdate).seconds)
 
+                # Genre
+
+                try:
+                    self.genre = re.compile('<div class="o-epg_stage__series-info">(.+?)</div>',
+                                            re.DOTALL).findall(content)[0].split(' • ')[0].strip()
+                except IndexError:
+                    pass
+
         except TypeError:
             pass
-

@@ -117,7 +117,7 @@ def scrape_page():
 
             writeLog('Scraping details from {}'.format(scraper.detailURL))
             details = get_feed(scraper.detailURL)
-            scraper.scrapeDetailPage(details, scraper.detailselector)
+            if details: scraper.scrapeDetailPage(details, scraper.detailselector)
 
         if not isinstance(scraper.enddate, datetime.datetime) or scraper.enddate < datetime.datetime.now():
             writeLog('Outdated or no endtime available, discard item')
