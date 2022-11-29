@@ -42,7 +42,7 @@ class Scraper():
     def scrapeRSS(self, content):
 
         self.reset()
-        knftv = ET.fromstring((self.selector + content).replace('</events>', ''))
+        knftv = ET.fromstring((self.preselector + content).replace('</events>', ''))
         try:
             self.channel = knftv.findtext('ChannelName')
             self.title = knftv.findtext('Title') or knftv.findtext('EpgEventTitle') or None
