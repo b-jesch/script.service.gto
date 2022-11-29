@@ -12,16 +12,17 @@ class Scraper():
         # Properties
 
         self.enabled = True
-        self.baseurl = 'https://www.hoerzu.de'
-        self.lang = 'de'
-        self.rssurl = 'https://www.hoerzu.de/tv-tipps/'
+        self.baseurl = 'https://www.hoerzu.de'                              # base URL of scraper
+        self.lang = 'de'                                                    # audience language
+        self.rssurl = 'https://www.hoerzu.de/tv-tipps/'                     # scraper main content
         self.friendlyname = 'HÖRZU Spielfilm Highlights'
         self.shortname = 'HÖRZU'
         self.icon = 'hoerzu.png'
-        self.selector = '<div class="o-tv-tips o-tv-tips--tipsPage">'
-        self.subselector = '<div class="uk-width-1-2 uk-width-1-4@s">'
-        self.detailselector = '/head>'
-        self.err404 = 'hoerzu_dummy.jpg'
+        self.preselector = '<div class="o-tv-tips o-tv-tips--tipsPage">'    # discard content before this selector
+        self.postselector = '<div id="loading" class="modal-loading">'      # discard content after this selector
+        self.subselector = '<div class="uk-width-1-2 uk-width-1-4@s">'      # split content into parts on this selector
+        self.detailselector = '/head>'                                      # discard content before this selector on detail pages
+        self.err404 = 'hoerzu_dummy.jpg'                                    # dummy picture
 
     def reset(self):
         self.channel = ''

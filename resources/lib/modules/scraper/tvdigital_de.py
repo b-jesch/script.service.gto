@@ -16,7 +16,8 @@ class Scraper():
         self.friendlyname = 'TV Digital Spielfilm Highlights'
         self.shortname = 'TV Digital'
         self.icon = 'tvd.png'
-        self.selector = '<div id="content-left" class="tv-highlights">'
+        self.preselector = '<div id="content-left" class="tv-highlights">'
+        self.postselector = None
         self.subselector = '<div class="highlight-container">'
         self.detailselector = '<div class="rating-container">'
         self.err404 = 'tvd_dummy.jpg'

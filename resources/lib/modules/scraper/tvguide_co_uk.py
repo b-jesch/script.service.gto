@@ -17,7 +17,8 @@ class Scraper():
         self.friendlyname = 'TVGuide.co.uk - TV Highlights'
         self.shortname = 'TVGuide.co.uk'
         self.icon = 'tvguide.uk_logo.png'
-        self.selector = '<span class=programmeheading'
+        self.preselector = '<span class=programmeheading'
+        self.postselector = None
         self.subselector = 'id="table1"'
         self.detailselector = '<div id="divLHS">'
         self.err404 = 'tvguide.uk_logo.png'

@@ -18,7 +18,8 @@ class Scraper():
         self.friendlyname = 'KN Community freeTV Highlights'
         self.shortname = 'Kodinerds freeTV'
         self.icon = 'knftv.png'
-        self.selector = '<knftv>'
+        self.preselector = '<knftv>'
+        self.postselector = None
         self.detailselector = None
         self.err404 = 'knftv_dummy.jpg'
 

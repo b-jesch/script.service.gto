@@ -15,7 +15,8 @@ class Scraper():
         self.friendlyname = 'TV Spielfilm Highlights'
         self.shortname = 'TV Spielfilm'
         self.icon = 'tvspielfilm.png'
-        self.selector = '<item>'
+        self.preselector = '<item>'
+        self.postselector = None
         self.detailselector = '<section id="content">'
         self.err404 = 'tvspielfilm_dummy.jpg'
 

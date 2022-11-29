@@ -92,9 +92,9 @@ def scrape_page():
 
     notifyOSD(LOC(30010), LOC(30018) % scraper.shortname, icon=getScraperIcon(scraper.icon))
     writeLog('Start scraping from %s' % scraper.rssurl)
-    content = get_feed(scraper.rssurl, container=scraper.selector)
+    content = get_feed(scraper.rssurl, container=scraper.preselector, postcontent=scraper.postselector)
 
-    if content is None:
+    if content is None or len(content) == 0:
         writeLog('Scraper returns no data', xbmc.LOGERROR)
         notifyOSD(LOC(30010), LOC(30132), icon=getScraperIcon(Scraper().icon), enabled=True)
         HOME.setProperty('GTO.busy', 'false')

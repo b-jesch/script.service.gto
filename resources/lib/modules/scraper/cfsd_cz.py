@@ -15,7 +15,8 @@ class Scraper():
         self.friendlyname = 'TV tipy dne'
         self.shortname = 'CSFD.cz'
         self.icon = 'csfd.png'
-        self.selector = '<div class="box-content box-content-striped-articles">'
+        self.preselector = '<div class="box-content box-content-striped-articles">'
+        self.postselector = None
         self.subselector = '<article class="article article-poster-78">'
         self.detailselector = '<div class="main-movie">'
         self.err404 = 'csfd_dummy.jpg'

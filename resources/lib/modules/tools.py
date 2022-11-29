@@ -146,7 +146,7 @@ def jsonrpc(query):
 # Scraper helpers
 
 
-def get_feed(resource, container=None):
+def get_feed(resource, container=None, postcontent=None):
     try:
         req = requests.get(resource, headers={'USER-AGENT': USER_AGENT})
         req.raise_for_status()
@@ -154,12 +154,17 @@ def get_feed(resource, container=None):
         writeLog('Response from {}: {}'.format(resource, e.response), xbmc.LOGERROR)
         return None
 
+    # remove waste if necessary
+
     if container is None:
         return req.text
     else:
         content = req.text.split(container)
         content.pop(0)
-        return content
+        if postcontent is None or len(content) > 1: return content
+        core = content[0].split(postcontent)
+        if len(core) > 1: core.pop()
+        return core
 
 
 def checkResource(resource, fallback):

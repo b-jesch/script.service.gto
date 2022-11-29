@@ -17,7 +17,8 @@ class Scraper():
         self.friendlyname = 'klack.de - TV Highlights'
         self.shortname = 'klack.de'
         self.icon = 'klack.png'
-        self.selector = '<item>'
+        self.preselector = '<item>'
+        self.postselector = None
         self.detailselector = '<table id="content">'
         self.err404 = 'klackde_dummy.jpg'
 
