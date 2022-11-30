@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<addon id="script.service.gto" name="Telecast Offers" version="3.0.8+matrix.2" provider-name="Birger Jesch">
+<addon id="script.service.gto" name="Telecast Offers" version="3.0.8+matrix.3" provider-name="Birger Jesch">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
         <import addon="xbmc.json" version="7.0.0"/>

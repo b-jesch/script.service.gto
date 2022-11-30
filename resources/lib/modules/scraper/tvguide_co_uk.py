@@ -17,9 +17,9 @@ class Scraper():
         self.friendlyname = 'TVGuide.co.uk - TV Highlights'
         self.shortname = 'TVGuide.co.uk'
         self.icon = 'tvguide.uk_logo.png'
-        self.preselector = '<span class=programmeheading'
-        self.postselector = None
-        self.subselector = 'id="table1"'
+        self.preselector = '<div  style="background:black; width:100%;">'
+        self.postselector = '<div id="blog-entries">'
+        self.subselector = '<div style="margin-top: 50px; background-image:'
         self.detailselector = '<div id="divLHS">'
         self.err404 = 'tvguide.uk_logo.png'
 
@@ -44,21 +44,22 @@ class Scraper():
         self.reset()
 
         try:
-            self.channel = re.compile('<span class="tvchannel">(.+?)</span>', re.DOTALL).findall(content)[-1]
-            self.detailURL = re.compile('<a href="(.+?)" title="Click to rate and review">', re.DOTALL).findall(content)[0]
-            self.title = re.compile('<span id=programmeheading class="programmeheading">(.+?)</span>', re.DOTALL).findall(content)[0]
-            self.thumb = re.compile('background-image: url\((.+?)\)', re.DOTALL).findall(content)[0]
+            self.channel = re.compile('<span class=tvchannel>(.+?)</span>', re.DOTALL).findall(content)[0]
+            self.detailURL = re.compile('href="(.+?)"', re.DOTALL).findall(content)[0]
+            self.title = re.compile('title="Click to rate and review">(.+?)</a>', re.DOTALL).findall(content)[0]
+            self.thumb = re.compile('url\((.+?)\)', re.DOTALL).findall(content)[0]
+            self.rating = re.compile('<span class="programmeheading">(.+?)</span>', re.DOTALL).findall(content)[0]
         except IndexError:
-            pass
+            writeLog('main parsing of \'%s\' incomplete' % self.shortname, level=xbmc.LOGWARNING)
 
         self.thumb = checkResource(self.thumb, self.err404)
         try:
-            self.plot = re.compile('<span class="programmetext">(.+?)</span>', re.DOTALL).findall(content)[0]
+            self.plot = re.compile('<div class="programmetext">(.+?)</div>', re.DOTALL).findall(content)[0]
         except IndexError:
             pass
 
         try:
-            self.startdate = parser.parse((re.compile('<span class="datetime">(.+?)</span>', re.DOTALL).findall(content)[0]))
+            self.startdate = parser.parse((re.compile('<span class=datetime>(.+?)</span>', re.DOTALL).findall(content)[0]))
         except ValueError:
             self.startdate = parser.parse((re.compile('<span class="datetime">(.+?)</span>', re.DOTALL).findall(content)[0]).split()[0])
         except IndexError:
@@ -87,10 +88,7 @@ class Scraper():
 
                 # Genre
                 try:
-                    self.genre = re.compile('Category: (.+?)</br>', re.DOTALL).findall(content)[0]
-
-                    # Cast
-                    self.cast = ', '.join(re.compile('<td class="actor">(.+?)</td>', re.DOTALL).findall(content))
+                    self.genre = re.compile('Category:(.+?)<br>', re.DOTALL).findall(content)[0].strip()
                 except IndexError:
                     pass
 

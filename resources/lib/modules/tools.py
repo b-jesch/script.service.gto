@@ -150,7 +150,7 @@ def get_feed(resource, container=None, postcontent=None):
     try:
         req = requests.get(resource, headers={'USER-AGENT': USER_AGENT})
         req.raise_for_status()
-    except (requests.exceptions.ConnectionError, requests.exceptions.MissingSchema) as e:
+    except (requests.exceptions.ConnectionError, requests.exceptions.HTTPError, requests.exceptions.MissingSchema) as e:
         writeLog('Response from {}: {}'.format(resource, e.response), xbmc.LOGERROR)
         return None
 
@@ -161,10 +161,11 @@ def get_feed(resource, container=None, postcontent=None):
     else:
         content = req.text.split(container)
         content.pop(0)
-        if postcontent is None or len(content) > 1: return content
-        core = content[0].split(postcontent)
-        if len(core) > 1: core.pop()
-        return core
+        if postcontent is None: return content
+        last = content[-1].split(postcontent)
+        if len(last) > 1: last.pop()
+        content[-1] = last[0]
+        return content
 
 
 def checkResource(resource, fallback):
