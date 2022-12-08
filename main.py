@@ -105,6 +105,7 @@ def scrape_page():
         content.pop(0)
 
     item_nr = 0
+    part_nr = 0
     items = list()
     entry = {
         'timestamp': int(time.time()),
@@ -112,11 +113,9 @@ def scrape_page():
     }
 
     parts = 100 // len(content)
-    progress = 0
     for item in content:
-        progress = progress + parts
         scraper.scrapeRSS(item)
-        HOME.setProperty('GTO.provider', LOC(30105).format(progress))
+        HOME.setProperty('GTO.provider', LOC(30105).format(parts * part_nr))
         if hasattr(scraper, 'scrapeDetailPage') and \
                 callable(getattr(scraper, 'scrapeDetailPage')) and scraper.detailURL:
 
@@ -124,6 +123,7 @@ def scrape_page():
             details = get_feed(scraper.detailURL)
             if details: scraper.scrapeDetailPage(details, scraper.detailselector)
 
+        part_nr += 1
         if not isinstance(scraper.enddate, datetime.datetime) or scraper.enddate < datetime.datetime.now():
             writeLog('Outdated or no endtime available, discard item')
             continue
