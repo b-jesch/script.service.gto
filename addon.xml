@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<addon id="script.service.gto" name="Telecast Offers" version="3.0.8+matrix.3" provider-name="Birger Jesch">
+<addon id="script.service.gto" name="Telecast Offers" version="3.0.8+matrix.4" provider-name="Birger Jesch">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
         <import addon="xbmc.json" version="7.0.0"/>
@@ -38,8 +38,8 @@ Skin support for Estuary, Estuary Mod V2, Confluence
         <assets>
             <icon>icon.png</icon>
             <fanart>fanart.jpg</fanart>
-            <screenshot>resources/lib/screenshots/screenshot_01.png</screenshot>
-            <screenshot>resources/lib/screenshots/screenshot_02.png</screenshot>
+            <screenshot>resources/lib/screenshots/screenshot_01.jpg</screenshot>
+            <screenshot>resources/lib/screenshots/screenshot_02.jpg</screenshot>
         </assets>
     </extension>
 </addon>

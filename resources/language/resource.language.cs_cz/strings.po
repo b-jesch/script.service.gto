@@ -36,8 +36,8 @@ msgstr "Nastavení"
 #empty strings from id 30012 to 30017
 
 msgctxt "#30018"
-msgid "Get Infos from %s"
-msgstr "Získané informace z %s"
+msgid "Get Infos from {}"
+msgstr "Získané informace z {}"
 
 #empty strings from id 30019 to 30103
 
@@ -46,8 +46,8 @@ msgid "Highlights"
 msgstr "Zvýrazòuje"
 
 msgctxt "#30105"
-msgid "loading..."
-msgstr "naèítám..."
+msgid "loading... ({}%)"
+msgstr "naèítám... ({}%)"
 
 msgctxt "#30106"
 msgid "Service started"
@@ -60,10 +60,6 @@ msgstr "Nastvení èasu pøepnutí"
 msgctxt "#30108"
 msgid "Switch Now"
 msgstr "Pøepni teï"
-
-msgctxt "#30109"
-msgid "Refreshing Widget of %s"
-msgstr "Obnovuji Widget z  %s "
 
 msgctxt "#30110"
 msgid "TV Scraper"

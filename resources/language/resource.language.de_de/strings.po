@@ -36,16 +36,16 @@ msgstr "Einstellungen"
 #empty strings from id 30012 to 30017
 
 msgctxt "#30018"
-msgid "Get Infos from %s"
-msgstr "Beziehe Programminfos von %s"
+msgid "Get Infos from {}"
+msgstr "Beziehe Programminfos von {}"
 
 msgctxt "#30104"
 msgid "Highlights"
 msgstr "TV Highlights"
 
 msgctxt "#30105"
-msgid "loading..."
-msgstr "lade..."
+msgid "loading... ({}%)"
+msgstr "lade... ({}%)"
 
 msgctxt "#30106"
 msgid "Service started"
@@ -58,10 +58,6 @@ msgstr "Umschalttimer setzen"
 msgctxt "#30108"
 msgid "Switch Now"
 msgstr "Jetzt umschalten"
-
-msgctxt "#30109"
-msgid "Refreshing Widget of %s"
-msgstr "Aktualisiere Widget von %s"
 
 msgctxt "#30110"
 msgid "TV Scraper"

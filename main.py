@@ -85,12 +85,12 @@ def list_offers():
 
 
 def scrape_page():
-    HOME.setProperty('GTO.provider', LOC(30105))
+    HOME.setProperty('GTO.provider', LOC(30105).format(0))
     HOME.setProperty('GTO.busy', 'true')
     scraper = Scraper()
     scraper.err404 = os.path.join(ADDON_PATH, 'resources', 'lib', 'media', scraper.err404)
 
-    notifyOSD(LOC(30010), LOC(30018) % scraper.shortname, icon=getScraperIcon(scraper.icon))
+    notifyOSD(LOC(30010), LOC(30018).format(scraper.shortname), icon=getScraperIcon(scraper.icon))
     writeLog('Start scraping from %s' % scraper.rssurl)
     content = get_feed(scraper.rssurl, container=scraper.preselector, postcontent=scraper.postselector)
 
@@ -111,8 +111,12 @@ def scrape_page():
         'scraper': scraper.shortname
     }
 
+    parts = 100 // len(content)
+    progress = 0
     for item in content:
+        progress = progress + parts
         scraper.scrapeRSS(item)
+        HOME.setProperty('GTO.provider', LOC(30105).format(progress))
         if hasattr(scraper, 'scrapeDetailPage') and \
                 callable(getattr(scraper, 'scrapeDetailPage')) and scraper.detailURL:
 

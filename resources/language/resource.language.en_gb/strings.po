@@ -37,7 +37,7 @@ msgstr ""
 #empty strings from id 30012 to 30017
 
 msgctxt "#30018"
-msgid "Get Infos from %s"
+msgid "Get Infos from {}"
 msgstr ""
 
 #empty strings from id 30019 to 30103
@@ -47,7 +47,7 @@ msgid "Highlights"
 msgstr ""
 
 msgctxt "#30105"
-msgid "loading..."
+msgid "loading... ({}%)"
 msgstr ""
 
 msgctxt "#30106"
@@ -60,10 +60,6 @@ msgstr ""
 
 msgctxt "#30108"
 msgid "Switch Now"
-msgstr ""
-
-msgctxt "#30109"
-msgid "Refreshing Widget of %s"
 msgstr ""
 
 msgctxt "#30110"
