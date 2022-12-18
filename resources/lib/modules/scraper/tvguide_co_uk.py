@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import re
 
 from .. tools import *
 from dateutil import parser
@@ -60,8 +61,13 @@ class Scraper():
 
         try:
             self.startdate = parser.parse((re.compile('<span class=datetime>(.+?)</span>', re.DOTALL).findall(content)[0]))
-        except ValueError:
-            self.startdate = parser.parse((re.compile('<span class="datetime">(.+?)</span>', re.DOTALL).findall(content)[0]).split()[0])
+        except (ValueError, IndexError, parser.ParserError):
+            try:
+                _sd = re.compile('<span class="datetime">(.+?)</span>', re.DOTALL).findall(content)[0]
+                self.startdate = parser.parse(_sd.split()[0])
+            except IndexError:
+                pass
+            # self.startdate = parser.parse((re.compile('<span class="datetime">(.+?)</span>', re.DOTALL).findall(content)[0]).split()[0])
         except IndexError:
             pass
 

@@ -133,26 +133,29 @@ def scrape_page():
         logoURL = getStationLogo(pvrid, scraper.err404).replace('image://', '')
         channel = getPvrChannelName(pvrid, scraper.channel)
 
-        record = {
-            'item': item_nr,
-            'title': entity2char(scraper.title),
-            'thumb': scraper.thumb,
-            'datetime': datetime.datetime.strftime(scraper.startdate, RSS_TIME_FORMAT),
-            'runtime': scraper.runtime,
-            'enddate': datetime.datetime.strftime(scraper.enddate, RSS_TIME_FORMAT),
-            'channel': scraper.channel,
-            'pvrchannel': channel,
-            'pvrid': pvrid,
-            'logo': logoURL,
-            'genre': entity2char(scraper.genre),
-            'plot': entity2char(scraper.plot),
-            'cast': entity2char(scraper.cast),
-            'rating': scraper.rating
-        }
-        if pvrid: record.update(getBroadcast(pvrid, datetime.datetime.strftime(scraper.startdate, RSS_TIME_FORMAT_WOS)))
+        try:
+            record = {
+                'item': item_nr,
+                'title': entity2char(scraper.title),
+                'thumb': scraper.thumb,
+                'datetime': datetime.datetime.strftime(scraper.startdate, RSS_TIME_FORMAT),
+                'runtime': scraper.runtime,
+                'enddate': datetime.datetime.strftime(scraper.enddate, RSS_TIME_FORMAT),
+                'channel': scraper.channel,
+                'pvrchannel': channel,
+                'pvrid': pvrid,
+                'logo': logoURL,
+                'genre': entity2char(scraper.genre),
+                'plot': entity2char(scraper.plot),
+                'cast': entity2char(scraper.cast),
+                'rating': scraper.rating
+            }
+            if pvrid: record.update(getBroadcast(pvrid, datetime.datetime.strftime(scraper.startdate, RSS_TIME_FORMAT_WOS)))
 
-        items.append(record)
-        item_nr += 1
+            items.append(record)
+            item_nr += 1
+        except TypeError:
+            continue
 
     entry.update({'items': sorted(items, key=itemgetter('datetime'))})
     with open(SCRAPER_CONTENT, 'w', encoding='utf-8') as f:
