@@ -45,8 +45,8 @@ class Scraper():
             self.channel = re.compile('<div class="m-epg-program-card__channel-name">(.+?)</div>',
                                       re.DOTALL).findall(content)[0]
             self.detailURL = self.baseurl + \
-                             re.compile('<a class="m-epg-program-card" data-controller=\'ControllerEpgProgramCard\' '
-                                        'href=\'(.+?)\'', re.DOTALL).findall(content)[0]
+                             re.compile('<a class="m-epg-program-card" data-controller="ControllerEpgProgramCard" '
+                                        'href="(.+?)"', re.DOTALL).findall(content)[0]
             self.title = re.compile('<h3 class="a-headline seriesName">(.+?)</h3>', re.DOTALL).findall(content)[0]
             self.thumb = re.compile('<source srcset="(.+?)" media="\(min-width: 960px\)" />',
                                     re.DOTALL).findall(content)[0].replace('202x147', '1280x720')
