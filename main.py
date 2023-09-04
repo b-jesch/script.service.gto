@@ -60,16 +60,21 @@ def list_offers():
     xbmcplugin.setPluginFanart(_handle, FANART)
     for item in content['items']:
         if OPT_PVR_ONLY and not item.get('pvrid', False): continue
-        liz = xbmcgui.ListItem()
-        liz.setLabel('{}'.format(item.get('pvrchannel', item.get('channel'))))
-        liz.setLabel2('{}'.format(item.get('title')))
-        liz.setInfo('video', {'genre': item.get('genre'),
-                              'plot': item.get('plot'),
-                              'duration': item.get('runtime'),
-                              'rating': item.get('rating'),
-                              'mediatype': 'video'})
+        liz = xbmcgui.ListItem(label='{}'.format(item.get('pvrchannel', item.get('channel'))),
+                               label2='{}'.format(item.get('title')))
+
+        vinfo = liz.getVideoInfoTag()
+        vinfo.setTitle('{}'.format(item.get('title')))
+        vinfo.setGenres([item.get('genre')])
+        vinfo.setPlot(item.get('plot'))
+        vinfo.setDuration(item.get('runtime'))
+        vinfo.setRating(0) if item.get('rating') is None else vinfo.setRating(item.get('rating'))
+        vinfo.setMediaType('video')
+
+        liz.setInfo(type='video', infoLabels=vinfo)
         liz.setArt({'icon': item.get('thumb'), 'thumb': item.get('thumb'), 'poster': item.get('thumb'),
                     'fanart': item.get('thumb'), 'logo': item.get('logo')})
+
         liz.setProperty('StartDate', convert_dateformat(item.get('datetime')))
         liz.setProperty('StartTime', convert_dateformat(item.get('datetime'), dt_out=LOCAL_TIME_FORMAT))
         liz.setProperty('EndTime', convert_dateformat(item.get('enddate')))
@@ -321,4 +326,3 @@ if __name__ == '__main__':
     Scraper = getattr(module, 'Scraper')
 
     router(sys.argv[2][1:])
-
