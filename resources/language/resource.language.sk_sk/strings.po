@@ -1,0 +1,217 @@
+# XBMC Media Center language file
+# Addon Name: resource.language.sk_sk Telecast Offers
+# Addon id: script.service.gto
+# Addon version: 2.0.24
+# Addon Provider: Birger Jesch
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC-Addons\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2016-09-06 08:37+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: sk\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgctxt "Addon Summary"
+msgid "Fetch TV Offers from different scrapers"
+msgstr "Získava televízne ponuky z rôznych scraperov"
+
+msgctxt "Addon Description"
+msgid "Fetch TV Offers from different scrapers\n\nThis plugin needs a integration into the skin!\nPlease refer to the README.txt into the folder named 'integration'.\n        "
+msgstr "Získava televízne ponuky z rôznych scraperov\n\nTento plugin potrebuje integráciu do vzhľadu!\nPozrite si prosím súbor README.txt v priečinku 'integration'.\n"
+
+
+msgctxt "#30010"
+msgid "Telecast Offers"
+msgstr "Telecast Offers"
+
+msgctxt "#30011"
+msgid "Settings"
+msgstr "Nastavenia"
+
+#empty strings from id 30012 to 30017
+
+msgctxt "#30018"
+msgid "Get Infos from {}"
+msgstr "Získavam informácie z {}"
+
+#empty strings from id 30019 to 30103
+
+msgctxt "#30104"
+msgid "Highlights"
+msgstr "TV tipy dňa"
+
+msgctxt "#30105"
+msgid "loading... ({}%)"
+msgstr "načítavam... ({}%)"
+
+msgctxt "#30106"
+msgid "Service started"
+msgstr "Služba spustená"
+
+msgctxt "#30107"
+msgid "Set Switchtimer"
+msgstr "Nastaviť časovač prepínania"
+
+msgctxt "#30108"
+msgid "Switch Now"
+msgstr "Prepnúť teraz"
+
+msgctxt "#30110"
+msgid "TV Scraper"
+msgstr "TV Scraper"
+
+msgctxt "#30111"
+msgid "Select TV Scraper"
+msgstr "Vybrať TV Scraper"
+
+msgctxt "#30112"
+msgid "Record"
+msgstr "Nahrávať"
+
+msgctxt "#30113"
+msgid "Prefer HD Broadcasts"
+msgstr "Uprednostniť HD vysielanie"
+
+msgctxt "#30114"
+msgid "Info at system start and refresh"
+msgstr "Informácia pri štarte a obnovení systému"
+
+msgctxt "#30115"
+msgid "Change Scraper"
+msgstr "Zmeniť scraper"
+
+msgctxt "#30116"
+msgid "Refresh Scraper"
+msgstr "Obnoviť scraper"
+
+#empty strings from id 30117 to 30118
+
+msgctxt "#30119"
+msgid "Close"
+msgstr "Zatvoriť"
+
+#empty strings from id 30120 to 30124
+
+msgctxt "#30125"
+msgid "Hide foreign Scraper"
+msgstr "Skryť zahraničné scrapery"
+
+msgctxt "#30126"
+msgid "Show stations only available in PVR Channel List"
+msgstr "Zobraziť iba stanice dostupné v zozname kanálov PVR"
+
+msgctxt "#30127"
+msgid "Refresh interval content"
+msgstr "Interval obnovy obsahu"
+
+msgctxt "#30128"
+msgid "Refresh interval screen"
+msgstr "Interval obnovy obrazovky"
+
+#empty strings from id 30129 to 30130
+
+msgctxt "#30131"
+msgid "Start Scraper with delay"
+msgstr "Spustiť scraper s oneskorením"
+
+msgctxt "#30132"
+msgid "Scraper doesn't provide any data"
+msgstr "Scraper neposkytuje žiadne údaje"
+
+msgctxt "#30133"
+msgid "Invalid function call"
+msgstr "Neplatné volanie funkcie"
+
+msgctxt "#30134"
+msgid "Timer couldn't set"
+msgstr "Časovač sa nepodarilo nastaviť"
+
+msgctxt "#30135"
+msgid "Reminder Timer was set"
+msgstr "Časovač pripomenutia bol nastavený"
+
+msgctxt "#30136"
+msgid "Missing PVR info window skin file"
+msgstr "Chýba súbor vzhľadu PVR info window"
+
+#empty strings from id 30137 to 30139
+
+msgctxt "#30140"
+msgid "Oh sorry! Details are not accessible at this time."
+msgstr "Prepáčte! Podrobnosti nie sú momentálne dostupné."
+
+msgctxt "#30141"
+msgid "This or a similar title is already in the database."
+msgstr "Tento alebo podobný titul je už v databáze."
+
+msgctxt "#30142"
+msgid "For this title a record timer is set."
+msgstr "Pre tento titul je nastavený časovač nahrávania."
+
+#empty strings from id 30143 to 30149
+
+msgctxt "#30150"
+msgid "0 (off)"
+msgstr "0 (vypnuté)"
+
+msgctxt "#30151"
+msgid "5 mins"
+msgstr "5 minút"
+
+msgctxt "#30152"
+msgid "10 mins"
+msgstr "10 minút"
+
+msgctxt "#30153"
+msgid "15 mins"
+msgstr "15 minút"
+
+msgctxt "#30154"
+msgid "30 mins"
+msgstr "30 minút"
+
+msgctxt "#30155"
+msgid "45 mins"
+msgstr "45 minút"
+
+msgctxt "#30156"
+msgid "60 mins"
+msgstr "60 minút"
+
+msgctxt "#30157"
+msgid "90 mins"
+msgstr "90 minút"
+
+msgctxt "#30158"
+msgid "120 mins"
+msgstr "120 minút"
+
+msgctxt "#30159"
+msgid "150 mins"
+msgstr "150 minút"
+
+msgctxt "#30160"
+msgid "180 mins"
+msgstr "180 minút"
+
+msgctxt "#30161"
+msgid "210 mins"
+msgstr "210 minút"
+
+msgctxt "#30162"
+msgid "240 mins"
+msgstr "240 minút"
+
+msgctxt "#30163"
+msgid "720 mins"
+msgstr "720 minút"
+
+msgctxt "#30164"
+msgid "1440 mins"
+msgstr "1440 minút"

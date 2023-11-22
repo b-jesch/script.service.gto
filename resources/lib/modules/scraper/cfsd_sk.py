@@ -9,11 +9,11 @@ class Scraper():
         # Properties
 
         self.enabled = True
-        self.baseurl = 'https://www.csfd.cz/'
-        self.lang = 'cs'
-        self.rssurl = 'https://www.csfd.cz/televize/'
-        self.friendlyname = 'TV tipy dne'
-        self.shortname = 'CSFD.cz'
+        self.baseurl = 'https://www.csfd.sk/'
+        self.lang = 'sk'
+        self.rssurl = 'https://www.csfd.sk/televizia/'
+        self.friendlyname = 'TV tipy dňa'
+        self.shortname = 'CSFD.sk'
         self.icon = 'csfd.png'
         self.preselector = '<div class="box-content box-content-striped-articles">'
         self.postselector = None
@@ -78,7 +78,7 @@ class Scraper():
         container.pop(0)
         content = container[0]
         try:
-            allcast = re.compile('<h4>Hrají:</h4>(.+?)<span', re.DOTALL).findall(content)[0]
+            allcast = re.compile('<h4>Hrajú:</h4>(.+?)<span', re.DOTALL).findall(content)[0]
             self.cast = ' '.join(re.sub('<.*?>', '', allcast).split())
         except IndexError:
             pass
