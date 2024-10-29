@@ -18,7 +18,7 @@ class Scraper():
         self.friendlyname = 'HÖRZU Spielfilm Highlights'
         self.shortname = 'HÖRZU'
         self.icon = 'hoerzu.png'
-        self.preselector = '<div class="o-tv-tips o-tv-tips--tipsPage">'    # discard content before this selector
+        self.preselector = '<div uk-grid class="uk-grid-small">'            # discard content before this selector
         self.postselector = '<div id="loading" class="modal-loading">'      # discard content after this selector
         self.subselector = '<div class="uk-width-1-2 uk-width-1-4@s">'      # split content into parts on this selector
         self.detailselector = '/head>'                                      # discard content before this selector on detail pages
@@ -39,16 +39,20 @@ class Scraper():
 
     def scrapeRSS(self, content):
         self.reset()
+        # cleanup from multiple spaces
+
+        content = re.sub('\s{2,}', ' ', content)
+        print(content)
         try:
             self.startdate = parser.parse((re.compile('<div class="m-epg-program-card__time">(.+?)</div',
                                                       re.DOTALL).findall(content)[0]))
             self.channel = re.compile('<div class="m-epg-program-card__channel-name">(.+?)</div>',
                                       re.DOTALL).findall(content)[0]
             self.detailURL = self.baseurl + \
-                             re.compile('<a class="m-epg-program-card" data-controller="ControllerEpgProgramCard" '
-                                        'href="(.+?)"', re.DOTALL).findall(content)[0]
-            self.title = re.compile('<h3 class="a-headline seriesName">(.+?)</h3>', re.DOTALL).findall(content)[0]
-            self.thumb = re.compile('<source srcset="(.+?)" media="\(min-width: 960px\)" />',
+                             re.compile('<a class="m-epg-program-card" data-controller=\'ControllerEpgProgramCard\' '
+                                        'href=\'(.+?)\'', re.DOTALL).findall(content)[0]
+            self.title = re.compile('<h3 class="a-headline seriesName" >(.+?)</h3>', re.DOTALL).findall(content)[0]
+            self.thumb = re.compile('<source srcset="(.+?)" media="\(min-width: 960px\)"/>',
                                     re.DOTALL).findall(content)[0].replace('202x147', '1280x720')
             self.thumb = checkResource(self.thumb, self.err404)
 
