@@ -35,6 +35,7 @@ class Scraper():
         self.enddate = ''
         self.runtime = 0
         self.genre = ''
+        self.year = ''
         self.plot = ''
         self.cast = ''
         self.rating = None
@@ -48,7 +49,10 @@ class Scraper():
             self.title = knftv.findtext('Title') or knftv.findtext('EpgEventTitle') or None
             self.thumb = knftv.findtext('Icon')
             self.genre = knftv.findtext('Genre')
-            
+            try:
+                self.year = knftv.findtext('Year')
+            except ValueError:
+                pass
             try:
                 self.rating = float(knftv.findtext('Rating'))
             except ValueError:

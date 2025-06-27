@@ -32,6 +32,7 @@ class Scraper():
         self.enddate = ''
         self.runtime = 0
         self.genre = ''
+        self.year = ''
         self.plot = ''
         self.cast = ''
         self.rating = None
@@ -98,4 +99,3 @@ class Scraper():
 
         except TypeError:
             pass
-

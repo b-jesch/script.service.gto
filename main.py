@@ -22,7 +22,7 @@ if not os.path.isfile(USER_TRANSLATIONS):
 writeLog('Getting PVR translations from %s' % USER_TRANSLATIONS, xbmc.LOGDEBUG)
 
 window_properties = ['Title', 'Picture', 'Subtitle', 'Description', 'Channel', 'ChannelID', 'Logo', 'Date', 'StartTime',
-                     'RunTime', 'EndTime', 'Genre', 'isRunning', 'isInFuture', 'BroadcastID', 'hasTimer', 'Item']
+                     'RunTime', 'EndTime', 'Genre', 'Year', 'isRunning', 'isInFuture', 'BroadcastID', 'hasTimer', 'Item']
 
 _url = sys.argv[0]
 _handle = int(sys.argv[1])
@@ -64,6 +64,7 @@ def list_offers():
         liz.setLabel('{}'.format(item.get('pvrchannel', item.get('channel'))))
         liz.setLabel2('{}'.format(item.get('title')))
         liz.setInfo('video', {'genre': item.get('genre'),
+                              'year': item.get('year'),
                               'plot': item.get('plot'),
                               'duration': item.get('runtime'),
                               'rating': item.get('rating'),
@@ -146,6 +147,7 @@ def scrape_page():
                 'pvrid': pvrid,
                 'logo': logoURL,
                 'genre': entity2char(scraper.genre),
+                'year': scraper.year,
                 'plot': entity2char(scraper.plot),
                 'cast': entity2char(scraper.cast),
                 'rating': scraper.rating
@@ -236,6 +238,7 @@ def show_info(item_nr):
             HOME.setProperty("GTO.Info.Genre", item['genre'])
         else:
             HOME.setProperty('GTO.Info.Genre', item['genre'] + ' | Rating: ' + str(item['rating']))
+        HOME.setProperty("GTO.Info.Year", item['year'])
         HOME.setProperty("GTO.Info.Cast", item['cast'])
 
         try:
@@ -321,4 +324,3 @@ if __name__ == '__main__':
     Scraper = getattr(module, 'Scraper')
 
     router(sys.argv[2][1:])
-

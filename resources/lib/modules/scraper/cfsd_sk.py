@@ -33,6 +33,7 @@ class Scraper():
         self.enddate = ''
         self.runtime = 0
         self.genre = ''
+        self.year = ''
         self.plot = ''
         self.cast = ''
         self.rating = None
@@ -86,5 +87,3 @@ class Scraper():
             self.rating = re.compile('<div class="film-rating-average">(.+?)</div>', re.DOTALL).findall(content)[0].strip()
         except IndexError:
             pass
-
-
