@@ -77,8 +77,8 @@ class Scraper():
 
                 # Cast
                 try:
-                    self.cast = re.compile('<div class="m-person-list__entries">(.+?)</div>',
-                                           re.DOTALL).findall(content)[0]
+                    self.cast = re.compile('<strong>Schauspieler:</strong></div><div class="m-person-list__entries">(.+?)</div>',
+                                           re.DOTALL).findall(content)[0].strip()
                 except IndexError:
                     pass
 
@@ -97,8 +97,11 @@ class Scraper():
                 # Genre
 
                 try:
+
                     self.genre = re.compile('<div class="o-epg_stage__series-info">(.+?)</div>',
                                             re.DOTALL).findall(content)[0].split(' • ')[0].strip()
+                    self.year = re.compile('<div class="o-epg_stage__series-info">(.+?)</div>',
+                                            re.DOTALL).findall(content)[0].split(' • ')[1]
                 except IndexError:
                     pass
 
