@@ -21,7 +21,7 @@ class Scraper():
         self.preselector = '<div uk-grid class="uk-grid-small">'            # discard content before this selector
         self.postselector = '<div id="loading" class="modal-loading">'      # discard content after this selector
         self.subselector = '<div class="uk-width-1-2 uk-width-1-4@s">'      # split content into parts on this selector
-        self.detailselector = '/head>'                                      # discard content before this selector on detail pages
+        self.detailselector = '<div id="siteWrapper" class="">'             # discard content before this selector on detail pages
         self.err404 = 'hoerzu_dummy.jpg'                                    # dummy picture
 
     def reset(self):
@@ -43,7 +43,7 @@ class Scraper():
         # cleanup from multiple spaces
 
         content = re.sub('\s{2,}', ' ', content)
-        print(content)
+        # print(content)
         try:
             self.startdate = parser.parse((re.compile('<div class="m-epg-program-card__time">(.+?)</div',
                                                       re.DOTALL).findall(content)[0]))
@@ -67,20 +67,18 @@ class Scraper():
 
                 container = content.split(contentID)
                 container.pop(0)
-                content = container[0]
+                content = re.sub('\s{2,}', ' ', container[0])
 
                 try:
-                    self.plot = re.compile('<p><strong>Beschreibung</strong></p><p>(.+?)</p></div>',
+                    self.plot = re.compile('id=\'beschreibung\'><p>(.+?)</p></div>',
                                            re.DOTALL).findall(content)[0]
                 except IndexError:
                     pass
 
                 # Cast
                 try:
-                    self.cast = re.compile('<strong>Schauspieler:</strong></div></div><div '
-                                           'class="m-accordion__item-name"><div '
-                                           'class="m-accordion__only-stars">(.+?)</div>',
-                                           re.DOTALL).findall(content)[0].strip()
+                    self.cast = re.compile('<div class="m-person-list__entries">(.+?)</div>',
+                                           re.DOTALL).findall(content)[0]
                 except IndexError:
                     pass
 
