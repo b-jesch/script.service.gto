@@ -76,6 +76,24 @@
 					</control>
 				</setting>
 			</group>
+			<group id="3">
+				<setting help="" id="sdelay" label="30131" type="string">
+					<level>1</level>
+					<default>30171</default>
+					<constraints>
+						<options>
+							<option label="30170">0</option>
+							<option label="30171">5</option>
+							<option label="30172">10</option>
+							<option label="30173">15</option>
+							<option label="30174">20</option>
+							<option label="30175">25</option>
+							<option label="30176">30</option>
+						</options>
+					</constraints>
+					<control format="string" type="spinner"/>
+				</setting>
+			</group>
 		</category>
 	</section>
 </settings>
