@@ -9,7 +9,6 @@ import xbmcplugin
 import xbmcvfs
 
 OPT_MDELAY = getAddonSetting('mdelay', NUM, 60)
-OPT_SDELAY = getAddonSetting('sdelay', NUM, 1000)
 OPT_ENABLE_INFO = getAddonSetting('enableinfo', BOOL)
 OPT_PREFER_HD = getAddonSetting('prefer_hd', BOOL)
 OPT_PREFERRED_SCRAPER = getAddonSetting('preferred')
@@ -167,7 +166,7 @@ def scrape_page():
     HOME.setProperty('GTO.busy', 'false')
     HOME.setProperty('GTO.timestamp', str(int(time.time())))
     HOME.setProperty('GTO.provider', scraper.shortname)
-    return item_nr
+    return item_nr if item_nr > 0 else False
 
 
 def change_scraper():
@@ -323,6 +322,4 @@ if __name__ == '__main__':
         writeLog('import scraper module %s' % SCRAPER_DEFAULT)
 
     Scraper = getattr(module, 'Scraper')
-    xbmc.sleep(OPT_SDELAY)
-
     router(sys.argv[2][1:])

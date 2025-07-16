@@ -23,15 +23,24 @@ class Starter:
 
     def __init__(self, scrape=True):
         self.OPT_MDELAY = getAddonSetting('mdelay', NUM, 60)
+        self.OPT_SDELAY = getAddonSetting('sdelay', NUM, 1000, False)
         self.OPT_SCREENREFRESH = getAddonSetting('screenrefresh', NUM, 60)
         self.REFRESH_RATIO = self.OPT_MDELAY / self.OPT_SCREENREFRESH
         if scrape:
-            xbmc.executebuiltin('RunPlugin(plugin://script.service.gto/?action=scrape&source=starter)')
+            writeLog('Delaying %s msecs' % self.OPT_SDELAY)
+            xbmc.sleep(self.OPT_SDELAY)
+            xbmc.executebuiltin('RunPlugin(plugin://script.service.gto/?action=scrape&source=init)')
+            self.OPT_SDELAY = 0
 
     def start(self):
         writeLog('Starting %s V.%s' % (ADDON_NAME, ADDON_VERSION), level=xbmc.LOGINFO)
+        HOME.setProperty('GTO.timestamp', str(int(time.time())))
         _c = 0
         gto_monitor = self.Monitor()
+
+        if self.OPT_SDELAY > 0:
+            writeLog('Delaying %s msecs' % self.OPT_SDELAY)
+            xbmc.sleep(self.OPT_SDELAY)
 
         while not gto_monitor.abortRequested():
 

@@ -52,12 +52,15 @@ def strToBool(par):
     return True if par.upper() == 'TRUE' else False
 
 
-def getAddonSetting(setting, sType=STRING, multiplicator=1):
+def getAddonSetting(setting, sType=STRING, multiplicator=1, labelvalue=True):
     if sType == BOOL:
         return strToBool(ADDON.getSetting(setting))
     elif sType == NUM:
         try:
-            return int(re.match('\d+', LOC(int(ADDON.getSetting(setting)))).group()) * multiplicator
+            if labelvalue:
+                return int(re.match('\d+', LOC(int(ADDON.getSetting(setting)))).group()) * multiplicator
+            else:
+                return int(ADDON.getSetting(setting)) * multiplicator
         except AttributeError:
             writeLog('Couldn\'t read NUM setting: %s' % setting)
             return 0
@@ -114,10 +117,7 @@ def notifyOSD(header, message, icon=xbmcgui.NOTIFICATION_INFO, disp=4000, enable
 
 
 def writeLog(message, level=xbmc.LOGDEBUG):
-        try:
-            xbmc.log('[%s %s]: %s' % (ADDON_ID, ADDON_VERSION,  message), level)
-        except Exception:
-            xbmc.log('[%s %s]: %s' % (ADDON_ID, ADDON_VERSION,  'Fatal: Message couldn\'t displayed'), xbmc.LOGERROR)
+    xbmc.log('[%s %s]: %s' % (ADDON_ID, ADDON_VERSION,  message), level)
 
 
 def utc_to_local_datetime(utc_datetime):
