@@ -85,13 +85,10 @@ def list_offers():
     HOME.setProperty('GTO.provider', content['scraper'])
 
 
-def scrape_page():
+def scrape_page(scraper):
     HOME.setProperty('GTO.provider', LOC(30105).format(0))
     HOME.setProperty('GTO.busy', 'true')
-    scraper = Scraper()
-    scraper.err404 = os.path.join(ADDON_PATH, 'resources', 'lib', 'media', scraper.err404)
 
-    notifyOSD(LOC(30010), LOC(30018).format(scraper.shortname), icon=getScraperIcon(scraper.icon))
     writeLog('Start scraping from %s' % scraper.rssurl)
     content = get_feed(scraper.rssurl, container=scraper.preselector, postcontent=scraper.postselector)
 
@@ -169,7 +166,7 @@ def scrape_page():
     return item_nr if item_nr > 0 else False
 
 
-def change_scraper():
+def change_scraper(name):
     global Scraper
     _scrapers = list()
     for modules in sorted(os.listdir(SCRAPER_FOLDER)):
@@ -194,6 +191,9 @@ def change_scraper():
         ADDON.setSetting('scraper', _scrapers[_selected].getProperty('shortname'))
         module = __import__(_scrapers[_selected].getProperty('module'), locals(), globals(), fromlist=['Scraper'])
         Scraper = getattr(module, 'Scraper')
+
+        if name != _scrapers[_selected].getProperty('shortname'): return True
+    return False
 
 
 def show_info(item_nr):
@@ -264,17 +264,23 @@ def router(paramstring):
     params = dict(parse_qsl(paramstring))
     if params:
         try:
+            scraper = Scraper()
+            scraper.err404 = os.path.join(ADDON_PATH, 'resources', 'lib', 'media', scraper.err404)
+
             if params['action'] == 'scrape':
-                if scrape_page():
+                notifyOSD(LOC(30010), LOC(30018).format(scraper.shortname), icon=getScraperIcon(scraper.icon))
+                if scrape_page(scraper):
                     list_offers()
 
             elif params['action'] == 'change_scraper':
-                change_scraper()
-                if params.get('source', None) is None:
-                    if scrape_page():
-                        list_offers()
+                if change_scraper(scraper.shortname):
+                    scraper = Scraper()
+                    notifyOSD(LOC(30010), LOC(30020).format(scraper.shortname), icon=getScraperIcon(scraper.icon))
+                    xbmc.sleep(5000)
+                    if params.get('source', None) is None and scrape_page(scraper): list_offers()
 
             elif params['action'] == 'getcontent':
+                notifyOSD(LOC(30010), LOC(30019).format(scraper.shortname), icon=getScraperIcon(scraper.icon))
                 list_offers()
 
             elif params['action'] == 'info':

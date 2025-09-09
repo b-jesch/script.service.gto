@@ -52,15 +52,16 @@ def strToBool(par):
     return True if par.upper() == 'TRUE' else False
 
 
-def getAddonSetting(setting, sType=STRING, multiplicator=1, labelvalue=True):
+def getAddonSetting(setting, sType=STRING, multiplicator=1):
     if sType == BOOL:
         return strToBool(ADDON.getSetting(setting))
     elif sType == NUM:
         try:
-            if labelvalue:
+            val = int(ADDON.getSetting(setting)) * multiplicator
+            if val > 30000:
+                writeLog('Using label value from old setting of %s' % setting)
                 return int(re.match('\d+', LOC(int(ADDON.getSetting(setting)))).group()) * multiplicator
-            else:
-                return int(ADDON.getSetting(setting)) * multiplicator
+            return val
         except AttributeError:
             writeLog('Couldn\'t read NUM setting: %s' % setting)
             return 0

@@ -40,7 +40,15 @@ msgctxt "#30018"
 msgid "Get Infos from {}"
 msgstr "Získavam informácie z {}"
 
-#empty strings from id 30019 to 30103
+msgctxt "#30019"
+msgid "Actualize content from {}"
+msgstr ""
+
+msgctxt "#30020"
+msgid "Set scraper to {}"
+msgstr ""
+
+#empty strings from id 30021 to 30103
 
 msgctxt "#30104"
 msgid "Highlights"
@@ -111,8 +119,8 @@ msgid "Refresh interval content"
 msgstr "Interval obnovy obsahu"
 
 msgctxt "#30128"
-msgid "Refresh interval screen"
-msgstr "Interval obnovy obrazovky"
+msgid "Refresh interval widget"
+msgstr "Interval obnovy widget"
 
 #empty strings from id 30129 to 30130
 

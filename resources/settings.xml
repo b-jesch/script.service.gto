@@ -25,34 +25,34 @@
 			<group id="2">
 				<setting help="" id="mdelay" label="30127" type="string">
 					<level>1</level>
-					<default>30160</default>
+					<default>180</default>
 					<constraints>
 						<options>
-							<option label="30154">30154</option>
-							<option label="30156">30156</option>
-							<option label="30157">30157</option>
-							<option label="30158">30158</option>
-							<option label="30159">30159</option>
-							<option label="30160">30160</option>
-							<option label="30161">30161</option>
-							<option label="30162">30162</option>
-							<option label="30163">30163</option>
-							<option label="30164">30164</option>
+							<option label="30154">30</option>
+							<option label="30156">60</option>
+							<option label="30157">90</option>
+							<option label="30158">120</option>
+							<option label="30159">150</option>
+							<option label="30160">180</option>
+							<option label="30161">210</option>
+							<option label="30162">240</option>
+							<option label="30163">720</option>
+							<option label="30164">1440</option>
 						</options>
 					</constraints>
 					<control format="string" type="spinner"/>
 				</setting>
 				<setting help="" id="screenrefresh" label="30128" type="string">
 					<level>1</level>
-					<default>30153</default>
+					<default>15</default>
 					<constraints>
 						<options>
-							<option label="30151">30151</option>
-							<option label="30152">30152</option>
-							<option label="30153">30153</option>
-							<option label="30154">30154</option>
-							<option label="30155">30155</option>
-							<option label="30156">30156</option>
+							<option label="30151">5</option>
+							<option label="30152">10</option>
+							<option label="30153">15</option>
+							<option label="30154">30</option>
+							<option label="30155">45</option>
+							<option label="30156">60</option>
 						</options>
 					</constraints>
 					<control format="string" type="spinner"/>
@@ -79,7 +79,7 @@
 			<group id="3">
 				<setting help="" id="sdelay" label="30131" type="string">
 					<level>0</level>
-					<default>30171</default>
+					<default>5</default>
 					<constraints>
 						<options>
 							<option label="30170">0</option>

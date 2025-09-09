@@ -39,6 +39,14 @@ msgctxt "#30018"
 msgid "Get Infos from {}"
 msgstr "Beziehe Programminfos von {}"
 
+msgctxt "#30019"
+msgid "Actualize content from {}"
+msgstr "Aktualisiere Inhalte von {}"
+
+msgctxt "#30020"
+msgid "Set scraper to {}"
+msgstr "Benutze Scraper von {}"
+
 msgctxt "#30104"
 msgid "Highlights"
 msgstr "TV Highlights"
@@ -106,8 +114,8 @@ msgid "Refresh interval content"
 msgstr "Aktualisierungsintervall Inhalte"
 
 msgctxt "#30128"
-msgid "Refresh interval screen"
-msgstr "Aktualisierungsintervall Anzeige"
+msgid "Refresh interval widget"
+msgstr "Aktualisierungsintervall Widget"
 
 msgctxt "#30131"
 msgid "Start Scraper with delay"

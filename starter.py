@@ -23,7 +23,7 @@ class Starter:
 
     def __init__(self, scrape=True):
         self.OPT_MDELAY = getAddonSetting('mdelay', NUM, 60)
-        self.OPT_SDELAY = getAddonSetting('sdelay', NUM, 1000, False)
+        self.OPT_SDELAY = getAddonSetting('sdelay', NUM, 1000)
         self.OPT_SCREENREFRESH = getAddonSetting('screenrefresh', NUM, 60)
         self.REFRESH_RATIO = self.OPT_MDELAY / self.OPT_SCREENREFRESH
         if scrape:

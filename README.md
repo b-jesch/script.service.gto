@@ -1,3 +1,16 @@
+<h1>Important Update - Please read</h1>
+
+<h4>Due some changes in value handling of the addon settings, you need to change the values of
+
+* Refresh interval content
+* Refresh interval widget
+* Start scraper with delay
+
+to a different value, store these setting(s), switch back to the desired values and store them again. This affects the
+settings.xml of the addon by rewriting changed values. A simple reset to defaults has no effect!
+
+Another way is deinstalling the addon with settings and reinstall the addon again.</h4>
+
 <h1>Description:</h1>
 
 The script 'script.service.gto' fetches actual tv highlights from various RSS feeds and present them as widget in the home 
@@ -129,4 +142,3 @@ Q: Where is the Widget GUI description file (xml)?
 
    This file is named ```gto-widget.xml``` and must reside within the xml folder of your skin. See examples in the integration
    folder of this addon.
-   
