@@ -52,10 +52,10 @@ class Scraper():
         try:
             _s = re.compile('<strong>(.+?)</strong>', re.DOTALL).findall(content)[0].split(' - ')[0]
             _e = re.compile('<strong>(.+?)</strong>', re.DOTALL).findall(content)[0].split(' - ')[1]
-            _ds = datetime.datetime.today()
+            _ds = datetime.today()
             self.startdate = _ds.replace(hour=int(_s[0:2]), minute=int(_s[3:5]))
             self.enddate = _ds.replace(hour=int(_e[0:2]), minute=int(_e[3:5]))
-            if self.enddate < self.startdate: self.enddate += datetime.timedelta(days=1)
+            if self.enddate < self.startdate: self.enddate += timedelta(days=1)
         except IndexError:
             pass
         try:

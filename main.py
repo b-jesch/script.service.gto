@@ -122,7 +122,7 @@ def scrape_page(scraper):
             if details: scraper.scrapeDetailPage(details, scraper.detailselector)
 
         part_nr += 1
-        if not isinstance(scraper.enddate, datetime.datetime) or scraper.enddate < datetime.datetime.now():
+        if not isinstance(scraper.enddate, datetime) or scraper.enddate < datetime.now():
             writeLog('Outdated or no endtime available, discard item')
             continue
 
@@ -136,9 +136,9 @@ def scrape_page(scraper):
                 'item': item_nr,
                 'title': entity2char(scraper.title),
                 'thumb': scraper.thumb,
-                'datetime': datetime.datetime.strftime(scraper.startdate, RSS_TIME_FORMAT),
+                'datetime': datetime.strftime(scraper.startdate, RSS_TIME_FORMAT),
                 'runtime': scraper.runtime,
-                'enddate': datetime.datetime.strftime(scraper.enddate, RSS_TIME_FORMAT),
+                'enddate': datetime.strftime(scraper.enddate, RSS_TIME_FORMAT),
                 'channel': scraper.channel,
                 'pvrchannel': channel,
                 'pvrid': pvrid,
@@ -149,7 +149,7 @@ def scrape_page(scraper):
                 'cast': entity2char(scraper.cast),
                 'rating': scraper.rating
             }
-            if pvrid: record.update(getBroadcast(pvrid, datetime.datetime.strftime(scraper.startdate, RSS_TIME_FORMAT_WOS)))
+            if pvrid: record.update(getBroadcast(pvrid, datetime.strftime(scraper.startdate, RSS_TIME_FORMAT_WOS)))
 
             items.append(record)
             item_nr += 1
@@ -213,12 +213,12 @@ def show_info(item_nr):
             HOME.setProperty('GTO.Info.BroadcastID', str(item['broadcastid']))
             HOME.setProperty('GTO.Info.hasTimer', str(is_timer))
 
-        if parser.parse(item['datetime'], dayfirst=False) >= datetime.datetime.now():
+        if parser.parse(item['datetime'], dayfirst=False) >= datetime.now():
             writeLog('Title \'{}\' starts @{}, enable switchtimer button'.format(item['title'], item['datetime']))
             is_inFuture = True
             HOME.setProperty("GTO.Info.isInFuture", str(is_inFuture))
 
-        elif parser.parse(item['datetime'], dayfirst=False) < datetime.datetime.now() < parser.parse(item['enddate'], dayfirst=False):
+        elif parser.parse(item['datetime'], dayfirst=False) < datetime.now() < parser.parse(item['enddate'], dayfirst=False):
             writeLog('Title \'{}\' is currently running, enable switch button'.format(item['title']))
 
             is_running = True

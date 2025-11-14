@@ -90,7 +90,7 @@ class Scraper():
                 except IndexError:
                     self.enddate = self.startdate
 
-                if self.startdate > self.enddate: self.enddate += datetime.timedelta(days=1)
+                if self.startdate > self.enddate: self.enddate += timedelta(days=1)
                 self.runtime = int((self.enddate - self.startdate).seconds)
 
                 # Genre

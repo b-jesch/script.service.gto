@@ -9,7 +9,7 @@ class Scraper():
 
         # Properties
 
-        self.enabled = True
+        self.enabled = False
         self.baseurl = 'https://www.tvdigital.de'
         self.lang = 'de'
         self.rssurl = 'https://www.tvdigital.de/tv-tipps/heute/spielfilm/'
@@ -56,7 +56,7 @@ class Scraper():
             _string = re.compile('<strong>(.+?)</strong>', re.DOTALL).findall(content)[0].split(' | ')
             self.genre =_string[0]
             self.runtime = int(_string[-1].split()[0]) * 60
-            self.enddate = self.startdate + datetime.timedelta(seconds=self.runtime)
+            self.enddate = self.startdate + timedelta(seconds=self.runtime)
         except (IndexError, ValueError):
             pass
         try:

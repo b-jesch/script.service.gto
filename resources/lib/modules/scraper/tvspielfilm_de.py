@@ -43,7 +43,7 @@ class Scraper():
 
         try:
             _ts = re.compile('<title>(.+?)</title>', re.DOTALL).findall(content)[0].split(' | ')[0]
-            _ds = datetime.datetime.today()
+            _ds = datetime.today()
             self.startdate = _ds.replace(hour=int(_ts[0:2]), minute=int(_ts[3:5]))
             self.channel = re.compile('<title>(.+?)</title>', re.DOTALL).findall(content)[0].split(' | ')[1]
             self.title = re.compile('<title>(.+?)</title>', re.DOTALL).findall(content)[0].split(' | ')[2]
@@ -85,7 +85,7 @@ class Scraper():
                 except IndexError:
                     self.enddate = self.startdate
 
-                if self.startdate > self.enddate: self.enddate += datetime.timedelta(days=1)
+                if self.startdate > self.enddate: self.enddate += timedelta(days=1)
                 self.runtime = int((self.enddate - self.startdate).seconds)
 
                 # Cast

@@ -1,5 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import re
+
 import xbmc
 
 from .. tools import *
@@ -18,9 +20,9 @@ class Scraper():
         self.friendlyname = 'HÖRZU Spielfilm Highlights'
         self.shortname = 'HÖRZU'
         self.icon = 'hoerzu.png'
-        self.preselector = '<div uk-grid class="uk-grid-small">'            # discard content before this selector
+        self.preselector = '<div class="o-tv-tips__grid-wrapper">'     # discard content before this selector
         self.postselector = '<div id="loading" class="modal-loading">'      # discard content after this selector
-        self.subselector = '<div class="uk-width-1-2 uk-width-1-4@s">'      # split content into parts on this selector
+        self.subselector = '<a class="m-epg-program-card"'      # split content into parts on this selector
         self.detailselector = '<div id="siteWrapper" class="">'             # discard content before this selector on detail pages
         self.err404 = 'hoerzu_dummy.jpg'                                    # dummy picture
 
@@ -29,8 +31,8 @@ class Scraper():
         self.title = ''
         self.thumb = False
         self.detailURL = ''
-        self.startdate = ''
-        self.enddate = ''
+        self.startdate = None
+        self.enddate = None
         self.runtime = 0
         self.genre = ''
         self.year = ''
@@ -45,20 +47,23 @@ class Scraper():
         content = re.sub('\s{2,}', ' ', content)
         # print(content)
         try:
+            parser_error = 'startdate'
             self.startdate = parser.parse((re.compile('<div class="m-epg-program-card__time">(.+?)</div',
                                                       re.DOTALL).findall(content)[0]))
+            parser_error = 'channel'
             self.channel = re.compile('<div class="m-epg-program-card__channel-name">(.+?)</div>',
                                       re.DOTALL).findall(content)[0]
+            parser_error = 'detailURL'
             self.detailURL = self.baseurl + \
-                             re.compile('<a class="m-epg-program-card" data-controller=\'ControllerEpgProgramCard\' '
+                             re.compile('data-controller=\'ControllerEpgProgramCard\' '
                                         'href=\'(.+?)\'', re.DOTALL).findall(content)[0]
-            self.title = re.compile('<h3 class="a-headline seriesName" >(.+?)</h3>', re.DOTALL).findall(content)[0]
+            parser_error = 'thumb'
             self.thumb = re.compile('<source srcset="(.+?)" media="\(min-width: 960px\)"/>',
-                                    re.DOTALL).findall(content)[0].replace('202x147', '1280x720')
+                                    re.DOTALL).findall(content)[0].replace('278x202', '1280x720')
             self.thumb = checkResource(self.thumb, self.err404)
 
         except IndexError:
-            writeLog('main parsing of \'%s\' incomplete' % self.shortname, level=xbmc.LOGWARNING)
+            writeLog('main parsing of \'%s\' breaks at %s' % (self.shortname, parser_error), level=xbmc.LOGWARNING)
 
     def scrapeDetailPage(self, content, contentID):
 
@@ -70,40 +75,35 @@ class Scraper():
                 content = re.sub('\s{2,}', ' ', container[0])
 
                 try:
+                    parser_error = 'title'
+                    self.title = re.compile('data-keyword="(.+?)">', re.DOTALL).findall(content)[0]
+
+                    parser_error = 'plot'
                     self.plot = re.compile('id=\'beschreibung\'><p>(.+?)</p></div>',
                                            re.DOTALL).findall(content)[0]
-                except IndexError:
-                    pass
 
-                # Cast
-                try:
+                    parser_error = 'cast'
                     self.cast = re.compile('<strong>Schauspieler:</strong></div><div class="m-person-list__entries">(.+?)</div>',
                                            re.DOTALL).findall(content)[0].strip()
-                except IndexError:
-                    pass
 
-                # Enddate
-
-                try:
+                    parser_error = 'enddate'
                     _s = re.compile('<span class="o-epg_stage__time--hidden">(.+?)</span>',
-                                    re.DOTALL).findall(content)[0].split()[-1]
+                                    re.DOTALL).findall(content)[0]
+                    _s = re.findall(r'\d{1,2}:\d{1,2}', _s)[0]
                     self.enddate = self.startdate.replace(hour=int(_s[0:2]), minute=int(_s[3:5]))
-                except IndexError:
-                    self.enddate = self.startdate
 
-                if self.startdate > self.enddate: self.enddate += datetime.timedelta(days=1)
-                self.runtime = int((self.enddate - self.startdate).seconds)
+                    if self.startdate > self.enddate: self.enddate += timedelta(days=1)
+                    self.runtime = int((self.enddate - self.startdate).seconds)
 
-                # Genre
-
-                try:
-
+                    parser_error = 'genre'
                     self.genre = re.compile('<div class="o-epg_stage__series-info">(.+?)</div>',
                                             re.DOTALL).findall(content)[0].split(' • ')[0].strip()
+
+                    parser_error = 'year'
                     self.year = re.compile('<div class="o-epg_stage__series-info">(.+?)</div>',
                                             re.DOTALL).findall(content)[0].split(' • ')[1]
                 except IndexError:
-                    pass
-
+                    writeLog('detail parsing of \'%s\' breaks at %s' % (self.shortname, parser_error),
+                             level=xbmc.LOGWARNING)
         except TypeError:
             pass

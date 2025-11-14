@@ -2,7 +2,7 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 import xbmcvfs
-import datetime
+from datetime import datetime, timedelta
 from dateutil import parser
 import json
 import os
@@ -33,7 +33,7 @@ USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Ge
 HOME = xbmcgui.Window(10000)
 OSD = xbmcgui.Dialog()
 
-EPOCH = datetime.datetime(1970, 1, 1)
+EPOCH = datetime(1970, 1, 1)
 RSS_TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 RSS_TIME_FORMAT_WOS = '%Y-%m-%d %H:%M'
 

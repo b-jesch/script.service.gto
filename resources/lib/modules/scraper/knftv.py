@@ -71,7 +71,7 @@ class Scraper():
 
             self.startdate = parser.parse(knftv.findtext('Date'))
             self.enddate = self.startdate.replace(hour=int(knftv.findtext('EndTime')[:2]), minute=int(knftv.findtext('EndTime')[-2:]))
-            if self.startdate > self.enddate: self.enddate += datetime.timedelta(days=1)
+            if self.startdate > self.enddate: self.enddate += timedelta(days=1)
             self.runtime = int((self.enddate - self.startdate).seconds)
 
             self.thumb = checkResource(self.thumb, self.err404)
