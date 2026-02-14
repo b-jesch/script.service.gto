@@ -1,9 +1,6 @@
 #!/usr/bin/python
-import re
 
 from .. tools import *
-from dateutil import parser
-
 
 class Scraper():
 

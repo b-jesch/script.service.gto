@@ -2,8 +2,9 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 import xbmcvfs
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil import parser
+from xml.etree import ElementTree as ET
 import json
 import os
 import re

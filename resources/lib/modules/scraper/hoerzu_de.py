@@ -1,12 +1,6 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
-import re
-
-import xbmc
 
 from .. tools import *
-from dateutil import parser
-
 
 class Scraper():
     def __init__(self):

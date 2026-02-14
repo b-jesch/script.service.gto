@@ -1,8 +1,6 @@
 #!/usr/bin/python
 
 from .. tools import *
-from dateutil import parser
-
 
 class Scraper():
     def __init__(self):

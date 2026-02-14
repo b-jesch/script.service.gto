@@ -1,9 +1,6 @@
 #!/usr/bin/python
 
 from .. tools import *
-from dateutil import parser
-from xml.etree import ElementTree as ET
-
 
 class Scraper():
 

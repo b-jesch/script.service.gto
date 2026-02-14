@@ -2,7 +2,6 @@
 
 from .. tools import *
 
-
 class Scraper():
     def __init__(self):
 
@@ -13,7 +12,7 @@ class Scraper():
         self.lang = 'de'
         self.rssurl = 'http://www.tvspielfilm.de/tv-programm/rss/filme.xml'
         self.friendlyname = 'TV Spielfilm Highlights'
-        self.shortname = 'TV Spielfilm'
+        self.shortname = 'TV Spielfilm (RSS)'
         self.icon = 'tvspielfilm.png'
         self.preselector = '<item>'
         self.postselector = None
@@ -48,20 +47,14 @@ class Scraper():
             self.channel = re.compile('<title>(.+?)</title>', re.DOTALL).findall(content)[0].split(' | ')[1]
             self.title = re.compile('<title>(.+?)</title>', re.DOTALL).findall(content)[0].split(' | ')[2]
             self.detailURL = re.compile('<link>(.+?)</link>', re.DOTALL).findall(content)[0]
-
+            self.thumb = re.compile('<enclosure url="(.+?)"', re.DOTALL).findall(content)[0].replace('width=159', 'width=400')
         except IndexError:
-            pass
+            self.thumb = 'image://%s' % (self.err404)
+
 
     def scrapeDetailPage(self, content, contentID):
 
         try:
-
-            # Thumbnail
-            try:
-                self.thumb = re.compile('<meta property="og:image" content="(.+?)" />', re.DOTALL).findall(content)[0]
-            except IndexError:
-                self.thumb = 'image://%s' % (self.err404)
-
             self.thumb = checkResource(self.thumb, self.err404)
             self.genre = re.compile('<meta property="og:title" content="(.+?)" />', re.DOTALL).findall(content)[0].split(' - ')[1]
 

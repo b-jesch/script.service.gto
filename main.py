@@ -122,8 +122,11 @@ def scrape_page(scraper):
             if details: scraper.scrapeDetailPage(details, scraper.detailselector)
 
         part_nr += 1
-        if not isinstance(scraper.enddate, datetime) or scraper.enddate < datetime.now():
-            writeLog('Outdated or no endtime available, discard item')
+        if not isinstance(scraper.enddate, datetime):
+            writeLog('No endtime available, discard item')
+            continue
+        elif scraper.enddate < datetime.now():
+            writeLog('Outdated, discard item')
             continue
 
         pvrid = channelName2pvrId(scraper.channel)
