@@ -122,8 +122,8 @@ def scrape_page(scraper):
             if details: scraper.scrapeDetailPage(details, scraper.detailselector)
 
         part_nr += 1
-        if not isinstance(scraper.enddate, datetime):
-            writeLog('No endtime available, discard item')
+        if not isinstance(scraper.enddate, datetime) or scraper.runtime == 0:
+            writeLog('No endtime or runtime available, discard item')
             continue
         elif scraper.enddate < datetime.now():
             writeLog('Outdated, discard item')
