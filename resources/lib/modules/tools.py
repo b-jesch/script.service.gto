@@ -2,7 +2,7 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 import xbmcvfs
-from datetime import datetime, timedelta
+from datetime import datetime
 from dateutil import parser
 import json
 import os
@@ -126,7 +126,7 @@ def utc_to_local_datetime(utc_datetime):
     utc_epoch = 86400 * delta.days + delta.seconds
     time_struct = time.localtime(utc_epoch)
     dt_args = time_struct[:6] + (delta.microseconds,)
-    return datetime.datetime(*dt_args)
+    return datetime(*dt_args)
 
 
 def convert_dateformat(datestring, dt_in=RSS_TIME_FORMAT, dt_out=LOCAL_DATE_FORMAT):
@@ -254,6 +254,7 @@ def getStationLogo(channelid, fallback):
 
 def switchToChannel(pvrid, item):
     """
+    :param item:        Widget number
     :param pvrid:       str PVR-ID of the broadcast station
     :return:            none
     """
@@ -323,6 +324,7 @@ def hasTimer(broadcastid):
 
 def setTimer(broadcastId, item, reminder=False):
     """
+    :param item:        Widget number
     :param broadcastId: str unique broadcastID of the broadcast
     :return:            bool (true on success, else false)
     """
